@@ -2,16 +2,15 @@ package com.waly.kanban.services;
 
 import com.waly.kanban.dto.CardDTO;
 import com.waly.kanban.dto.CardInsertDTO;
-import com.waly.kanban.dto.ReplacementDTO;
 import com.waly.kanban.entities.Board;
 import com.waly.kanban.entities.Card;
 import com.waly.kanban.repositories.BoardRepository;
 import com.waly.kanban.repositories.CardRepository;
+import com.waly.kanban.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,10 +28,12 @@ public class CardService {
     }
 
     private Card copyDtoToEntity(CardInsertDTO dto){
+        Long boardId = dto.getBoardId();
+        validateBoard(boardId);
         Card card = new Card();
         card.setTitle(dto.getTitle());
         card.setDescription(dto.getDescription());
-        Board board = boardRepository.getReferenceById(dto.getBoard());
+        Board board = boardRepository.getReferenceById(boardId);
         card.setCardPosition(board.getTotalCards());
         board.setTotalCards(board.getTotalCards() + 1);
         board = boardRepository.save(board);
@@ -40,9 +41,15 @@ public class CardService {
         return card;
     }
 
+    private void validateBoard(Long boardId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new NotFoundException("Board não encontrado para o id: " + boardId);
+        }
+    }
+
     public CardDTO findById(Long id) {
         return new CardDTO(repository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("Card não encontrado");
+            throw new NotFoundException("Card não encontrado para o id: " + id);
         }));
     }
 

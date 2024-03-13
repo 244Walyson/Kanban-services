@@ -58,7 +58,7 @@ public class Board {
         return cards;
     }
 
-    public void setCard(Card card) {
+    public void addCard(Card card) {
         this.cards.add(card);
     }
 }

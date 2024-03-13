@@ -16,11 +16,13 @@ public class BoardDTO {
 
     private Long id;
     private String title;
+    private Integer totalCards;
     private List<CardDTO> cards = new ArrayList<>();
 
     public BoardDTO(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
+        this.totalCards = board.getTotalCards();
         board.getCards().forEach(this::addCardSorted);
     }
 

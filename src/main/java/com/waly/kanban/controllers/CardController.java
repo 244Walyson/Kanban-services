@@ -4,6 +4,7 @@ import com.waly.kanban.dto.CardDTO;
 import com.waly.kanban.dto.CardInsertDTO;
 import com.waly.kanban.dto.ReplacementDTO;
 import com.waly.kanban.services.CardService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class CardController {
     private CardService service;
 
     @PostMapping
-    public ResponseEntity<CardDTO> insert(@RequestBody CardInsertDTO dto){
+    public ResponseEntity<CardDTO> insert(@Valid @RequestBody CardInsertDTO dto){
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(service.insert(dto));
     }
