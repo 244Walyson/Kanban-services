@@ -9,6 +9,7 @@ import com.waly.kanban.repositories.CardRepository;
 import com.waly.kanban.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +23,15 @@ public class CardService {
     private BoardRepository boardRepository;
 
     public CardDTO insert(CardInsertDTO dto) {
-        Card card = copyDtoToEntity(dto);
+        Card card = new Card();
+        copyDtoToEntity(card, dto);
         card = repository.save(card);
         return new CardDTO(card);
     }
 
-    private Card copyDtoToEntity(CardInsertDTO dto){
+    private Card copyDtoToEntity(Card card, CardInsertDTO dto){
         Long boardId = dto.getBoardId();
         validateBoard(boardId);
-        Card card = new Card();
         card.setTitle(dto.getTitle());
         card.setDescription(dto.getDescription());
         Board board = boardRepository.getReferenceById(boardId);
@@ -68,4 +69,26 @@ public class CardService {
         }
         repository.saveAll(cards);
     }
+
+    public void delete(Long id) {
+        if(!repository.existsById(id)){
+            throw new NotFoundException("Card não encontrado para o id: " + id);
+        }
+        try {
+            repository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public CardDTO update(Long id, CardInsertDTO dto){
+        if(!repository.existsById(id)){
+            throw new NotFoundException("Card não encontrado para o id: " + id);
+        }
+        Card card = repository.getReferenceById(id);
+        copyDtoToEntity(card, dto);
+        card = repository.save(card);
+        return new CardDTO(card);
+    }
+
 }

@@ -30,6 +30,15 @@ public class CardController {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<CardDTO> update(@PathVariable Long id, @Valid @RequestBody CardInsertDTO dto){
+        return ResponseEntity.ok().body(service.update(id, dto));
+    }
     @PostMapping(value = "/{boardId}/replacement")
     public ResponseEntity<Void> replacement(@PathVariable Long boardId, @RequestBody ReplacementDTO dto) {
         service.replacePosition(dto.getSourceIndex(), dto.getDestinationIndex(), boardId);
