@@ -1,5 +1,6 @@
 package com.waly.kanban.controllers;
 
+import com.waly.kanban.dto.CardInsertDTO;
 import com.waly.kanban.dto.TeamDTO;
 import com.waly.kanban.dto.TeamInsertDTO;
 import com.waly.kanban.services.TeamService;
@@ -34,5 +35,17 @@ public class TeamController {
         TeamDTO teamDTO = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(teamDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(teamDTO);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TeamDTO> update(@PathVariable Long id, @RequestBody TeamInsertDTO dto){
+        return ResponseEntity.ok().body(service.update(id, dto));
+    }
+
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

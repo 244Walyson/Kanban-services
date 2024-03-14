@@ -1,6 +1,7 @@
 package com.waly.kanban.controllers.handlers;
 
 import com.waly.kanban.exceptions.CustomError;
+import com.waly.kanban.exceptions.DatabaseException;
 import com.waly.kanban.exceptions.NotFoundException;
 import com.waly.kanban.exceptions.ValidationError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,5 +41,18 @@ public class ExceptionHandlers {
             error.addError(f.getField(), f.getDefaultMessage());
         }
         return ResponseEntity.status(status.value()).body(error);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<CustomError> databaseException(DatabaseException e, HttpServletRequest request){
+        CustomError error = new CustomError();
+        int status = HttpStatus.NOT_FOUND.value();
+        error.setStatus(status);
+        error.setMessage(e.getMessage());
+        error.setTimestamp(Instant.now());
+        error.setError("Database Exception");
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+
     }
 }
