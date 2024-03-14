@@ -2,6 +2,7 @@ package com.waly.kanban.dto;
 
 import com.waly.kanban.entities.Board;
 import com.waly.kanban.entities.Card;
+import com.waly.kanban.entities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

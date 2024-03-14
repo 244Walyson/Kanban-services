@@ -5,21 +5,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Embeddable
-public class UserBoardPK {
+public class UserTeamPK {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-    public UserBoardPK() {
+    public UserTeamPK() {
     }
 
-    public UserBoardPK(User user, Board board) {
+    public UserTeamPK(User user, Team team) {
         this.user = user;
-        this.board = board;
+        this.team = team;
     }
 
     public User getUser() {
@@ -30,11 +30,11 @@ public class UserBoardPK {
         this.user = user;
     }
 
-    public Board getBoard() {
-        return board;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

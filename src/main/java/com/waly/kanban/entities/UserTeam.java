@@ -1,31 +1,30 @@
 package com.waly.kanban.entities;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_user_board")
-public class UserBoard {
+@Table(name = "tb_user_team")
+public class UserTeam {
 
     @EmbeddedId
-    private UserBoardPK id = new UserBoardPK();
+    private UserTeamPK id = new UserTeamPK();
     private boolean isAdmin;
 
-    public UserBoard() {
+    public UserTeam() {
     }
 
-    public UserBoard(UserBoardPK id, boolean isAdmin) {
+    public UserTeam(UserTeamPK id, boolean isAdmin) {
         this.id = id;
         this.isAdmin = isAdmin;
     }
 
-    public UserBoardPK getId() {
+    public UserTeamPK getId() {
         return id;
     }
 
-    public void setId(UserBoardPK id) {
+    public void setId(UserTeamPK id) {
         this.id = id;
     }
 

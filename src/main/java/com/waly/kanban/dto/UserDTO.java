@@ -1,17 +1,12 @@
 package com.waly.kanban.dto;
 
-import com.waly.kanban.entities.Card;
 import com.waly.kanban.entities.User;
-import com.waly.kanban.entities.UserBoard;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +20,7 @@ public class UserDTO {
     private String imgUrl;
     private String bio;
     private List<CardDTO> cards = new ArrayList<>();
-    private List<BoardDTO> boards = new ArrayList<>();
+    private List<TeamDTO> teams = new ArrayList<>();
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -35,6 +30,6 @@ public class UserDTO {
         this.imgUrl = user.getImgUrl();
         this.bio = user.getBio();
         this.cards = user.getCards().stream().map(x -> new CardDTO(x)).toList();
-        this.boards = user.getBoards().stream().map(x -> new BoardDTO(x)).toList();
+        this.teams = user.getBoards().stream().map(x -> new TeamDTO(x)).toList();
     }
 }

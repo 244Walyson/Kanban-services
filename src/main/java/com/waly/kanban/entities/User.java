@@ -22,7 +22,7 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String bio;
     @OneToMany(mappedBy = "id.user")
-    private Set<UserBoard> boards = new HashSet<>();
+    private Set<UserTeam> teams = new HashSet<>();
     @ManyToMany(mappedBy = "collaborators")
     private Set<Card> cards;
     private String password;
@@ -88,8 +88,8 @@ public class User {
         this.bio = bio;
     }
 
-    public List<Board> getBoards(){
-        return boards.stream().map(x -> x.getId().getBoard()).toList();
+    public List<Team> getBoards(){
+        return teams.stream().map(x -> x.getId().getTeam()).toList();
     }
 
     public String getPassword() {

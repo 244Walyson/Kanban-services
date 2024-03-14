@@ -1,9 +1,6 @@
 package com.waly.kanban.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,13 +18,15 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Card> cards = new HashSet<>();
     private Integer totalCards;
-    @OneToMany(mappedBy = "id.board")
-    private Set<UserBoard> users = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-    public Board(Long id, String title, Integer totalCards) {
+    public Board(Long id, String title, Integer totalCards, Team team) {
         this.id = id;
         this.title = title;
         this.totalCards = totalCards;
+        this.team = team;
     }
 
     public Board() {
@@ -65,7 +64,11 @@ public class Board {
         this.cards.add(card);
     }
 
-    public List<User> getUsers() {
-        return this.users.stream().map(x -> x.getId().getUser()).toList();
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
