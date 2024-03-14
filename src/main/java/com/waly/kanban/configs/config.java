@@ -1,11 +1,11 @@
-package com.waly.kanban;
+package com.waly.kanban.configs;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class configs {
+public class config {
 
     @Bean
     public ModelMapper modelMapper(){

@@ -13,6 +13,7 @@ import com.waly.kanban.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,25 +36,7 @@ public class CardService {
         return new CardDTO(card);
     }
 
-    private Card copyDtoToEntity(Card card, CardInsertDTO dto){
-        Long boardId = dto.getBoardId();
-        validateBoard(boardId);
-        card.setTitle(dto.getTitle());
-        card.setDescription(dto.getDescription());
-        Board board = boardRepository.getReferenceById(boardId);
-        card.setCardPosition(board.getTotalCards());
-        board.setTotalCards(board.getTotalCards() + 1);
-        board = boardRepository.save(board);
-        card.setBoard(board);
-        return card;
-    }
-
-    private void validateBoard(Long boardId) {
-        if(!boardRepository.existsById(boardId)){
-            throw new NotFoundException("Board não encontrado para o id: " + boardId);
-        }
-    }
-
+    @Transactional(readOnly = true)
     public CardDTO findById(Long id) {
         return new CardDTO(repository.findById(id).orElseThrow(() -> {
             throw new NotFoundException("Card não encontrado para o id: " + id);
@@ -76,6 +59,7 @@ public class CardService {
         repository.saveAll(cards);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if(!repository.existsById(id)){
             throw new NotFoundException("Card não encontrado para o id: " + id);
@@ -87,6 +71,7 @@ public class CardService {
         }
     }
 
+    @Transactional(readOnly = false)
     public CardDTO update(Long id, CardInsertDTO dto){
         if(!repository.existsById(id)){
             throw new NotFoundException("Card não encontrado para o id: " + id);
@@ -105,6 +90,25 @@ public class CardService {
         card.addCollaborator(user);
         card = repository.save(card);
         return new CardDTO(card);
+    }
+
+    private Card copyDtoToEntity(Card card, CardInsertDTO dto){
+        Long boardId = dto.getBoardId();
+        validateBoard(boardId);
+        card.setTitle(dto.getTitle());
+        card.setDescription(dto.getDescription());
+        Board board = boardRepository.getReferenceById(boardId);
+        card.setCardPosition(board.getTotalCards());
+        board.setTotalCards(board.getTotalCards() + 1);
+        board = boardRepository.save(board);
+        card.setBoard(board);
+        return card;
+    }
+
+    private void validateBoard(Long boardId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new NotFoundException("Board não encontrado para o id: " + boardId);
+        }
     }
 
     private void validateReq(Long cardId, SetCollaboratorDTO dto) {

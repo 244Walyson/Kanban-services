@@ -1,21 +1,24 @@
 package com.waly.kanban.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "tb_user")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     @Column(unique = true)
-    private String username;
+    private String nickname;
     @Column(unique = true)
     private String email;
     private String imgUrl;
@@ -24,16 +27,18 @@ public class User {
     @OneToMany(mappedBy = "id.user")
     private Set<UserTeam> teams = new HashSet<>();
     @ManyToMany(mappedBy = "collaborators")
-    private Set<Card> cards;
+    private Set<Card> cards = new HashSet<>();
     private String password;
+    @ManyToMany(mappedBy = "users")
+    private Set<Role> authorities = new HashSet<>();
 
     public User() {
     }
 
-    public User(Long id, String name, String username, String email, String imgUrl, String bio, String password) {
+    public User(Long id, String name, String nickname, String email, String imgUrl, String bio, String password) {
         this.id = id;
         this.name = name;
-        this.username = username;
+        this.nickname = nickname;
         this.email = email;
         this.imgUrl = imgUrl;
         this.bio = bio;
@@ -57,11 +62,15 @@ public class User {
     }
 
     public String getUsername() {
-        return username;
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getEmail() {
@@ -106,5 +115,34 @@ public class User {
 
     public void addCard(Card card) {
         this.cards.add(card);
+    }
+
+    public void addRole(Role role) {
+        this.authorities.add(role);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 }

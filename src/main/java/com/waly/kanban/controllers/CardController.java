@@ -5,9 +5,11 @@ import com.waly.kanban.dto.CardInsertDTO;
 import com.waly.kanban.dto.ReplacementDTO;
 import com.waly.kanban.dto.SetCollaboratorDTO;
 import com.waly.kanban.services.CardService;
+import jakarta.persistence.PostRemove;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +28,7 @@ public class CardController {
         return ResponseEntity.created(uri).body(service.insert(dto));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<CardDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));
