@@ -2,15 +2,18 @@ package com.waly.kanban.services;
 
 import com.waly.kanban.dto.CardDTO;
 import com.waly.kanban.dto.CardInsertDTO;
+import com.waly.kanban.dto.SetCollaboratorDTO;
 import com.waly.kanban.entities.Board;
 import com.waly.kanban.entities.Card;
+import com.waly.kanban.entities.User;
 import com.waly.kanban.repositories.BoardRepository;
 import com.waly.kanban.repositories.CardRepository;
 import com.waly.kanban.exceptions.NotFoundException;
-import jakarta.transaction.Transactional;
+import com.waly.kanban.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +24,10 @@ public class CardService {
     private CardRepository repository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private UserRepository userRepository;
 
+    @Transactional(readOnly = false)
     public CardDTO insert(CardInsertDTO dto) {
         Card card = new Card();
         copyDtoToEntity(card, dto);
@@ -54,7 +60,7 @@ public class CardService {
         }));
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void replacePosition(int sourceIndex, int destinationIndex, Long boardId){
         List<Card> cards = repository.findAllByBoard(boardId);
 
@@ -91,4 +97,22 @@ public class CardService {
         return new CardDTO(card);
     }
 
+    @Transactional(readOnly = false)
+    public CardDTO updateCollaborators(Long cardId, SetCollaboratorDTO dto) {
+        validateReq(cardId, dto);
+        Card card = repository.getReferenceById(cardId);
+        User user = userRepository.getReferenceById(dto.getCollaboratorId());
+        card.addCollaborator(user);
+        card = repository.save(card);
+        return new CardDTO(card);
+    }
+
+    private void validateReq(Long cardId, SetCollaboratorDTO dto) {
+        if(!repository.existsById(cardId)){
+            throw new NotFoundException("Card não encontrado para o id: " + cardId);
+        }
+        if(!userRepository.existsById(dto.getCollaboratorId())){
+            throw new NotFoundException("Colaborador não encontrado para o id: " + dto.getCollaboratorId());
+        }
+    }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class Card {
     @JoinTable(name = "tb_user_card",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "card_id"))
-    private Set<User> collaborators;
+    private Set<User> collaborators = new HashSet<>();
 
     public Card() {
     }

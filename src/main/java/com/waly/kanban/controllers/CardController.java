@@ -3,6 +3,7 @@ package com.waly.kanban.controllers;
 import com.waly.kanban.dto.CardDTO;
 import com.waly.kanban.dto.CardInsertDTO;
 import com.waly.kanban.dto.ReplacementDTO;
+import com.waly.kanban.dto.SetCollaboratorDTO;
 import com.waly.kanban.services.CardService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class CardController {
     public ResponseEntity<CardDTO> update(@PathVariable Long id, @Valid @RequestBody CardInsertDTO dto){
         return ResponseEntity.ok().body(service.update(id, dto));
     }
+
+    @PutMapping("/{id}/collaborator")
+    public ResponseEntity<CardDTO> setCollaborator(@PathVariable Long id, @Valid @RequestBody SetCollaboratorDTO dto){
+        return ResponseEntity.ok().body(service.updateCollaborators(id, dto));
+    }
+
     @PostMapping(value = "/{boardId}/replacement")
     public ResponseEntity<Void> replacement(@PathVariable Long boardId, @RequestBody ReplacementDTO dto) {
         service.replacePosition(dto.getSourceIndex(), dto.getDestinationIndex(), boardId);
