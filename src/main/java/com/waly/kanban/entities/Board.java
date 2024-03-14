@@ -30,6 +30,7 @@ public class Board {
     }
 
     public Board() {
+        this.totalCards = 0;
     }
 
     public Long getId() {
