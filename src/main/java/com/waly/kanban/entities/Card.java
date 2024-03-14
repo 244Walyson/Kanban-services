@@ -16,6 +16,7 @@ public class Card {
     @Column(columnDefinition = "TEXT")
     private String description;
     private Integer cardPosition;
+    private boolean done;
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
@@ -23,12 +24,13 @@ public class Card {
     public Card() {
     }
 
-    public Card(Long id, String title, String description, Integer cardPosition, Board board) {
+    public Card(Long id, String title, String description, Integer cardPosition, Board board, boolean done) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.cardPosition = cardPosition;
         this.board = board;
+        this.done = done;
     }
 
     public Long getId() {
@@ -69,5 +71,13 @@ public class Card {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 }

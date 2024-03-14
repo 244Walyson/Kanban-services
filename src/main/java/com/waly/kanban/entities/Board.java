@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -20,6 +21,8 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Card> cards = new HashSet<>();
     private Integer totalCards;
+    @OneToMany(mappedBy = "id.board")
+    private Set<UserBoard> users = new HashSet<>();
 
     public Board(Long id, String title, Integer totalCards) {
         this.id = id;
@@ -60,5 +63,9 @@ public class Board {
 
     public void addCard(Card card) {
         this.cards.add(card);
+    }
+
+    public List<User> getUsers() {
+        return this.users.stream().map(x -> x.getId().getUser()).toList();
     }
 }
