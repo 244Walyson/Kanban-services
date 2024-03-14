@@ -23,20 +23,21 @@ public class User {
     private String bio;
     @OneToMany(mappedBy = "id.user")
     private Set<UserBoard> boards = new HashSet<>();
-    @ManyToOne
-    private Card card;
+    @ManyToMany(mappedBy = "collaborators")
+    private Set<Card> cards;
+    private String password;
 
     public User() {
     }
 
-    public User(Long id, String name, String username, String email, String imgUrl, String bio, Card card) {
+    public User(Long id, String name, String username, String email, String imgUrl, String bio, String password) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.imgUrl = imgUrl;
         this.bio = bio;
-        this.card = card;
+        this.password = password;
     }
 
     public Long getId() {
@@ -87,15 +88,23 @@ public class User {
         this.bio = bio;
     }
 
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
     public List<Board> getBoards(){
         return boards.stream().map(x -> x.getId().getBoard()).toList();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Card> getCards() {
+        return cards;
+    }
+
+    public void addCard(Card card) {
+        this.cards.add(card);
     }
 }

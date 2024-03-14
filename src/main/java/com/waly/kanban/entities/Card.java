@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "tb_card")
 public class Card {
@@ -20,6 +22,11 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+    @ManyToMany
+    @JoinTable(name = "tb_user_card",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "card_id"))
+    private Set<User> collaborators;
 
     public Card() {
     }
@@ -79,5 +86,13 @@ public class Card {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public Set<User> getCollaborators() {
+        return collaborators;
+    }
+
+    public void addCollaborator(User collaborator) {
+        this.collaborators.add(collaborator);
     }
 }
