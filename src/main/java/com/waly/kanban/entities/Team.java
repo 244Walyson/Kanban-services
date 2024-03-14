@@ -24,6 +24,8 @@ public class Team {
     private Integer totalBoards;
 
     public Team() {
+        this.totalBoards = 0;
+        this.totalCollaborators = 0;
     }
 
     public Team(Long id, String name, String occupationArea, String description) {
