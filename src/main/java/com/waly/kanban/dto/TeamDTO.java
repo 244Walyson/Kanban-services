@@ -22,15 +22,19 @@ public class TeamDTO {
     private String name;
     private String occupationArea;
     private String description;
-    private List<UserDTO> collaborators = new ArrayList<>();
-    private List<BoardDTO> boards = new ArrayList<>();
+    private Integer totalCollaborators;
+    private Integer totalBoards;
+    private List<UserMinDTO> collaborators = new ArrayList<>();
+    private List<BoardMinDTO> boards = new ArrayList<>();
 
     public TeamDTO(Team team) {
         this.id = team.getId();
         this.name = team.getName();
         this.occupationArea = team.getOccupationArea();
         this.description = team.getDescription();
-        this.collaborators = team.getCollaborators().stream().map(x -> new UserDTO(x)).toList();
-        this.boards = team.getBoards().stream().map(x -> new BoardDTO(x)).toList();
+        this.collaborators = team.getCollaborators().stream().map(x -> new UserMinDTO(x)).toList();
+        this.boards = team.getBoards().stream().map(x -> new BoardMinDTO(x)).toList();
+        this.totalCollaborators = team.getTotalCollaborators();
+        this.totalBoards = team.getTotalBoards();
     }
 }

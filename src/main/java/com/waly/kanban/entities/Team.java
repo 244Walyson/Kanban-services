@@ -20,6 +20,8 @@ public class Team {
     private Set<UserTeam> collaborators = new HashSet<>();
     @OneToMany(mappedBy = "team")
     private Set<Board> boards = new HashSet<>();
+    private Integer totalCollaborators;
+    private Integer totalBoards;
 
     public Team() {
     }
@@ -73,5 +75,21 @@ public class Team {
 
     public void addBoard(Board board) {
         this.boards.add(board);
+    }
+
+    public Integer getTotalCollaborators() {
+        return totalCollaborators;
+    }
+
+    public void setTotalCollaborators(Integer totalCollaborators) {
+        this.totalCollaborators = totalCollaborators;
+    }
+
+    public Integer getTotalBoards() {
+        return totalBoards;
+    }
+
+    public void setTotalBoards(Integer totalBoards) {
+        this.totalBoards = totalBoards;
     }
 }
