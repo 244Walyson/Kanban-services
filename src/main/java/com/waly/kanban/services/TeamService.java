@@ -12,6 +12,7 @@ import com.waly.kanban.exceptions.DatabaseException;
 import com.waly.kanban.exceptions.NotFoundException;
 import com.waly.kanban.repositories.TeamRepository;
 import com.waly.kanban.repositories.UserTeamRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,7 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+@Slf4j
+@Service("TeamService")
 public class TeamService {
 
     @Autowired
@@ -71,6 +73,9 @@ public class TeamService {
             throw new NotFoundException("Team não encontrada para o id: " + id);
         }
         try {
+            User user = userService.authenticade();
+            Team team = repository.getReferenceById(id);
+            userTeamRepository.deleteById(new UserTeamPK(user, team));
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial team de id: " + id);
