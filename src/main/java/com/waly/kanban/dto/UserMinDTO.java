@@ -15,10 +15,10 @@ public class UserMinDTO {
 
     private Long id;
     private String name;
-    private String username;
+    private String email;
     public UserMinDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
-        this.username = user.getUsername();
+        this.email = user.getUsername();
     }
 }

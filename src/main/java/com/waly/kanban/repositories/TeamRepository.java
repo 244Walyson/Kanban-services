@@ -17,4 +17,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             LOWER(obj.occupationArea) LIKE LOWER(CONCAT('%', :query ,'%'))
             """)
     Page<Team> findAllByAttributes(String query, Pageable pageable);
+
+
 }

@@ -25,7 +25,7 @@ public class Team {
 
     public Team() {
         this.totalBoards = 0;
-        this.totalCollaborators = 0;
+        this.totalCollaborators = 1;
     }
 
     public Team(Long id, String name, String occupationArea, String description) {
@@ -93,5 +93,9 @@ public class Team {
 
     public void setTotalBoards(Integer totalBoards) {
         this.totalBoards = totalBoards;
+    }
+
+    public void addUserTeam(UserTeam userTeam){
+        this.collaborators.add(userTeam);
     }
 }

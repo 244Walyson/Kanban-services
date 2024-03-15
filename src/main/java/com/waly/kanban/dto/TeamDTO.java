@@ -37,4 +37,5 @@ public class TeamDTO {
         this.totalCollaborators = team.getTotalCollaborators();
         this.totalBoards = team.getTotalBoards();
     }
+
 }
