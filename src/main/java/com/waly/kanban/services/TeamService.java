@@ -84,6 +84,9 @@ public class TeamService {
 
     @Transactional(readOnly = false)
     public TeamDTO update(Long id, TeamInsertDTO dto) {
+        if (!repository.existsById(id)){
+            throw new NotFoundException("Team não encontrado para o id: " + id);
+        }
         Team team = repository.getReferenceById(id);
         copyDtoToEntity(dto, team);
         team = repository.save(team);
