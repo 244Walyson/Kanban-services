@@ -2,6 +2,7 @@ package com.waly.kanban.services;
 
 import com.waly.kanban.dto.CardDTO;
 import com.waly.kanban.dto.CardInsertDTO;
+import com.waly.kanban.dto.CardUpdateDTO;
 import com.waly.kanban.dto.SetCollaboratorDTO;
 import com.waly.kanban.entities.Board;
 import com.waly.kanban.entities.Card;
@@ -27,6 +28,8 @@ public class CardService {
     private BoardRepository boardRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Transactional(readOnly = false)
     public CardDTO insert(CardInsertDTO dto) {
@@ -44,8 +47,12 @@ public class CardService {
     }
 
     @Transactional(readOnly = false)
-    public void replacePosition(int sourceIndex, int destinationIndex, Long boardId){
+    public void replacePosition(int sourceIndex, Integer destinationIndex, Long boardId){
         List<Card> cards = repository.findAllByBoard(boardId);
+
+        if (destinationIndex == null){
+            destinationIndex = cards.size();
+        }
 
         Card card = cards.remove(sourceIndex);
         cards.add(destinationIndex, card);
@@ -72,12 +79,12 @@ public class CardService {
     }
 
     @Transactional(readOnly = false)
-    public CardDTO update(Long id, CardInsertDTO dto){
+    public CardDTO update(Long id, CardUpdateDTO dto){
         if(!repository.existsById(id)){
             throw new NotFoundException("Card não encontrado para o id: " + id);
         }
         Card card = repository.getReferenceById(id);
-        copyDtoToEntity(card, dto);
+        copyDtoToEntityUpdate(card, dto);
         card = repository.save(card);
         return new CardDTO(card);
     }
@@ -102,6 +109,13 @@ public class CardService {
         board.setTotalCards(board.getTotalCards() + 1);
         board = boardRepository.save(board);
         card.setBoard(board);
+        return card;
+    }
+    private Card copyDtoToEntityUpdate(Card card, CardUpdateDTO dto){
+        Long boardId = card.getBoard().getId();
+        validateBoard(boardId);
+        card.setTitle(dto.getTitle());
+        card.setDescription(dto.getDescription());
         return card;
     }
 

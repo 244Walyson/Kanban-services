@@ -4,6 +4,7 @@ import com.waly.kanban.entities.Team;
 import com.waly.kanban.entities.User;
 import com.waly.kanban.entities.UserTeamPK;
 import com.waly.kanban.repositories.BoardRepository;
+import com.waly.kanban.repositories.CardRepository;
 import com.waly.kanban.repositories.TeamRepository;
 import com.waly.kanban.repositories.UserTeamRepository;
 import com.waly.kanban.services.UserService;
@@ -25,12 +26,26 @@ public class CustomPermissions {
     private UserTeamRepository userTeamRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private CardRepository cardRepository;
 
     @Transactional
     public boolean isAdminOfTeam(Long teamId){
         log.info(String.valueOf(teamId));
         if (!teamRepository.existsById(teamId)) return true;
         User user = userService.authenticade();
+        Team team = teamRepository.getReferenceById(teamId);
+        return userTeamRepository.findById(new UserTeamPK(user, team))
+                .map(userTeam -> userTeam.isAdmin())
+                .orElse(false);
+    }
+    @Transactional
+    public boolean isAdminOfTeamByBoard(Long boardId){
+        if(!boardRepository.existsById(boardId)){
+            return true;
+        }
+        User user = userService.authenticade();
+        Long teamId = boardRepository.getReferenceById(boardId).getTeam().getId();
         Team team = teamRepository.getReferenceById(teamId);
         return userTeamRepository.findById(new UserTeamPK(user, team))
                 .map(userTeam -> userTeam.isAdmin())
@@ -53,6 +68,32 @@ public class CustomPermissions {
         }
         User user = userService.authenticade();
         Long teamId = boardRepository.getReferenceById(boardId).getTeam().getId();
+        Team team = teamRepository.getReferenceById(teamId);
+        return userTeamRepository.existsById(new UserTeamPK(user, team));
+    }
+    @Transactional
+    public boolean isAdminOfTeamByCard(Long cardId){
+        if(!cardRepository.existsById(cardId)){
+            return true;
+        }
+        User user = userService.authenticade();
+        Long teamId = cardRepository.getReferenceById(cardId).getBoard().getTeam().getId();
+        log.info("aaaa");
+        log.info(user.getId().toString());
+        log.info(teamId.toString());
+        log.info("aaaa");
+        Team team = teamRepository.getReferenceById(teamId);
+        return userTeamRepository.findById(new UserTeamPK(user, team))
+                .map(userTeam -> userTeam.isAdmin())
+                .orElse(false);
+    }
+    @Transactional
+    public boolean isMemberOfTeamByCard(Long cardId){
+        if(!cardRepository.existsById(cardId)){
+            return true;
+        }
+        User user = userService.authenticade();
+        Long teamId = cardRepository.getReferenceById(cardId).getBoard().getTeam().getId();
         Team team = teamRepository.getReferenceById(teamId);
         return userTeamRepository.existsById(new UserTeamPK(user, team));
     }

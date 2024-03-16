@@ -4,6 +4,7 @@ import com.waly.kanban.dto.BoardDTO;
 import com.waly.kanban.dto.BoardInsertDTO;
 import com.waly.kanban.dto.BoardUpdateDTO;
 import com.waly.kanban.entities.Board;
+import com.waly.kanban.entities.Team;
 import com.waly.kanban.projections.BoardProjection;
 import com.waly.kanban.repositories.BoardRepository;
 import com.waly.kanban.exceptions.NotFoundException;
@@ -76,6 +77,9 @@ public class BoardService {
             throw new NotFoundException("Team não encontrado para o id: " + teamId);
         }
         board.setTitle(dto.getTitle());
-        board.setTeam(teamRepository.getReferenceById(teamId));
+        Team team = teamRepository.getReferenceById(teamId);
+        team.setTotalBoards(team.getTotalBoards() + 1);
+        teamRepository.save(team);
+        board.setTeam(team);
     }
 }
