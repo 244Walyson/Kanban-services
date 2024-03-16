@@ -4,6 +4,7 @@ import com.waly.kanban.dto.BoardDTO;
 import com.waly.kanban.dto.BoardInsertDTO;
 import com.waly.kanban.dto.BoardUpdateDTO;
 import com.waly.kanban.entities.Board;
+import com.waly.kanban.projections.BoardProjection;
 import com.waly.kanban.repositories.BoardRepository;
 import com.waly.kanban.exceptions.NotFoundException;
 import com.waly.kanban.repositories.TeamRepository;
@@ -26,15 +27,14 @@ public class BoardService {
     private TeamRepository teamRepository;
 
     @Transactional(readOnly = true)
-    public Page<BoardDTO> findAll(String title, Pageable pageable) {
-        Page<Board> boards = repository.findAllPageable(title, pageable);
-        log.info(boards.getContent().get(0).getCards().toString());
-        return boards.map(x -> new BoardDTO(x));
+    public Page<BoardProjection> findAll(String title, Pageable pageable, Long teamId) {
+        Page<BoardProjection> boards = repository.findAllPageable(title, pageable, teamId);
+        return boards;
     }
 
     @Transactional(readOnly = true)
     public BoardDTO findById(Long id) {
-        return new BoardDTO(repository.findByIdWithCards(id).orElseThrow(() -> {
+        return new BoardDTO(repository.findById(id).orElseThrow(() -> {
             throw new NotFoundException("Board não encontrado para o id: " + id);
         }));
     }
