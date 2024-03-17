@@ -52,7 +52,7 @@ public class CardController {
         return ResponseEntity.ok().body(service.updateCollaborators(id, dto));
     }
 
-    @PreAuthorize("@authAdmin.isAdminOfTeamByCard(#id)")
+    @PreAuthorize("@authAdmin.isAdminOfTeamByBoard(#boardId)")
     @PostMapping(value = "/{boardId}/replacement")
     public ResponseEntity<Void> replacement(@PathVariable Long boardId, @RequestBody ReplacementDTO dto) {
         service.replacePosition(dto.getSourceIndex(), dto.getDestinationIndex(), boardId);
