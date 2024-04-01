@@ -61,6 +61,8 @@ public class AuthorizationServerConfig {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	private static RSAKey rsaKey;
+
 	@Bean
 	@Order(2)
 	public SecurityFilterChain asSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -165,6 +167,7 @@ public class AuthorizationServerConfig {
 	@Bean
 	public JWKSource<SecurityContext> jwkSource() {
 		RSAKey rsaKey = generateRsa();
+		this.rsaKey = rsaKey;
 		JWKSet jwkSet = new JWKSet(rsaKey);
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 	}
@@ -186,5 +189,9 @@ public class AuthorizationServerConfig {
 			throw new IllegalStateException(ex);
 		}
 		return keyPair;
+	}
+
+	public RSAKey getRsaKey() {
+		return rsaKey;
 	}
 }
