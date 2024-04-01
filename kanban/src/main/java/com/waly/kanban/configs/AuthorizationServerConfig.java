@@ -7,6 +7,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.waly.kanban.configs.customgrant.CustomPasswordAuthenticationConverter;
 import com.waly.kanban.configs.customgrant.CustomPasswordAuthenticationProvider;
 import com.waly.kanban.configs.customgrant.CustomUserAuthorities;
+import com.waly.kanban.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +61,8 @@ public class AuthorizationServerConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+	@Autowired
+	private UserService userService;
 
 	private static RSAKey rsaKey;
 
@@ -148,12 +151,14 @@ public class AuthorizationServerConfig {
 		return context -> {
 			OAuth2ClientAuthenticationToken principal = context.getPrincipal();
 			CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
+			String nickname = userService.findUserByEmail(user.getUsername()).getNickname();
 			List<String> authorities = user.getAuthorities().stream().map(x -> x.getAuthority()).toList();
 			if (context.getTokenType().getValue().equals("access_token")) {
 				// @formatter:off
 				context.getClaims()
 					.claim("authorities", authorities)
-					.claim("username", user.getUsername());
+					.claim("nickname", nickname)
+					.claim("email", user.getUsername());
 				// @formatter:on
 			}
 		};

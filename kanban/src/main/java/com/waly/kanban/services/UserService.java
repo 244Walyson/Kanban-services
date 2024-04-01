@@ -59,4 +59,8 @@ public class UserService implements UserDetailsService {
         return new UserDTO(user);
     }
 
+    @Transactional
+    public User findUserByEmail(String username) {
+        return repository.findByEmail(username).get();
+    }
 }
