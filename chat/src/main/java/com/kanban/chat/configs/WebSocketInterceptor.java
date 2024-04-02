@@ -1,6 +1,7 @@
 package com.kanban.chat.configs;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -16,7 +17,10 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        log.info("Before handshake" + request.getHeaders().get("Sec-WebSocket-Protocol").get(0));
+        String accessToken = request.getHeaders().get("Sec-WebSocket-Protocol").get(0);
+        log.info(accessToken);
+        TokenValidator tokenValidator = new TokenValidator();
+        tokenValidator.validateAuthentication(accessToken);
         return true;
     }
 
