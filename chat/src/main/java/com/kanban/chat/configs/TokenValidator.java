@@ -31,7 +31,7 @@ import java.util.List;
 @Component
 public class TokenValidator {
 
-    public void validateAuthentication(String token){
+    public boolean validateAuthentication(String token){
         log.info(token);
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
@@ -55,17 +55,16 @@ public class TokenValidator {
             JWTClaimsSet claimsSet;
             try {
                 claimsSet = jwtProcessor.process(token, ctx);
+                System.out.println(claimsSet.toJSONObject());
+                return true;
             } catch (ParseException | BadJOSEException e) {
                 // Invalid token
                 System.err.println(e.getMessage());
-                return;
+                return false;
             } catch (JOSEException e) {
-                // Key sourcing failed or another internal exception
                 System.err.println(e.getMessage());
-                return;
+                return false;
             }
-
-            System.out.println(claimsSet.toJSONObject());
 
         }catch (Exception e){
             e.printStackTrace();

@@ -17,11 +17,9 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        String accessToken = request.getHeaders().get("Sec-WebSocket-Protocol").get(0);
-        log.info(accessToken);
+        String accessToken = request.getURI().getQuery().split("=")[1];
         TokenValidator tokenValidator = new TokenValidator();
-        tokenValidator.validateAuthentication(accessToken);
-        return true;
+        return tokenValidator.validateAuthentication(accessToken);
     }
 
     @Override
