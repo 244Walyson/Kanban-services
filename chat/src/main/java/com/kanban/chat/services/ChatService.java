@@ -41,4 +41,6 @@ public class ChatService {
         String nickname = customUserUtil.getLoggedNickname();
         return chatRepository.findAllByReceiverUsername(nickname);
     }
+
+
 }

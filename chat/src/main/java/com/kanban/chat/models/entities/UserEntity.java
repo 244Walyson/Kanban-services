@@ -2,6 +2,9 @@ package com.kanban.chat.models.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document(collection = "user")
 public class UserEntity {
 
@@ -9,6 +12,7 @@ public class UserEntity {
   private String name;
   private String username;
   private String email;
+  private List<ChatRoomEntity> chatRoomEntity = new ArrayList<>();
 
   public UserEntity() {
   }
@@ -50,5 +54,13 @@ public class UserEntity {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public void setChatRoomEntity(List<ChatRoomEntity> chatRoomEntity) {
+    this.chatRoomEntity = chatRoomEntity;
+  }
+
+  public void addChatRoomEntity(ChatRoomEntity chatRoomEntity) {
+    this.chatRoomEntity.add(chatRoomEntity);
   }
 }
