@@ -43,48 +43,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(org.springframework.messaging.simp.config.MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/user", "/chat");
-        registry.setApplicationDestinationPrefixes("/app", "/user", "/chat");
+        registry.enableSimpleBroker("/user");
+        registry.setApplicationDestinationPrefixes("/app", "/user");
         registry.setUserDestinationPrefix("/user");
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new Interceptor());
-    }
-    @Override
-    public void configureClientOutboundChannel(ChannelRegistration registration) {
-        //registration.interceptors(new Interceptor());
-    }
-
-    private static class Interceptor implements ChannelInterceptor {
-
-        private String CONNECT = "CONNECT";
-        @Override
-        public Message<?> preSend(Message<?> message, MessageChannel channel) {
-
-            String simpMessageType = message.getHeaders().get("simpMessageType").toString();
-
-            if(!simpMessageType.equals(CONNECT)){
-                log.info("CONNECTED");
-                String nickName = message.getHeaders().get("simpSessionAttributes").toString().split("=")[1].split("}")[0];
-                log.info("NickName: " + nickName);
-
-                log.info("PASSANDO NO HANDLERRRRRRRRR");
-                String[] chatRoomId = message.getHeaders().get("nativeHeaders").toString().split("/");
-                chatRoomId = chatRoomId[chatRoomId.length - 1].split("]");
-
-                Authentication authenticationAfter = SecurityContextHolder.getContext().getAuthentication();
-
-                System.out.println("Authentication After: " + authenticationAfter);
-                log.info("THREAD HANDLER " + Thread.currentThread().getId());
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(nickName, chatRoomId[0]));
-                 authenticationAfter = SecurityContextHolder.getContext().getAuthentication();
-
-                System.out.println("Authentication setada: " + authenticationAfter);
-
-            }
-            return message;
-        }
-    }
 }

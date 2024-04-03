@@ -39,15 +39,15 @@ public class TestConfig {
     UserEntity user1 = new UserEntity(null, "Maria Brown", "maria2543", "maria@gmail.com");
     UserEntity user2 = new UserEntity(null, "Alex Green", "alex244", "alex@gmail.com");
 
-    ChatMessageEntity message1 = new ChatMessageEntity(null, new UserEmbedded(user1), new UserEmbedded(user2), "Hello", Instant.now(), MessageStatus.READ);
-    ChatMessageEntity message2 = new ChatMessageEntity(null, new UserEmbedded(user2), new UserEmbedded(user1), "Hi",  Instant.now(), MessageStatus.DELIVERED);
+    ChatMessageEntity message1 = new ChatMessageEntity(null, new UserEmbedded(user1), "Hello", Instant.now(), MessageStatus.READ);
+    ChatMessageEntity message2 = new ChatMessageEntity(null, new UserEmbedded(user2), "Hi",  Instant.now(), MessageStatus.DELIVERED);
 
     ChatNotificationEntity notification1 = new ChatNotificationEntity(null, user1, user2, "notification");
     ChatNotificationEntity notification2 = new ChatNotificationEntity(null, user2, user1, "notification");
 
     ChatRoomEntity chatRoom = new ChatRoomEntity(null, "chat2");
-    chatRoom.addUser(new UserEmbedded(user1));
-    chatRoom.addUser(new UserEmbedded(user2));
+    chatRoom.addMember(new UserEmbedded(user1));
+    chatRoom.addMember(new UserEmbedded(user2));
     chatRoom.addMessage(new ChatMessageEmbedded(message1));
     chatRoom.addMessage(new ChatMessageEmbedded(message2));
 

@@ -12,16 +12,16 @@ import java.util.List;
 public class ChatRoomEntity {
 
     private String id;
-    private String name;
+    private String roomName;
     private List<UserEmbedded> members = new ArrayList<>();
     private List<ChatMessageEmbedded> messages = new ArrayList<>();
 
     public ChatRoomEntity() {
     }
 
-    public ChatRoomEntity(String id, String name) {
+    public ChatRoomEntity(String id, String roomName) {
         this.id = id;
-        this.name = name;
+        this.roomName = roomName;
     }
 
     public String getId() {
@@ -32,19 +32,19 @@ public class ChatRoomEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public List<UserEmbedded> getUsers() {
+    public List<UserEmbedded> getMembers() {
         return members;
     }
 
-    public void addUser(UserEmbedded user) {
+    public void addMember(UserEmbedded user) {
         this.members.add(user);
     }
 

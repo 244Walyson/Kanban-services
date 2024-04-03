@@ -2,8 +2,11 @@ package com.kanban.chat.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.ChatMessageEntity;
+import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.services.AuthService;
+import com.kanban.chat.services.ChatRoomService;
 import com.kanban.chat.services.ChatService;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +37,17 @@ public class WebsocketController {
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private ChatService chatService;
-
+    @Autowired
+    private ChatRoomService chatRoomService;
     @Autowired
     private AuthService authService;
+
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageEntity chatMessage) throws JsonProcessingException {
         log.info("Message received: " + new ObjectMapper().writeValueAsString(chatMessage));
-        chatMessage = chatService.saveChatMessage(chatMessage);
-        messagingTemplate.convertAndSendToUser(chatMessage.getReceiver().getNickName(), "/queue/messages", chatMessage);
+        //chatMessage = chatService.saveChatMessage(chatMessage);
+        messagingTemplate.convertAndSendToUser("user", "/queue/messages", chatMessage);
     }
 
     //@PreAuthorize("@authService.isMemberOfChat()")
@@ -49,24 +55,32 @@ public class WebsocketController {
     public void processMessage(@Payload ChatMessageEntity chatMessage,
                                @DestinationVariable String roomId,
                                @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+
        String nickName = String.valueOf(sessionAttributes.get("nickName"));
-        log.info(nickName);
-        log.info(String.valueOf(authService.isMemberOfChat(nickName, roomId)));
-        messagingTemplate.convertAndSend("/chat/" + roomId, chatMessage);
+
+        if(authService.isMemberOfChat(nickName, roomId)){
+            messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", chatMessage);
+            chatRoomService.saveMessage(chatMessage, roomId, nickName);
+        }
     }
 
-    @SubscribeMapping("/user2/queue/messages")
-    public List<ChatMessageEntity> sendOneTimeMessage() {
-           List<ChatMessageEntity> chatMessageEntities = chatService.findAllByReceiver();
-        return chatMessageEntities;
-    }
-
-    @SubscribeMapping("/chat/{roomId}")
-    public ChatMessageEntity sendOneTimeMessage(@DestinationVariable String roomId) {
-        ChatMessageEntity chatMessageEntity = new ChatMessageEntity();
-        chatMessageEntity.setContent("Welcome to room " + roomId);
-        return chatMessageEntity;
+    @SubscribeMapping("/{roomId}/queue/messages")
+    public ChatRoomEntity sendOneTimeMessage(@DestinationVariable String roomId, @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+        String nickName = String.valueOf(sessionAttributes.get("nickName"));
+        if(authService.isMemberOfChat(nickName, roomId)){
+            return chatRoomService.getChatRoom(roomId);
+        }
+        log.info("user is not member of chat room");
+        return null;
     }
 
 
+
+
+    //@SubscribeMapping("/*/queue/messages")
+    //public List<ChatMessageEntity> sendOneTimeMessage() {
+        //List<ChatMessageEntity> chatMessageEntities = chatService.findAllByReceiver();
+        //log.info("Messages sent: " + chatMessageEntities.size());
+      //  return chatMessageEntities;
+    //}
 }

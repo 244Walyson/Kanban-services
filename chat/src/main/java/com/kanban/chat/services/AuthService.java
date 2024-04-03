@@ -20,9 +20,9 @@ public class AuthService {
     private CustomUserUtil customUserUtil;
 
     public boolean isMemberOfChat(String nickName, String chatRoomId) {
-        log.info("Checking if user is member of chat" + nickName + " " + chatRoomId);
-        ChatRoomEntity chatRoomEntity = chatRoomRepository.findById(chatRoomId).get();
-        log.info("Chat room entity: " + chatRoomEntity.toString());
-        return true;
+        log.info("Checking if user is member of chat " + nickName + " " + chatRoomId);
+        boolean isMember = chatRoomRepository.checkIfUserIsMember(chatRoomId, nickName);
+        log.info(String.valueOf(isMember));
+        return isMember;
     }
 }

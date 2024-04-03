@@ -12,20 +12,18 @@ public class ChatMessageEntity {
     @Id
     private String id;
     private UserEmbedded sender;
-    private UserEmbedded receiver;
     private String content;
-    private Instant timestamp;
+    private Instant instant;
     private MessageStatus status;
 
     public ChatMessageEntity() {
     }
 
-    public ChatMessageEntity(String id, UserEmbedded sender, UserEmbedded receiver, String content, Instant timestamp, MessageStatus status) {
+    public ChatMessageEntity(String id, UserEmbedded sender, String content, Instant instant, MessageStatus status) {
         this.id = id;
         this.sender = sender;
-        this.receiver = receiver;
         this.content = content;
-        this.timestamp = timestamp;
+        this.instant = instant;
         this.status = status;
     }
 
@@ -45,14 +43,6 @@ public class ChatMessageEntity {
         this.sender = sender;
     }
 
-    public UserEmbedded getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(UserEmbedded receiver) {
-        this.receiver = receiver;
-    }
-
     public String getContent() {
         return content;
     }
@@ -61,19 +51,19 @@ public class ChatMessageEntity {
         this.content = content;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public MessageStatus getStatus() {
         return status;
     }
 
     public void setStatus(MessageStatus status) {
         this.status = status;
+    }
+
+    public Instant getInstant() {
+        return instant;
+    }
+
+    public void setInstant(Instant instant) {
+        this.instant = instant;
     }
 }

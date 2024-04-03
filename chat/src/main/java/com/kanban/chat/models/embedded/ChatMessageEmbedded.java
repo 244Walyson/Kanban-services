@@ -26,7 +26,7 @@ public class ChatMessageEmbedded {
         this.id = entity.getId();
         this.sender = entity.getSender();
         this.content = entity.getContent();
-        this.sendAt = entity.getTimestamp();
+        this.sendAt = entity.getInstant();
     }
     public String getId() {
         return id;
