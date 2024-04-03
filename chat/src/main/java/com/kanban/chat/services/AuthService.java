@@ -2,6 +2,7 @@ package com.kanban.chat.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
 import com.kanban.chat.utils.CustomUserUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,10 @@ public class AuthService {
     @Autowired
     private CustomUserUtil customUserUtil;
 
-    public boolean isMemberOfChat() throws JsonProcessingException {
-        String username = customUserUtil.getLoggedUsername();
-        return chatRoomRepository.checkIfUserIsMember(username);
+    public boolean isMemberOfChat(String nickName, String chatRoomId) {
+        log.info("Checking if user is member of chat" + nickName + " " + chatRoomId);
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.findById(chatRoomId).get();
+        log.info("Chat room entity: " + chatRoomEntity.toString());
+        return true;
     }
 }

@@ -8,21 +8,21 @@ public class UserEmbedded {
 
     private String id;
     private String name;
-    private String username;
+    private String nickName;
 
     public UserEmbedded() {
     }
 
-    public UserEmbedded(String id, String name, String username) {
+    public UserEmbedded(String id, String name, String nickName) {
         this.id = id;
         this.name = name;
-        this.username = username;
+        this.nickName = nickName;
     }
 
     public UserEmbedded(UserEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.username = entity.getUsername();
+        this.nickName = entity.getNickName();
     }
 
     public String getId() {
@@ -41,12 +41,12 @@ public class UserEmbedded {
         this.name = name;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setnickName(String username) {
+        this.nickName = username;
     }
 
 }

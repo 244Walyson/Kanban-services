@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.Query;
 
 public interface ChatRoomRepository extends MongoRepository<ChatRoomEntity, String> {
 
-    @Query(value = "{'users.username': ?0}", exists = true)
-    boolean checkIfUserIsMember(String username);
+    @Query(value = "{ '_id' : ?1, 'members.nickname' : ?0 }")
+    ChatRoomEntity checkIfUserIsMember(String username, String chatRoomId);
 }

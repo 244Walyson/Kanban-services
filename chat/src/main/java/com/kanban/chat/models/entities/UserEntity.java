@@ -10,17 +10,17 @@ public class UserEntity {
 
   private String id;
   private String name;
-  private String username;
+  private String nickName;
   private String email;
   private List<ChatRoomEntity> chatRoomEntity = new ArrayList<>();
 
   public UserEntity() {
   }
 
-    public UserEntity(String id, String name, String username, String email) {
+    public UserEntity(String id, String name, String nickName, String email) {
         this.id = id;
         this.name = name;
-        this.username = username;
+        this.nickName = nickName;
         this.email = email;
     }
 
@@ -40,12 +40,12 @@ public class UserEntity {
     this.name = name;
   }
 
-  public String getUsername() {
-    return username;
+  public String getNickName() {
+    return nickName;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
   }
 
   public String getEmail() {

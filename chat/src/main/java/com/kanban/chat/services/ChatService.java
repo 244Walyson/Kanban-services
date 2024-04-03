@@ -29,7 +29,7 @@ public class ChatService {
     @Transactional
     protected UserEntity authenticade(){
         try{
-            String username = customUserUtil.getLoggedUsername();
+            //String username = customUserUtil.getLoggedUsername();
             return null;
         }
         catch (Exception e){

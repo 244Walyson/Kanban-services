@@ -13,7 +13,7 @@ public class ChatRoomEntity {
 
     private String id;
     private String name;
-    private List<UserEmbedded> users = new ArrayList<>();
+    private List<UserEmbedded> members = new ArrayList<>();
     private List<ChatMessageEmbedded> messages = new ArrayList<>();
 
     public ChatRoomEntity() {
@@ -41,11 +41,11 @@ public class ChatRoomEntity {
     }
 
     public List<UserEmbedded> getUsers() {
-        return users;
+        return members;
     }
 
     public void addUser(UserEmbedded user) {
-        this.users.add(user);
+        this.members.add(user);
     }
 
     public List<ChatMessageEmbedded> getMessages() {

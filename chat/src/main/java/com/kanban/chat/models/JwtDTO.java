@@ -12,15 +12,7 @@ import lombok.NoArgsConstructor;
 public class JwtDTO {
 
     private int id;
-    private String name;
+    private String nickName;
     private String email;
 
-    public static JwtDTO getUser(Claims claims){
-        try {
-            return new ObjectMapper().convertValue(claims.get("authUser"), JwtDTO.class);
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
