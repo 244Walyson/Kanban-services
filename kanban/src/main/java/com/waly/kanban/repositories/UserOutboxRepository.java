@@ -11,4 +11,5 @@ import java.util.Optional;
 
 public interface UserOutboxRepository extends JpaRepository<UserOutbox, Long> {
 
+    Optional<UserOutbox> findByTeamId(Long teamId);
 }

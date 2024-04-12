@@ -58,6 +58,9 @@ public class TeamService {
         UserTeam userTeam = saveUserTeam(team);
         team.addUserTeam(userTeam);
         TeamOutbox teamOutbox = new TeamOutbox(team);
+        UserOutbox userOutbox = new UserOutbox(userService.authenticade());
+        userOutbox.setTeamId(team.getId());
+        userOutboxRepository.save(userOutbox);
         teamOutboxRepository.save(teamOutbox);
         return new TeamDTO(team);
     }
