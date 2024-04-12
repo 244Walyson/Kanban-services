@@ -51,7 +51,7 @@ public class TokenValidator {
                 claimsSet = jwtProcessor.process(token, ctx);
 
                 System.out.println(claimsSet.toJSONObject());
-                String nickName = claimsSet.getClaim("nickname").toString();
+                String nickName = claimsSet.getClaim("nick").toString();
 
                 return nickName;
             } catch (ParseException | BadJOSEException e) {

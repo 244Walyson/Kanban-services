@@ -22,17 +22,19 @@ public class Team {
     private Set<Board> boards = new HashSet<>();
     private Integer totalCollaborators;
     private Integer totalBoards;
+    private String imgUrl;
 
     public Team() {
         this.totalBoards = 0;
         this.totalCollaborators = 1;
     }
 
-    public Team(Long id, String name, String occupationArea, String description) {
+    public Team(Long id, String name, String occupationArea, String description, String imgUrl) {
         this.id = id;
         this.name = name;
         this.occupationArea = occupationArea;
         this.description = description;
+        this.imgUrl = imgUrl;
     }
 
     public Long getId() {
@@ -41,6 +43,14 @@ public class Team {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getName() {

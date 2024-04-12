@@ -10,8 +10,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @Query("""
             SELECT obj FROM Team obj
-            JOIN FETCH obj.collaborators c
-            JOIN FETCH obj.boards b
+            LEFT JOIN FETCH obj.collaborators c
+            LEFT JOIN FETCH obj.boards b
             WHERE LOWER(obj.name) LIKE LOWER(CONCAT('%', :query ,'%')) OR
             LOWER(obj.description) LIKE LOWER(CONCAT('%', :query ,'%')) OR
             LOWER(obj.occupationArea) LIKE LOWER(CONCAT('%', :query ,'%'))

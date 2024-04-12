@@ -45,7 +45,7 @@ public class TestConfig {
     ChatNotificationEntity notification1 = new ChatNotificationEntity(null, user1, user2, "notification");
     ChatNotificationEntity notification2 = new ChatNotificationEntity(null, user2, user1, "notification");
 
-    ChatRoomEntity chatRoom = new ChatRoomEntity(null, "chat2");
+    ChatRoomEntity chatRoom = new ChatRoomEntity(null, "team1", "team.img.com", "chat2");
     chatRoom.addMember(new UserEmbedded(user1));
     chatRoom.addMember(new UserEmbedded(user2));
     chatRoom.addMessage(new ChatMessageEmbedded(message1));

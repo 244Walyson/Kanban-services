@@ -13,15 +13,19 @@ public class ChatRoomEntity {
 
     private String id;
     private String roomName;
+    private String imgUrl;
+    private String description;
     private List<UserEmbedded> members = new ArrayList<>();
     private List<ChatMessageEmbedded> messages = new ArrayList<>();
 
     public ChatRoomEntity() {
     }
 
-    public ChatRoomEntity(String id, String roomName) {
+    public ChatRoomEntity(String id, String roomName, String imgUrl, String description) {
         this.id = id;
         this.roomName = roomName;
+        this.imgUrl = imgUrl;
+        this.description = description;
     }
 
     public String getId() {
@@ -54,5 +58,21 @@ public class ChatRoomEntity {
 
     public void addMessage(ChatMessageEmbedded message) {
         this.messages.add(message);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }

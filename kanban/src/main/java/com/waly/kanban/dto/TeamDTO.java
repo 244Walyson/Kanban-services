@@ -26,6 +26,7 @@ public class TeamDTO {
     private Integer totalBoards;
     private List<UserMinDTO> collaborators = new ArrayList<>();
     private List<BoardMinDTO> boards = new ArrayList<>();
+    private String imgUrl;
 
     public TeamDTO(Team team) {
         this.id = team.getId();
@@ -36,6 +37,7 @@ public class TeamDTO {
         this.boards = team.getBoards().stream().map(x -> new BoardMinDTO(x)).toList();
         this.totalCollaborators = team.getTotalCollaborators();
         this.totalBoards = team.getTotalBoards();
+        this.imgUrl = team.getImgUrl();
     }
 
 }
