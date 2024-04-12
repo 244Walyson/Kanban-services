@@ -1,5 +1,6 @@
 package com.waly.kanban.controllers;
 
+import com.waly.kanban.dto.AddUserDTO;
 import com.waly.kanban.dto.TeamDTO;
 import com.waly.kanban.dto.TeamInsertDTO;
 import com.waly.kanban.services.TeamService;
@@ -52,4 +53,11 @@ public class TeamController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("@authAdmin.isAdminOfTeam(#teamId)")
+    @PostMapping(value = "add/{teamId}")
+    public ResponseEntity<TeamDTO> addUserToTeam(@PathVariable Long teamId, @RequestBody AddUserDTO addUserDTO){
+        return ResponseEntity.ok().body(service.addUserToTeam(teamId, addUserDTO));
+    }
+
 }

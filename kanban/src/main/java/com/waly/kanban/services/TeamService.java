@@ -1,17 +1,10 @@
 package com.waly.kanban.services;
 
-import com.waly.kanban.dto.CardInsertDTO;
-import com.waly.kanban.dto.TeamDTO;
-import com.waly.kanban.dto.TeamInsertDTO;
-import com.waly.kanban.dto.UserMinDTO;
-import com.waly.kanban.entities.Team;
-import com.waly.kanban.entities.User;
-import com.waly.kanban.entities.UserTeam;
-import com.waly.kanban.entities.UserTeamPK;
+import com.waly.kanban.dto.*;
+import com.waly.kanban.entities.*;
 import com.waly.kanban.exceptions.DatabaseException;
 import com.waly.kanban.exceptions.NotFoundException;
-import com.waly.kanban.repositories.TeamRepository;
-import com.waly.kanban.repositories.UserTeamRepository;
+import com.waly.kanban.repositories.*;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +26,15 @@ public class TeamService {
     @Autowired
     private UserTeamRepository userTeamRepository;
     @Autowired
+    private TeamOutboxRepository teamOutboxRepository;
+    @Autowired
+    private UserRepository  userRepository;
+    @Autowired
     private UserService userService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserOutboxRepository userOutboxRepository;
 
     @Transactional(readOnly = true)
     public Page<TeamDTO> findAll(String query, Pageable pageable) {
@@ -58,6 +57,8 @@ public class TeamService {
         team = repository.save(team);
         UserTeam userTeam = saveUserTeam(team);
         team.addUserTeam(userTeam);
+        TeamOutbox teamOutbox = new TeamOutbox(team);
+        teamOutboxRepository.save(teamOutbox);
         return new TeamDTO(team);
     }
 
@@ -65,6 +66,28 @@ public class TeamService {
         UserTeamPK pk = new UserTeamPK(userService.authenticade(), team);
         UserTeam userTeam = new UserTeam(pk, true);
         return userTeamRepository.save(userTeam);
+    }
+
+    @Transactional
+    public TeamDTO addUserToTeam(Long teamId, AddUserDTO addUserDTO) {
+        Team team = repository.findById(teamId).orElseThrow(() -> {
+            throw new NotFoundException("Equipe não encontrada para o id: " + teamId);
+        });
+        User user = userRepository.findById(addUserDTO.getUserId()).orElseThrow(() -> {
+            throw new NotFoundException("Usuário não encontrado para o id: " + addUserDTO.getUserId());
+        });
+        UserTeamPK pk = new UserTeamPK(user, team);
+        if(userTeamRepository.existsById(pk)){
+            throw new DatabaseException("Usuário já pertence a equipe");
+        }
+        UserTeam userTeam = new UserTeam(pk, addUserDTO.getIsAdmin());
+        userTeam = userTeamRepository.save(userTeam);
+        team.addUserTeam(userTeam);
+        team = repository.save(team);
+        UserOutbox userOutbox = new UserOutbox(user);
+        userOutbox.setTeamId(teamId);
+        userOutboxRepository.save(userOutbox);
+        return new TeamDTO(team);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

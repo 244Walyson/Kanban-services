@@ -15,6 +15,7 @@ public class Team {
     private Long id;
     private String name;
     private String occupationArea;
+    @Column(columnDefinition = "TEXT")
     private String description;
     @OneToMany(mappedBy = "id.team")
     private Set<UserTeam> collaborators = new HashSet<>();
