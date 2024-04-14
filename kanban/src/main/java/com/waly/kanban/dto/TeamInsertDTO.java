@@ -16,4 +16,5 @@ public class TeamInsertDTO {
     private String name;
     private String occupationArea;
     private String description;
+    private String imgUrl;
 }

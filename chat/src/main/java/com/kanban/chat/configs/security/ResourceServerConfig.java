@@ -30,6 +30,8 @@ public class ResourceServerConfig {
 
 	@Value("${cors.origins}")
 	private String corsOrigins;
+	@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+	private String BASE_JWK_SET_URL;
 
 	//@Bean
 	//@Profile("test")
@@ -66,7 +68,7 @@ public class ResourceServerConfig {
 
 	@Bean
 	public JwtDecoder jwtDecoder() throws JsonProcessingException {
-		return NimbusJwtDecoder.withJwkSetUri("http://localhost:8081/.well-known/jwks.json").build();
+		return NimbusJwtDecoder.withJwkSetUri(BASE_JWK_SET_URL).build();
 	}
 
 	@Bean

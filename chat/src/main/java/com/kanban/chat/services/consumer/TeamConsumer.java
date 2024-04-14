@@ -39,6 +39,7 @@ public class TeamConsumer {
             JsonNode jsonNode = objectMapper.readTree(message);
             JsonNode payloadNode = jsonNode.get("payload");
             TeamDTO teamDTO = objectMapper.convertValue(payloadNode, TeamDTO.class);
+            teamDTO.setImgUrl(payloadNode.get("img_url").asText());
 
             if(chatRoomRepository.existsById(teamDTO.getId().toString())) {
                 log.info("Team already exists in the database");

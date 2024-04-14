@@ -11,6 +11,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -20,8 +21,12 @@ import java.text.ParseException;
 @Component
 public class TokenValidator {
 
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String BASE_JWK_SET_URL = "http://kanban:9090/.well-known/jwks.json";
+
     public String validateAuthentication(String token){
         log.info(token);
+        log.info(BASE_JWK_SET_URL);
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -29,7 +34,7 @@ public class TokenValidator {
 
 
             JWKSource<SecurityContext> keySource = JWKSourceBuilder
-                    .create(new URL("http://localhost:8081/.well-known/jwks.json"))
+                    .create(new URL(BASE_JWK_SET_URL))
                     .retrying(true)
                     .build();
 

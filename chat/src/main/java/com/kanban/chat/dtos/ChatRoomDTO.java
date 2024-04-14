@@ -24,7 +24,9 @@ public class ChatRoomDTO {
         this.id = chatRoomEntity.getId();
         this.roomName = chatRoomEntity.getRoomName();
         this.imgUrl = chatRoomEntity.getImgUrl();
-        this.latestMessage = chatRoomEntity.getMessages().get(chatRoomEntity.getMessages().size() - 1).getContent();
+        if(chatRoomEntity.getMessages().size() > 0){
+            this.latestMessage = chatRoomEntity.getMessages().get(chatRoomEntity.getMessages().size() - 1).getContent();
+        }
     }
 
     public String getId() {
