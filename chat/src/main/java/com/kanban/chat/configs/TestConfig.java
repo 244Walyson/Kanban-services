@@ -37,7 +37,7 @@ public class TestConfig {
 
 
     UserEntity user1 = new UserEntity(null, "Maria Brown", "maria2543", "maria@gmail.com", "https://randomuser.me/api/portraits");
-    UserEntity user2 = new UserEntity(null, "Alex Green", "alex244", "alex@gmail.com", "https://randomuser.me/api/portraits");
+    UserEntity user2 = new UserEntity(null, "Alex Green", "alex321", "alex@gmail.com", "https://randomuser.me/api/portraits");
 
     ChatMessageEntity message1 = new ChatMessageEntity(null, new UserEmbedded(user1), "Hello", Instant.now(), MessageStatus.READ);
     ChatMessageEntity message2 = new ChatMessageEntity(null, new UserEmbedded(user2), "Hi",  Instant.now(), MessageStatus.DELIVERED);

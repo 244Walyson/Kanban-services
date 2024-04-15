@@ -1,6 +1,7 @@
 package com.waly.kanban.services;
 
 import com.waly.kanban.dto.UserDTO;
+import com.waly.kanban.dto.UserLoggedDTO;
 import com.waly.kanban.entities.Role;
 import com.waly.kanban.entities.User;
 import com.waly.kanban.projections.UserDetailsProjection;
@@ -54,9 +55,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO getMe(){
+    public UserLoggedDTO getMe(){
         User user = authenticade();
-        return new UserDTO(user);
+        return new UserLoggedDTO(user);
     }
 
     @Transactional
