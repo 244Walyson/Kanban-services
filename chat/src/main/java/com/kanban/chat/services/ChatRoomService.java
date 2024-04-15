@@ -50,4 +50,8 @@ public class ChatRoomService {
         List<ChatRoomDTO> chatRooms = chatRoomRepository.findAll().stream().map(ChatRoomDTO::new).toList();
         return chatRooms;
     }
+
+    public List<ChatRoomEntity> findAllByUserNick(String nickName) {
+        return chatRoomRepository.findAllByMembersNickName(nickName);
+    }
 }

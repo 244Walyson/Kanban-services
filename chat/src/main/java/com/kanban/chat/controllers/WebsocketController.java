@@ -74,7 +74,12 @@ public class WebsocketController {
         return null;
     }
 
-
+    @SubscribeMapping("/chats")
+    public List<ChatRoomEntity> sendOneTimeMessage(@Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+        String nickName = String.valueOf(sessionAttributes.get("nickName"));
+        log.info("Messages sent: " + chatRoomService.findAllByUserNick(nickName).size());
+        return chatRoomService.findAllByUserNick(nickName);
+    }
 
 
     //@SubscribeMapping("/*/queue/messages")
