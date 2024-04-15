@@ -12,7 +12,8 @@ INSERT INTO tb_card (title, description, card_position, board_id, done) VALUES (
 
 INSERT INTO tb_user( name, email, nickname, password, bio, img_url) VALUES ('user test', 'test@gmail.com', 'test1232', '$2a$10$4vet6vWuI78kQf9HcbTMYeuN1eM6yKeBwcpa7dsYdc0ARQypKbVhm', 'biografia', 'https://www.cambe.pr.leg.br/anonimo.jpg/image_view_fullscreen');
 INSERT INTO tb_user (name, email, nickname, password, bio, img_url) VALUES ('Maria Brown', 'maria@gmail.com', 'maria2543', '$2a$10$4vet6vWuI78kQf9HcbTMYeuN1eM6yKeBwcpa7dsYdc0ARQypKbVhm', '2001-07-25', 'https://www.cambe.pr.leg.br/anonimo.jpg/image_view_fullscreen');
-INSERT INTO tb_user (name, email, nickname, password, bio, img_url) VALUES ('Alex Green', 'alex@gmail.com', 'alex244', '$2a$10$4vet6vWuI78kQf9HcbTMYeuN1eM6yKeBwcpa7dsYdc0ARQypKbVhm', '1987-12-13', 'https://www.cambe.pr.leg.br/anonimo.jpg/image_view_fullscreen');
+INSERT INTO tb_user (name, email, nickname, password, bio, img_url) VALUES ('Joao Grey', 'joao@gmail.com', 'joao123', '$2a$10$4vet6vWuI78kQf9HcbTMYeuN1eM6yKeBwcpa7dsYdc0ARQypKbVhm', '2001-07-25', 'https://www.cambe.pr.leg.br/anonimo.jpg/image_view_fullscreen');
+INSERT INTO tb_user (name, email, nickname, password, bio, img_url) VALUES ('Alex Grenn', 'alex@gmail.com', 'alex321', '$2a$10$4vet6vWuI78kQf9HcbTMYeuN1eM6yKeBwcpa7dsYdc0ARQypKbVhm', '2001-07-25', 'https://www.cambe.pr.leg.br/anonimo.jpg/image_view_fullscreen');
 
 INSERT INTO tb_role (authority) VALUES ('ROLE_SYS_ADMIN');
 INSERT INTO tb_role (authority) VALUES ('ROLE_MEMBER');
