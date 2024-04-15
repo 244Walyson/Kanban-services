@@ -30,15 +30,16 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomEntity saveMessage(ChatMessageEntity message, String roomId, String sender) {
+    public ChatMessageEntity saveMessage(ChatMessageEntity message, String roomId, String sender) {
         ChatRoomEntity chatRoom = chatRoomRepository.findById(roomId).get();
         UserEntity user = userService.getLoggedUser(sender);
         message.setSender(new UserEmbedded(user));
+        message.setInstant(Instant.now());
         ChatMessageEmbedded chatMessageEmbedded = new ChatMessageEmbedded(message);
-        chatMessageEmbedded.setSendAt(Instant.now());
         chatRoom.addMessage(chatMessageEmbedded);
         log.info("SERVICE");
-        return chatRoomRepository.save(chatRoom);
+        chatRoomRepository.save(chatRoom);
+        return message;
     }
 
     @Transactional

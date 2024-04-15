@@ -16,7 +16,7 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    
+
     @GetMapping("/me")
     public ResponseEntity<UserLoggedDTO> getMe(){
         return ResponseEntity.ok(service.getMe());

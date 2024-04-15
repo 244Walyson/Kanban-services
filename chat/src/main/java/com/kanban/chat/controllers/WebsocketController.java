@@ -8,6 +8,7 @@ import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.services.AuthService;
 import com.kanban.chat.services.ChatRoomService;
 import com.kanban.chat.services.ChatService;
+import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +29,19 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-
+@AllArgsConstructor
 @Slf4j
 @Controller
 public class WebsocketController {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-    @Autowired
-    private ChatService chatService;
-    @Autowired
-    private ChatRoomService chatRoomService;
-    @Autowired
-    private AuthService authService;
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    private final ChatService chatService;
+
+    private final ChatRoomService chatRoomService;
+
+    private final AuthService authService;
 
 
     @MessageMapping("/chat")
@@ -54,14 +55,17 @@ public class WebsocketController {
     @MessageMapping("/chat/{roomId}")
     public void processMessage(@Payload ChatMessageEntity chatMessage,
                                @DestinationVariable String roomId,
-                               @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+                               @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) throws JsonProcessingException {
 
        String nickName = String.valueOf(sessionAttributes.get("nickName"));
 
-        if(authService.isMemberOfChat(nickName, roomId)){
-            messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", chatMessage);
-            chatRoomService.saveMessage(chatMessage, roomId, nickName);
+        if(!authService.isMemberOfChat(nickName, roomId)){
+            return;
         }
+        ChatMessageEntity msgEntity = chatRoomService.saveMessage(chatMessage, roomId, nickName);
+        messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", chatMessage);
+
+
     }
 
     @SubscribeMapping("/{roomId}/queue/messages")
