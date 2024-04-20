@@ -1,6 +1,7 @@
 package com.example.chatui.views
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -18,6 +19,8 @@ import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
 import com.example.chatui.models.Team
 import com.example.chatui.notification.MessageNotification
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -44,35 +47,46 @@ class ChatRoomActivity : AppCompatActivity() {
 
         MessageNotification(this).createNotificationChannel()
 
-        binding.backButton.setOnClickListener {
-
-            with(NotificationManagerCompat.from(this)) {
-                val notification = NotificationCompat.Builder(this@ChatRoomActivity, "com.example.chatui")
-                    .setSmallIcon(R.drawable.icon_google)
-                    .setContentTitle("ChatUI")
-                    .setContentText("Welcome to ChatUI")
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setAutoCancel(true)
-                    .build()
-
-                if (ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return@setOnClickListener
-                }
-                Log.i("NOTIFICATIONNNNNNNN", "SENDING NOTIFICATION $notification")
-                notify(1, notification)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
             }
-        }
+            // Get new FCM registration token
+            val token = task.result
+            Log.e("myToken", "" + token)
+        })
+
+//        binding.backButton.setOnClickListener {
+//
+//            with(NotificationManagerCompat.from(this)) {
+//                val notification = NotificationCompat.Builder(this@ChatRoomActivity, "com.example.chatui")
+//                    .setSmallIcon(R.drawable.icon_google)
+//                    .setContentTitle("ChatUI")
+//                    .setContentText("Welcome to ChatUI")
+//                    .setPriority(NotificationCompat.PRIORITY_MAX)
+//                    .setAutoCancel(true)
+//                    .build()
+//
+//                if (ActivityCompat.checkSelfPermission(
+//                        applicationContext,
+//                        Manifest.permission.POST_NOTIFICATIONS
+//                    ) != PackageManager.PERMISSION_GRANTED
+//                ) {
+//                    // TODO: Consider calling
+//                    //    ActivityCompat#requestPermissions
+//                    // here to request the missing permissions, and then overriding
+//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                    //                                          int[] grantResults)
+//                    // to handle the case where the user grants the permission. See the documentation
+//                    // for ActivityCompat#requestPermissions for more details.
+//                    return@setOnClickListener
+//                }
+//                Log.i("NOTIFICATIONNNNNNNN", "SENDING NOTIFICATION $notification")
+//                Thread.sleep(4000)
+//                notify(1, notification)
+//            }
+//        }
 
 //        binding.backButton.setOnClickListener {
 //            Intent(this, LoginActivity::class.java).also {

@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.chatui.R
 import com.example.chatui.databinding.ActivitySplashScreenBinding
+import com.example.chatui.notification.MessageNotification
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,6 +24,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         if(verifyTokenExpiration()) {
             Intent(this, ChatRoomActivity::class.java).also {
