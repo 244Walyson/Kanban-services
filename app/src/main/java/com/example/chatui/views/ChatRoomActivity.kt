@@ -1,17 +1,23 @@
 package com.example.chatui.views
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
 import com.example.chatui.models.Team
+import com.example.chatui.notification.MessageNotification
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -36,12 +42,43 @@ class ChatRoomActivity : AppCompatActivity() {
 
         websocketConnect()
 
+        MessageNotification(this).createNotificationChannel()
 
         binding.backButton.setOnClickListener {
-            Intent(this, LoginActivity::class.java).also {
-                startActivity(it)
+
+            with(NotificationManagerCompat.from(this)) {
+                val notification = NotificationCompat.Builder(this@ChatRoomActivity, "com.example.chatui")
+                    .setSmallIcon(R.drawable.icon_google)
+                    .setContentTitle("ChatUI")
+                    .setContentText("Welcome to ChatUI")
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setAutoCancel(true)
+                    .build()
+
+                if (ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return@setOnClickListener
+                }
+                Log.i("NOTIFICATIONNNNNNNN", "SENDING NOTIFICATION $notification")
+                notify(1, notification)
             }
         }
+
+//        binding.backButton.setOnClickListener {
+//            Intent(this, LoginActivity::class.java).also {
+//                startActivity(it)
+//            }
+//        }
     }
 
     fun websocketConnect() {
@@ -104,4 +141,6 @@ class ChatRoomActivity : AppCompatActivity() {
 
         }
     }
+
+
 }

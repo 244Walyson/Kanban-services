@@ -35,6 +35,10 @@ class SplashScreenActivity : AppCompatActivity() {
             startActivity(it)
             finish()
         }
+        Intent(this, ChatRoomActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
     }
 
     fun verifyTokenExpiration() : Boolean {
