@@ -36,8 +36,9 @@ class ChatRoomActivity : AppCompatActivity() {
 
         websocketConnect()
 
+
         binding.backButton.setOnClickListener {
-            Intent(this, ChatActivity::class.java).also {
+            Intent(this, LoginActivity::class.java).also {
                 startActivity(it)
             }
         }

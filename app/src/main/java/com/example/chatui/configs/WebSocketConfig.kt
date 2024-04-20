@@ -13,7 +13,7 @@ class WebSocketConfig(private val context: Context) {
 
     private val sessionManager = SessionManager(context)
 
-    private val BASE_URL = "ws://10.0.2.2:8080/connect"
+    private val BASE_URL = "ws://10.0.2.2:8090/connect"
     private val token = sessionManager.accessToken
 
     val client = StompClient(KtorWebSocketClient())

@@ -13,18 +13,28 @@ import com.example.chatui.models.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var session: SessionManager
     private val CLIENT_ID = "myclientid"
     private val CLIENT_SECRET = "myclientsecret"
     private val GRANT_TYPE = "password"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        session = SessionManager(applicationContext)
+
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -47,9 +57,10 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val loginResponse = response.body()
-                        saveToken(loginResponse?.accessToken.toString())
+                        saveToken(loginResponse?.accessToken.toString(), loginResponse!!.expiresIn)
                         saveLogedUser()
                         startActivity(Intent(this@LoginActivity, ChatRoomActivity::class.java))
+                        finish()
                     }
                 }
 
@@ -59,13 +70,12 @@ class LoginActivity : AppCompatActivity() {
             })
 
     }
-    fun saveToken(token: String) {
-        val session = SessionManager(this)
+    fun saveToken(token: String, expiresIn: Long) {
         session.accessToken = "Bearer $token"
+        session.accessTokenExpiration = Date().time.plus(expiresIn * 1000).toString()
     }
 
     fun saveLogedUser() {
-        val session = SessionManager(this)
         val service = NetworkUtils.createServiceUser()
         val accessToken = session.accessToken
 

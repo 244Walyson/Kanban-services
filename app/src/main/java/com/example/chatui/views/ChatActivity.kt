@@ -3,6 +3,7 @@ package com.example.chatui.views
 import SessionManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View.FOCUS_DOWN
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,12 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        val scrollView = binding.chatScrollView
+
+        scrollView.post {
+            scrollView.fullScroll(FOCUS_DOWN)
+        }
 
         channelSubscribe()
 

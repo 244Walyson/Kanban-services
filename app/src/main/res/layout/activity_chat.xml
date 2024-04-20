@@ -27,11 +27,13 @@
             android:orientation="vertical">
 
             <ScrollView
+                android:id="@+id/chat_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingHorizontal="2dp"
-                android:background="#951C1C1C">
+                android:background="#951C1C1C"
+                android:fillViewport="true">
                 <LinearLayout
                     android:id="@+id/chat_container"
                     android:layout_width="match_parent"
@@ -67,7 +69,7 @@
                         android:minHeight="40dp"
                         android:hint="Digite uma mensagem..."
                         android:background="@null"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/gray_primary"
                         android:paddingHorizontal="10dp"

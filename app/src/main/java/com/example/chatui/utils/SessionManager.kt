@@ -10,6 +10,7 @@ class SessionManager(context: Context) {
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_USER_LOGGED_NICKNAME = "user_logged_nickname"
+        private const val KEY_ACCESS_TOKEN_EXPIRATION = "access_token_expiration"
     }
 
 
@@ -17,6 +18,13 @@ class SessionManager(context: Context) {
         get() = sharedPreferences.getString(KEY_ACCESS_TOKEN, null)
         set(value) {
             editor.putString(KEY_ACCESS_TOKEN, value)
+            editor.apply()
+        }
+
+    var accessTokenExpiration: String?
+        get() = sharedPreferences.getString(KEY_ACCESS_TOKEN_EXPIRATION, null)
+        set(value) {
+            editor.putString(KEY_ACCESS_TOKEN_EXPIRATION, value)
             editor.apply()
         }
 
