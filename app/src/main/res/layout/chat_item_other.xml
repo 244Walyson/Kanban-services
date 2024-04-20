@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="40dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/senderImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/color5"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/Circle"
+        android:layout_gravity="bottom"
+        android:layout_marginRight="5dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_chat_shape"
+        android:backgroundTint="@color/dark_blue"
+        android:layout_gravity="start"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Walyson"
+            android:textSize="15sp"
+            android:fontFamily="@font/gordita_medium"
+            android:textColor="#009688"/>
+        <TextView
+            android:id="@+id/message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="Loren ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+    </LinearLayout>
+</LinearLayout>

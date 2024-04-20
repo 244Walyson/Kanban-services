@@ -1,0 +1,80 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:paddingVertical="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/image_test"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="7dp"
+                app:shapeAppearanceOverlay="@style/Circle" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="vertical"
+                android:layout_gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fulano de tal"
+                            android:textSize="18sp"
+                            android:fontFamily="@font/gordita_medium"
+                            android:textColor="@color/black"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\@fulano2435"
+                        android:textColor="@color/gray_quaternary"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/gordita_medium"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_marginTop="-5dp"
+                    android:text="Desenvolvedor Backend"
+                    android:textColor="@color/gray_quaternary"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="350dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/gray_primary"/>
+
+    </LinearLayout>
+
+</LinearLayout>

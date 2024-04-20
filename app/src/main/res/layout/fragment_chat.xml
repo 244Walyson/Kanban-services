@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.ChatFragment"
+    android:background="@color/black_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_arrow_left"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="20dp"
+                android:paddingHorizontal="20dp"
+                android:orientation="horizontal"
+                android:backgroundTint="@color/black_tertiary"
+                android:background="@drawable/input_message_shape">
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:textColorHint="@color/gray_tertiary"
+                    android:textColor="@color/white"
+                    android:hint="Pesquisar..."/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icon_search_white"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+       <HorizontalScrollView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:paddingVertical="20dp"
+               android:paddingHorizontal="10dp">
+               <include layout="@layout/image_status"/>
+               <include layout="@layout/image_status"/>
+               <include layout="@layout/image_status"/>
+               <include layout="@layout/image_status"/>
+               <include layout="@layout/image_status"/>
+               <include layout="@layout/image_status"/>
+           </LinearLayout>
+       </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingHorizontal="50dp"
+        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Todos"
+            android:textSize="15dp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Equipes"
+            android:textSize="15dp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/gray_tertiary"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contatos"
+            android:textSize="15dp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/gray_tertiary"/>
+    </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+                <include layout="@layout/card_chat_item"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

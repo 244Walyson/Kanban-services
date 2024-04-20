@@ -1,0 +1,56 @@
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="170dp"
+    android:orientation="vertical"
+    android:background="@drawable/card_group_shape"
+    android:minHeight="170dp"
+    android:minWidth="150dp"
+    android:layout_marginRight="10dp"
+    android:backgroundTint="@color/black_tertiary"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ImageView -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:shapeAppearanceOverlay="@style/RoundedTop"
+        android:src="@drawable/color4"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_weight="1" />
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="-20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hexagon_shape"
+        app:tint="@color/black" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Backend"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:fontFamily="@font/poppins_semibold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:text="Desenvolvimento Do Chat Kanban"
+            android:textColor="@color/gray_quaternary"
+            android:textSize="12dp"
+            android:fontFamily="@font/poppins"/>
+    </LinearLayout>
+
+</LinearLayout>
