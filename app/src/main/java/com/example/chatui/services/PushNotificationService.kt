@@ -33,8 +33,11 @@ class PushNotificationService: FirebaseMessagingService() {
     private fun saveToken(token: String) {
         val service = NetworkUtils.createServiceSaveToken()
         val tokenToSave: FcmToken = FcmToken(token)
+        val accessToken = session.accessToken ?: ""
 
-        service.saveToken(tokenToSave, session.accessToken!!)
+        if(accessToken.isEmpty()) return@saveToken
+
+        service.saveToken(tokenToSave, accessToken)
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
