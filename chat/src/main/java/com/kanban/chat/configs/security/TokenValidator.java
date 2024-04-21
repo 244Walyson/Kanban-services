@@ -22,9 +22,16 @@ import java.text.ParseException;
 public class TokenValidator {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
-    private static  String BASE_JWK_SET_URL = "http://kanban:9090/.well-known/jwks.json";
+    private String BASE_JWK_SET_URL;
 
-    public static String validateAuthentication(String token){
+    public TokenValidator() {
+    }
+
+    public TokenValidator(String BASE_JWK_SET_URL) {
+        this.BASE_JWK_SET_URL = BASE_JWK_SET_URL;
+    }
+
+    public String validateAuthentication(String token){
 
         if(token == null || token.isEmpty()){
             throw new RuntimeException("Token is null or empty");
