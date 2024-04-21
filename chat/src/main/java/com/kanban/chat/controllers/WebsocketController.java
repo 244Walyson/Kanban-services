@@ -63,8 +63,7 @@ public class WebsocketController {
             return;
         }
         ChatMessageEntity msgEntity = chatRoomService.saveMessage(chatMessage, roomId, nickName);
-        messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", chatMessage);
-
+        messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", msgEntity);
 
     }
 

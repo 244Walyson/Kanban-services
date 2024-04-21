@@ -8,16 +8,26 @@ public class ChatNotificationEntity {
   private String id;
   private UserEntity sender;
   private UserEntity receiver;
+  private String title;
   private String message;
 
   public ChatNotificationEntity() {
   }
 
-  public ChatNotificationEntity(String id, UserEntity sender, UserEntity receiver, String message) {
+  public ChatNotificationEntity(String id, UserEntity sender, UserEntity receiver, String message, String title) {
     this.id = id;
     this.sender = sender;
     this.receiver = receiver;
     this.message = message;
+    this.title = title;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getId() {
