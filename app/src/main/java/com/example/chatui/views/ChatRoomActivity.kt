@@ -1,22 +1,19 @@
 package com.example.chatui.views
 
-import android.Manifest
+import SessionManager
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
+import com.example.chatui.models.FcmToken
 import com.example.chatui.models.Team
 import com.example.chatui.notification.MessageNotification
 import com.google.android.gms.tasks.OnCompleteListener
@@ -31,6 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.subscribeText
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ChatRoomActivity : AppCompatActivity() {
 
@@ -54,46 +54,42 @@ class ChatRoomActivity : AppCompatActivity() {
             }
             // Get new FCM registration token
             val token = task.result
+            saveFcmToken(token!!)
             Log.e("myToken", "" + token)
         })
 
-//        binding.backButton.setOnClickListener {
-//
-//            with(NotificationManagerCompat.from(this)) {
-//                val notification = NotificationCompat.Builder(this@ChatRoomActivity, "com.example.chatui")
-//                    .setSmallIcon(R.drawable.icon_google)
-//                    .setContentTitle("ChatUI")
-//                    .setContentText("Welcome to ChatUI")
-//                    .setPriority(NotificationCompat.PRIORITY_MAX)
-//                    .setAutoCancel(true)
-//                    .build()
-//
-//                if (ActivityCompat.checkSelfPermission(
-//                        applicationContext,
-//                        Manifest.permission.POST_NOTIFICATIONS
-//                    ) != PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    // TODO: Consider calling
-//                    //    ActivityCompat#requestPermissions
-//                    // here to request the missing permissions, and then overriding
-//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                    //                                          int[] grantResults)
-//                    // to handle the case where the user grants the permission. See the documentation
-//                    // for ActivityCompat#requestPermissions for more details.
-//                    return@setOnClickListener
-//                }
-//                Log.i("NOTIFICATIONNNNNNNN", "SENDING NOTIFICATION $notification")
-//                Thread.sleep(4000)
-//                notify(1, notification)
-//            }
-//        }
+        binding.backButton.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
 
-//        binding.backButton.setOnClickListener {
-//            Intent(this, LoginActivity::class.java).also {
-//                startActivity(it)
-//            }
-//        }
     }
+
+    private fun saveFcmToken(token: String) {
+        val session = SessionManager(applicationContext)
+
+        if(!session.tokenSaved){
+            val tokenToSave: FcmToken = FcmToken(token)
+            val service = NetworkUtils.createServiceSaveToken()
+
+            Log.i("SAVING TOKEN", "Saving token $token")
+
+            service.saveToken(tokenToSave, session.accessToken!!)
+                .enqueue(object : Callback<Void> {
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        if (response.isSuccessful) {
+                            session.tokenSaved = true
+                            Log.i("PUSHH PUSHH ROOM", "Token saved")
+                        }
+                        Log.e("PUSHH PUSHH ROOM", "Token not saved ${response.errorBody().toString()}")
+                    }
+
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Log.i("PUSHH PUSHH ROOM eRROR", t.message.toString())
+                    }
+                })
+        }
+    }
+
 
     fun websocketConnect() {
         val webSocketConfig = WebSocketConfig(applicationContext)
