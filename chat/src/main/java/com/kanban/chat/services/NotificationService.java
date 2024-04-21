@@ -15,17 +15,18 @@ import java.util.Map;
 @Service
 public class NotificationService {
 
-    public String sendPushNotificationService(ChatNotificationEntity request) {
+    public String sendPushNotification(ChatNotificationEntity request) {
         try {
             Notification notification = Notification
                     .builder()
-                    .setTitle(request.getTitle())
+                    .setTitle(request.getSender())
                     .setBody(request.getMessage())
                     .build();
+
             Message message = Message
                     .builder()
                     .setNotification(notification)
-                    .setToken("cODSqYnpRfKna8-H5Z082O:APA91bEI29Eo5yzctt2FidXO90Xvg4rt7n2XXqq50Lu3uHzr51LwIm7wbn7cTAOw7Ya1_7e5BSSymVwncpswGHv87HL7vXx1wHEm1nlfd1hM8hYzTFMs0GSKwOBYm9VMlu3c-8fJfJrBd")
+                    .setToken(request.getFcmToken())
                     .build();
 
             String response = FirebaseMessaging.getInstance().send(message);

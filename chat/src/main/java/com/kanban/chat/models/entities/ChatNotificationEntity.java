@@ -6,28 +6,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ChatNotificationEntity {
 
   private String id;
-  private UserEntity sender;
-  private UserEntity receiver;
-  private String title;
+  private String sender;
   private String message;
+  private String fcmToken;
 
   public ChatNotificationEntity() {
   }
 
-  public ChatNotificationEntity(String id, UserEntity sender, UserEntity receiver, String message, String title) {
+  public ChatNotificationEntity(String id, String sender, String message, String fcmToken) {
     this.id = id;
     this.sender = sender;
-    this.receiver = receiver;
     this.message = message;
-    this.title = title;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
+    this.fcmToken = fcmToken;
   }
 
   public String getId() {
@@ -38,20 +28,12 @@ public class ChatNotificationEntity {
     this.id = id;
   }
 
-  public UserEntity getSender() {
+  public String getSender() {
     return sender;
   }
 
-  public void setSender(UserEntity sender) {
+  public void setSender(String sender) {
     this.sender = sender;
-  }
-
-  public UserEntity getReceiver() {
-    return receiver;
-  }
-
-  public void setReceiver(UserEntity receiver) {
-    this.receiver = receiver;
   }
 
   public String getMessage() {
@@ -62,4 +44,11 @@ public class ChatNotificationEntity {
     this.message = message;
   }
 
+  public String getFcmToken() {
+    return fcmToken;
+  }
+
+  public void setFcmToken(String fcmToken) {
+    this.fcmToken = fcmToken;
+  }
 }

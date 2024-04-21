@@ -26,7 +26,7 @@ public class ChatRoomController {
 
     @PostMapping("/ok")
     public ResponseEntity<String> ok(@RequestBody ChatNotificationEntity request) {
-        notificationService.sendPushNotificationService(request);
+        notificationService.sendPushNotification(request);
         return ResponseEntity.ok().body("ok");
     }
 }

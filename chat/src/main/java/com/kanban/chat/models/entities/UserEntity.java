@@ -17,17 +17,19 @@ public class UserEntity {
   private String nickName;
   private String imgUrl;
   private String email;
+  private String fcmToken;
   private List<ChatRoomEntity> chatRoomEntity = new ArrayList<>();
 
   public UserEntity() {
   }
 
-    public UserEntity(String id, String name, String nickName, String email, String imgUrl) {
+    public UserEntity(String id, String name, String nickName, String email, String imgUrl, String fcmToken) {
         this.id = id;
         this.name = name;
         this.nickName = nickName;
         this.email = email;
         this.imgUrl = imgUrl;
+        this.fcmToken = fcmToken;
     }
 
   public String getId() {
@@ -76,5 +78,13 @@ public class UserEntity {
 
   public void setImgUrl(String imgUrl) {
     this.imgUrl = imgUrl;
+  }
+
+  public String getFcmToken() {
+    return fcmToken;
+  }
+
+  public void setFcmToken(String fcmToken) {
+    this.fcmToken = fcmToken;
   }
 }

@@ -9,20 +9,23 @@ public class UserEmbedded {
     private String id;
     private String name;
     private String nickName;
+    private String fcmToken;
 
     public UserEmbedded() {
     }
 
-    public UserEmbedded(String id, String name, String nickName) {
+    public UserEmbedded(String id, String name, String nickName, String fcmToken) {
         this.id = id;
         this.name = name;
         this.nickName = nickName;
+        this.fcmToken = fcmToken;
     }
 
     public UserEmbedded(UserEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.nickName = entity.getNickName();
+        this.fcmToken = entity.getFcmToken();
     }
 
     public String getId() {
@@ -49,4 +52,12 @@ public class UserEmbedded {
         this.nickName = username;
     }
 
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }

@@ -4,6 +4,7 @@ import com.kanban.chat.dtos.ChatRoomDTO;
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.ChatMessageEntity;
+import com.kanban.chat.models.entities.ChatNotificationEntity;
 import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.models.entities.UserEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
@@ -24,6 +25,9 @@ public class ChatRoomService {
     private ChatRoomRepository chatRoomRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
+
 
     public ChatRoomEntity findChatRoomById(String id) {
         return chatRoomRepository.findById(id).orElse(null);
@@ -37,9 +41,23 @@ public class ChatRoomService {
         message.setInstant(Instant.now());
         ChatMessageEmbedded chatMessageEmbedded = new ChatMessageEmbedded(message);
         chatRoom.addMessage(chatMessageEmbedded);
-        log.info("SERVICE");
         chatRoomRepository.save(chatRoom);
+
+        List<UserEmbedded> members = chatRoom.getMembers();
+
+        sendNotifications(members, message.getContent());
+
         return message;
+    }
+
+    private void sendNotifications(List<UserEmbedded> members, String message) {
+        members.forEach(member -> {
+            ChatNotificationEntity notification = new ChatNotificationEntity();
+            notification.setSender(member.getName());
+            notification.setMessage(message);
+            notification.setFcmToken(member.getFcmToken());
+            notificationService.sendPushNotification(notification);
+        });
     }
 
     @Transactional
