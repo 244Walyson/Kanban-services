@@ -2,6 +2,7 @@ package com.kanban.chat.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class UserEntity {
   private String imgUrl;
   private String email;
   private String fcmToken;
+  @DBRef
   private List<ChatRoomEntity> chatRoomEntity = new ArrayList<>();
 
   public UserEntity() {
@@ -62,10 +64,6 @@ public class UserEntity {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public void setChatRoomEntity(List<ChatRoomEntity> chatRoomEntity) {
-    this.chatRoomEntity = chatRoomEntity;
   }
 
   public void addChatRoomEntity(ChatRoomEntity chatRoomEntity) {

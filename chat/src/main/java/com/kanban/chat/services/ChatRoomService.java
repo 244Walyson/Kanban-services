@@ -8,6 +8,7 @@ import com.kanban.chat.models.entities.ChatNotificationEntity;
 import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.models.entities.UserEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
+import com.kanban.chat.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,22 +44,11 @@ public class ChatRoomService {
         chatRoom.addMessage(chatMessageEmbedded);
         chatRoomRepository.save(chatRoom);
 
-        List<UserEmbedded> members = chatRoom.getMembers();
-
-        sendNotifications(members, message.getContent());
+        notificationService.sendNotification(roomId, message.getContent(), user);
 
         return message;
     }
 
-    private void sendNotifications(List<UserEmbedded> members, String message) {
-        members.forEach(member -> {
-            ChatNotificationEntity notification = new ChatNotificationEntity();
-            notification.setSender(member.getName());
-            notification.setMessage(message);
-            notification.setFcmToken(member.getFcmToken());
-            notificationService.sendPushNotification(notification);
-        });
-    }
 
     @Transactional
     public ChatRoomEntity getChatRoom(String roomId) {

@@ -24,9 +24,10 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(chatRoomService.findAll());
     }
 
-    @PostMapping("/ok")
-    public ResponseEntity<String> ok(@RequestBody ChatNotificationEntity request) {
-        notificationService.sendPushNotification(request);
+    @PostMapping("/ok/{teamId}")
+    public ResponseEntity<String> ok(@RequestBody String message, @PathVariable String teamId) {
+        notificationService.sendNotification(teamId, message, null);
         return ResponseEntity.ok().body("ok");
     }
+
 }

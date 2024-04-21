@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class UserService {
@@ -30,5 +32,10 @@ public class UserService {
         UserEntity user = getLoggedUser(customUserUtil.getLoggedUsername());
         user.setFcmToken(token.getToken());
         repository.save(user);
+    }
+
+    @Transactional
+    public List<UserEntity> findUsersByTeam(String teamId){
+        return repository.findByChatRoomEntityId(teamId);
     }
 }

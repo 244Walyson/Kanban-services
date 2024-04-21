@@ -94,7 +94,7 @@ services:
     build: ./chat
     container_name: chat
     ports:
-      - "8090:8080"
+      - "8090:8090"
     depends_on:
       - chat-db
       - kafka
