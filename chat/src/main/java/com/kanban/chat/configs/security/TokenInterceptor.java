@@ -21,12 +21,12 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization");
-        token = token.split( " ")[1];
 
         if (token == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
+        token = token.split( " ")[1];
         String nick = tokenValidator.validateAuthentication(token);
 
         if(nick == null){

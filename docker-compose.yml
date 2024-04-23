@@ -12,6 +12,8 @@ services:
       MYSQL_PASSWORD: 123456
     ports:
       - "3307:3306"
+    networks:
+      - kanban
     
   kafka:
     container_name: kafka-kanban
@@ -26,6 +28,8 @@ services:
     - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     ports:
     - 9094:9094
+    networks:
+      - kanban
 
   kafka-connect:
     container_name: kafka-connect
@@ -63,6 +67,8 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.2.0
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run
+    networks:
+      - kanban
   
   redpanda-console:
     container_name: redpanda-kanban
@@ -79,6 +85,8 @@ services:
           brokers: ["kafka:9092"]
     depends_on:
       - kafka 
+    networks:
+      - kanban
 
   
   chat-db:
@@ -89,9 +97,12 @@ services:
       MONGO_INITDB_DATABASE: chat-db
     ports:
       - "27019:27017"
+    networks:
+      - kanban
 
   chat:
     build: ./chat
+    #image: walymb/chat:latest
     container_name: chat
     ports:
       - "8090:8090"
@@ -102,11 +113,14 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://chat-db:27017/chat-db
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - JWK_SET_URI=http://localhost:9090/.well-known/jwks.json
+      - JWK_SET_URI=http://kanban:9090/.well-known/jwks.json
+    networks:
+      - kanban
 
 
   kanban:
     build: ./kanban
+    #image: walymb/kanbanapp:latest
     container_name: kanban
     ports:
       - "9090:9090"
@@ -119,3 +133,20 @@ services:
       - DB_PORT=3306
       - DB_NAME=kanban
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - kanban
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - kanban
+
+networks:
+  kanban:
+    driver: bridge

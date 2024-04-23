@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: default-ingress
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: api.waly.dev.br
+    http:
+      paths:
+      - path: /kanban
+        pathType: Prefix
+        backend:
+          service:
+            name: kanban
+            port:
+              number: 80
+      - path: /chat
+        pathType: Prefix
+        backend:
+          service:
+            name: chat
+            port:
+              number: 80
