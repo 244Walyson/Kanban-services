@@ -1,7 +1,9 @@
 package com.waly.kanban.services;
 
 import com.waly.kanban.dto.UserDTO;
+import com.waly.kanban.dto.UserInsertDTO;
 import com.waly.kanban.dto.UserLoggedDTO;
+import com.waly.kanban.dto.UserUpdateDTO;
 import com.waly.kanban.entities.Role;
 import com.waly.kanban.entities.User;
 import com.waly.kanban.projections.UserDetailsProjection;
@@ -63,5 +65,32 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User findUserByEmail(String username) {
         return repository.findByEmail(username).get();
+    }
+
+    @Transactional
+    public UserDTO insert(UserInsertDTO dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setNickname(dto.getNickname());
+        user.setEmail(dto.getEmail());
+        user.setImgUrl(dto.getImgUrl());
+        user.setBio(dto.getBio());
+        user.setPassword(dto.getPassword());
+
+        user = repository.save(user);
+        return new UserDTO(user);
+    }
+
+    @Transactional
+    public UserDTO update(Long id, UserUpdateDTO dto) {
+        User user = repository.getReferenceById(id);
+        user.setName(dto.getName());
+        user.setNickname(dto.getNickname());
+        user.setEmail(dto.getEmail());
+        user.setImgUrl(dto.getImgUrl());
+        user.setBio(dto.getBio());
+
+        user = repository.save(user);
+        return new UserDTO(user);
     }
 }
