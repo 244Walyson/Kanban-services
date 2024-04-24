@@ -4,17 +4,9 @@ import SessionManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.chatui.R
 import com.example.chatui.databinding.ActivitySplashScreenBinding
-import com.example.chatui.notification.MessageNotification
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class SplashScreenActivity : AppCompatActivity() {
 

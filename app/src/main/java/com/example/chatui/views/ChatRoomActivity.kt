@@ -79,8 +79,9 @@ class ChatRoomActivity : AppCompatActivity() {
                         if (response.isSuccessful) {
                             session.tokenSaved = true
                             Log.i("PUSHH PUSHH ROOM", "Token saved")
+                            return
                         }
-                        Log.e("PUSHH PUSHH ROOM", "Token not saved ${response.errorBody().toString()}")
+                        Log.e("PUSHH PUSHH ROOM", "Token not saved ${response.code()} ${response.message()}")
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {

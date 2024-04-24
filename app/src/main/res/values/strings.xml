@@ -2,4 +2,10 @@
     <string name="app_name">ChatUi</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="CHAT_URI">http://chat.rancher.waly.dev.br</string>
+    <string name="KANBAN_URI">http://kanban.rancher.waly.dev.br</string>
+    <string name="MY_CLIENT_SECRET">myclientsecret</string>
+    <string name="MY_CLIENT_ID">myclientid</string>
 </resources>

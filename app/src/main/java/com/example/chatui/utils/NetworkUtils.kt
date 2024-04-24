@@ -1,5 +1,6 @@
 
 import com.example.chatui.clients.SaveFcmTokenClient
+import com.example.chatui.utils.Environments
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,8 +10,8 @@ class NetworkUtils {
     companion object{
         private lateinit var INSTANCE: Retrofit
         private lateinit var INSTANCE_CHAT: Retrofit
-        private val BASE_URL_CHAT = "http://10.0.2.2:8090"
-        private val BASE_URL = "http://10.0.2.2:9090"
+        private val BASE_URL_CHAT = Environments.BASE_CHAT_URL
+        private val BASE_URL = Environments.BASE_KANBAN_URL
 
 
         private fun getRetrofitInstance(): Retrofit {

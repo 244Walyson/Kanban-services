@@ -10,31 +10,26 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatui.databinding.ActivityLoginBinding
 import com.example.chatui.models.User
+import com.example.chatui.utils.Environments
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var session: SessionManager
-    private val CLIENT_ID = "myclientid"
-    private val CLIENT_SECRET = "myclientsecret"
+    private val CLIENT_ID = Environments.CLIENT_ID
+    private val CLIENT_SECRET = Environments.CLIENT_SECRET
     private val GRANT_TYPE = "password"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         session = SessionManager(applicationContext)
-
 
         binding.btnLogin.setOnClickListener {
             login()
