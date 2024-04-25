@@ -1,13 +1,24 @@
 package com.waly.kanban.configs;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
 import com.waly.kanban.configs.customgrant.CustomPasswordAuthenticationConverter;
 import com.waly.kanban.configs.customgrant.CustomPasswordAuthenticationProvider;
 import com.waly.kanban.configs.customgrant.CustomUserAuthorities;
 import com.waly.kanban.services.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +26,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationConsentService;
@@ -44,9 +57,14 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static javax.crypto.Cipher.SECRET_KEY;
+
+@Slf4j
 @Configuration
 public class AuthorizationServerConfig {
 
@@ -175,6 +193,37 @@ public class AuthorizationServerConfig {
 		this.rsaKey = rsaKey;
 		JWKSet jwkSet = new JWKSet(rsaKey);
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+	}
+
+
+	public String generateToken(String username, String nickname, List<String> authorities) {
+
+		try {
+		var issTime = Date.from(Instant.now());
+		// Crie uma instância de JWTClaimsSet.Builder
+		JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder();
+		// Defina os claims do token
+			log.info("here" + rsaKey.toRSAPrivateKey().toString());
+
+		var jwt = Jwts.builder()
+				.setAudience(clientId)
+				.setIssuer("http://localhost:9090")
+				.setId(UUID.randomUUID().toString()) // jti
+				.setIssuedAt(issTime) // iat
+				.setNotBefore(issTime) // nbf
+				.setExpiration(Date.from(Instant.now().plusSeconds(jwtDurationSeconds))) // exp
+				.claim("nick", nickname)
+				.claim("username", username)
+				.claim("authorities", authorities)
+				.signWith(SignatureAlgorithm.RS256, rsaKey.toRSAPrivateKey())
+				.compact();
+
+		return jwt;
+		} catch (JOSEException e) {
+			log.error("here" + e.getMessage());
+			e.printStackTrace();
+            throw new RuntimeException(e);
+        }
 	}
 
 	private static RSAKey generateRsa() {

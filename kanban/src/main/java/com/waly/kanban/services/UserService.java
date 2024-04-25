@@ -9,18 +9,21 @@ import com.waly.kanban.entities.User;
 import com.waly.kanban.projections.UserDetailsProjection;
 import com.waly.kanban.repositories.UserRepository;
 import com.waly.kanban.util.CustonUserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -92,5 +95,16 @@ public class UserService implements UserDetailsService {
 
         user = repository.save(user);
         return new UserDTO(user);
+    }
+
+    public void saveOauthUser(OidcUser oidcUser) {
+        if(!repository.existsByEmail(oidcUser.getEmail())){
+            User user = new User();
+            user.setName(oidcUser.getName());
+            user.setImgUrl(oidcUser.getPicture());
+            user.setEmail(oidcUser.getEmail());
+            repository.save(user);
+            log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
+        }
     }
 }
