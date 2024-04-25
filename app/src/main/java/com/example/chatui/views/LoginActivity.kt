@@ -16,6 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Date
 
+
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -29,6 +30,14 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.txtSignUp.setOnClickListener {
+            startActivity(Intent(this, NewUserActivity::class.java))
+        }
+
+
+        binding.imgGoogle.setOnClickListener {
+
+        }
         session = SessionManager(applicationContext)
 
         binding.btnLogin.setOnClickListener {
@@ -36,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
 
     fun login() {
         val service = NetworkUtils.createServiceLogin()

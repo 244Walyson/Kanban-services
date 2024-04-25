@@ -93,8 +93,10 @@ class ChatActivity : AppCompatActivity() {
 
 
             } catch (e: Exception) {
+                Log.e("ERORRRR desconect ", "Error: $e")
                 Log.e("ChatActivity", "Error: $e")
             }
+
         }
     }
 

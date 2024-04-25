@@ -25,9 +25,10 @@ class WebSocketConfig(private val context: Context) {
 
     val wsClient = KtorWebSocketClient(httpClient)
     val stompClient = StompClient(wsClient)
-
+    
     suspend fun connect(): StompSession {
         val accessToken = token?.split(" ")?.get(1)
         return stompClient.connect(BASE_URL + "/connect?token=$accessToken")
     }
+
 }
