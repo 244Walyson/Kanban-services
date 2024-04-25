@@ -21,7 +21,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -100,9 +102,10 @@ public class UserService implements UserDetailsService {
     public void saveOauthUser(OidcUser oidcUser) {
         if(!repository.existsByEmail(oidcUser.getEmail())){
             User user = new User();
-            user.setName(oidcUser.getName());
+            user.setName(oidcUser.getFullName());
             user.setImgUrl(oidcUser.getPicture());
             user.setEmail(oidcUser.getEmail());
+            user.setNickname(oidcUser.getGivenName().concat("#").concat(UUID.randomUUID().toString().substring(0, 3)));
             repository.save(user);
             log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
         }

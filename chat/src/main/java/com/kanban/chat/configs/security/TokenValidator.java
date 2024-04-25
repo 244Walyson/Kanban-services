@@ -48,7 +48,6 @@ public class TokenValidator {
             JWKSource<SecurityContext> keySource = JWKSourceBuilder
                     .create(new URL(BASE_JWK_SET_URL))
                     .retrying(true)
-                    .cache(3000, 1200)
                     .build();
 
             JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS256;
