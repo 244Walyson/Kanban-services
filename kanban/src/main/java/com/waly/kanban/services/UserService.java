@@ -6,7 +6,9 @@ import com.waly.kanban.dto.UserLoggedDTO;
 import com.waly.kanban.dto.UserUpdateDTO;
 import com.waly.kanban.entities.Role;
 import com.waly.kanban.entities.User;
+import com.waly.kanban.entities.UserOutbox;
 import com.waly.kanban.projections.UserDetailsProjection;
+import com.waly.kanban.repositories.UserOutboxRepository;
 import com.waly.kanban.repositories.UserRepository;
 import com.waly.kanban.util.CustonUserUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
-
+    @Autowired
+    private UserOutboxRepository userOutboxRepository;
     @Autowired
     private CustonUserUtil custonUserUtil;
 
@@ -89,6 +92,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(dto.getPassword());
 
         user = repository.save(user);
+        userOutboxRepository.save(new UserOutbox(user));
         return new UserDTO(user);
     }
 
@@ -102,6 +106,7 @@ public class UserService implements UserDetailsService {
         user.setBio(dto.getBio());
 
         user = repository.save(user);
+        userOutboxRepository.save(new UserOutbox(user));
         return new UserDTO(user);
     }
 
@@ -113,6 +118,7 @@ public class UserService implements UserDetailsService {
             user.setEmail(oidcUser.getEmail());
             user.setNickname(oidcUser.getGivenName().concat("#").concat(UUID.randomUUID().toString().substring(0, 3)));
             repository.save(user);
+            userOutboxRepository.save(new UserOutbox(user));
             log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
         }
     }
