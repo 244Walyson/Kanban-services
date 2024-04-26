@@ -8,15 +8,15 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.chatui.R
+import com.example.chatui.utils.Environments
 
 class MessageNotification(private val context: Context) {
 
     companion object {
-        const val CHANNEL_ID = "com.waly.chatUi.messages"
-        const val CHANNEL_NAME = "Messages"
-        const val CHANNEL_DESCRIPTION = "ChatUI Messages Notification Channel"
+        const val CHANNEL_ID = Environments.CHANNEL_ID
+        const val CHANNEL_NAME = Environments.CHANNEL_NAME
+        const val CHANNEL_DESCRIPTION = Environments.CHANNEL_DESCRIPTION
     }
-
 
     private val notificationManager: NotificationManager by lazy {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

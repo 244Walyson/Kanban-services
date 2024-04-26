@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatUi"
         tools:targetApi="31">
+        <activity
+            android:name=".views.WebAuthActivity"
+            android:exported="false" />
         <activity
             android:name=".views.NewUserActivity"
             android:exported="false" />
@@ -43,7 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"

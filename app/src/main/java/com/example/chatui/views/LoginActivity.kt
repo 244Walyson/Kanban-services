@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         binding.imgGoogle.setOnClickListener {
-
+            startActivity(Intent(this, WebAuthActivity::class.java))
         }
         session = SessionManager(applicationContext)
 

@@ -12,7 +12,7 @@
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#A1000000" />
+        android:background="#18353434" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:text="Sign In"
             android:fontFamily="@font/gordita_black"
             android:textSize="20sp" />
@@ -54,9 +54,8 @@
                 android:background="@drawable/input_message_shape"
                 android:backgroundTint="#C8FFFFFF"
                 android:hint="Email"
-                android:text="maria@gmail.com"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_regular"
+                android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/black_secondary"
                 android:inputType="textEmailAddress"/>
 
@@ -65,14 +64,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:inputType="textPassword"
-                android:text="123456"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
                 android:backgroundTint="#C8FFFFFF"
                 android:hint="Password"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_regular"
+                android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/black_secondary" />
 
             <EditText
@@ -85,7 +83,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="10dp"
                 android:maxLines="1"
-                android:fontFamily="@font/gordita_regular"
+                android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/black_secondary"
                 android:inputType="text"/>
 
@@ -118,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Entrar com"
-                    android:textColor="#d9d9d9" />
+                    android:textColor="@color/black" />
 
                 <View
                     android:layout_width="80dp"
@@ -153,7 +151,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="130dp"
                 android:padding="15dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:text="Ja tem uma conta? Faça login"
                 android:textSize="15sp" />
         </LinearLayout>
