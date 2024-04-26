@@ -1,10 +1,7 @@
 package com.waly.kanban.controllers;
 
 import com.waly.kanban.configs.AuthorizationServerConfig;
-import com.waly.kanban.dto.UserDTO;
-import com.waly.kanban.dto.UserInsertDTO;
-import com.waly.kanban.dto.UserLoggedDTO;
-import com.waly.kanban.dto.UserUpdateDTO;
+import com.waly.kanban.dto.*;
 import com.waly.kanban.services.TokenService;
 import com.waly.kanban.services.UserService;
 import jakarta.validation.Valid;
@@ -45,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<String> getToken(Authentication authentication){
+    public ResponseEntity<AccessToken> getToken(Authentication authentication){
         return ResponseEntity.ok(tokenGenerator.getToken(authentication));
     }
 }
