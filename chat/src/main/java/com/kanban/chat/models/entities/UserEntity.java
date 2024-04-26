@@ -1,5 +1,6 @@
 package com.kanban.chat.models.entities;
 
+import com.kanban.chat.dtos.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -34,7 +35,15 @@ public class UserEntity {
         this.fcmToken = fcmToken;
     }
 
-  public String getId() {
+    public UserEntity(UserDTO userDTO) {
+        this.id = userDTO.getId().toString();
+        this.name = userDTO.getName();
+        this.nickName = userDTO.getNickname();
+        this.email = userDTO.getEmail();
+        this.imgUrl = userDTO.getImgUrl();
+    }
+
+    public String getId() {
     return id;
   }
 
