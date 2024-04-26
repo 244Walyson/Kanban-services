@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -23,11 +24,18 @@ public class TokenService {
     private AuthorizationServerConfig authorizationServerConfig;
 
     public String getToken(Authentication authentication) {
-        log.info("Getting token");
-        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        log.info(oidcUser.getAttributes().toString());
-        User user = userService.findUserByEmail(oidcUser.getEmail());
+        User user;
+        try {
+            OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+            log.info(oidcUser.getAttributes().toString());
+            user = userService.findUserByEmail(oidcUser.getEmail());
+            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_USER"));
+        } catch (Exception e) {
+            OAuth2User userOauth = (OAuth2User) authentication.getPrincipal();
+            log.info(userOauth.getAttributes().toString());
+            user = userService.findUserByNickname(userOauth.getAttribute("login"));
+            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_USER"));
+        }
 
-        return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_USER"));
     }
 }

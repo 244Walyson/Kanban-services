@@ -77,13 +77,14 @@ public class ResourceServerConfig {
 						@Override
 						public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 								Authentication authentication) throws IOException, ServletException {
+							if(request.getRequestURI().contains("google")) {
+								DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+								log.info(authentication.getPrincipal().toString());
 
-							DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-							log.info(authentication.getPrincipal().toString());
+								userService.saveOauthUser(oidcUser);
+							}
 
-							userService.saveOauthUser(oidcUser);
-
-							response.sendRedirect("/");
+							response.sendRedirect("/users/token");
 					}
 				}));
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource()));

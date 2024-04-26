@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
+    public User findUserByNickname(String nickname) {
+        return repository.findByNickname(nickname).get();
+    }
+
+    @Transactional
     public UserDTO insert(UserInsertDTO dto) {
         User user = new User();
         user.setName(dto.getName());
@@ -110,4 +116,5 @@ public class UserService implements UserDetailsService {
             log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
         }
     }
+
 }

@@ -202,9 +202,8 @@ public class AuthorizationServerConfig {
 		var issTime = Date.from(Instant.now());
 		// Crie uma instância de JWTClaimsSet.Builder
 		JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder();
-		// Defina os claims do token
-			log.info("here" + rsaKey.toRSAPrivateKey().toString());
 
+		// Defina os claims do token
 		var jwt = Jwts.builder()
 				.setAudience(clientId)
 				.setIssuer("http://localhost:9090")

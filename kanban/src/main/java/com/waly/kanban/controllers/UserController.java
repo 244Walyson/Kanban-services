@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @GetMapping("/ok")
+    @GetMapping("/token")
     public ResponseEntity<String> getToken(Authentication authentication){
         return ResponseEntity.ok(tokenGenerator.getToken(authentication));
     }
