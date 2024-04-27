@@ -34,10 +34,18 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, NewUserActivity::class.java))
         }
 
-
-        binding.imgGoogle.setOnClickListener {
-            startActivity(Intent(this, WebAuthActivity::class.java))
+        binding.GithubLogin.setOnClickListener {
+            val intent = Intent(this, WebAuthActivity::class.java)
+            intent.putExtra("param", Environments.GITHUB_PARAM)
+            startActivity(intent)
         }
+
+        binding.GoogleLogin.setOnClickListener {
+            val intent = Intent(this, WebAuthActivity::class.java)
+            intent.putExtra("param", Environments.GOOGLE_PARAM)
+            startActivity(intent)
+        }
+
         session = SessionManager(applicationContext)
 
         binding.btnLogin.setOnClickListener {

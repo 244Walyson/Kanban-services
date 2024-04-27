@@ -10,6 +10,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatui.databinding.ActivityWebAuthBinding
+import com.example.chatui.utils.Environments
 import org.json.JSONObject
 
 
@@ -27,7 +28,8 @@ class WebAuthActivity : AppCompatActivity() {
         webView = binding.webView
         session = SessionManager(applicationContext)
 
-        webView.loadUrl("http://10.0.2.2:9090/oauth2/authorization/github")
+        val url = getUrl()
+        webView.loadUrl(url)
         webView.settings.javaScriptEnabled = true
 
         webView.webViewClient = WebViewClient()
@@ -36,6 +38,10 @@ class WebAuthActivity : AppCompatActivity() {
 
     }
 
+    private fun getUrl(): String {
+        val param = intent.getStringExtra("param")
+        return "${Environments.BASE_KANBAN_URL}$param"
+    }
     private fun getAccessToken() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {

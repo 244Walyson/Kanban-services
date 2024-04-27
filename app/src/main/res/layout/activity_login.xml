@@ -119,13 +119,13 @@
                 android:gravity="center"
                 android:layout_marginTop="20dp">
                 <ImageView
-                    android:id="@+id/imgGoogle"
+                    android:id="@+id/GoogleLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icon_google"
                     android:layout_marginHorizontal="10dp"/>
                 <ImageView
-                    android:id="@+id/imgGithub"
+                    android:id="@+id/GithubLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginHorizontal="10dp"
