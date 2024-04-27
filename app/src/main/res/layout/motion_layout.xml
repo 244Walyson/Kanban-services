@@ -100,7 +100,7 @@
         android:tint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:iconSize="30dp"
+        app:iconSize="20dp"
         android:src="@drawable/icon_add"
         app:srcCompat="@drawable/icon_add" />
 

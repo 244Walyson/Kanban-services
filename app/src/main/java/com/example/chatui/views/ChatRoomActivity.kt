@@ -27,9 +27,11 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import io.ktor.util.Hash
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,11 +40,13 @@ import org.hildan.krossbow.stomp.subscribeText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Stack
 import java.util.zip.Inflater
 
 class ChatRoomActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatRoomBinding
+    private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,8 @@ class ChatRoomActivity : AppCompatActivity() {
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        session = SessionManager(applicationContext)
 
         websocketConnect()
 
@@ -180,70 +186,97 @@ class ChatRoomActivity : AppCompatActivity() {
     }
 
     fun websocketConnect() {
+        val nickname = session.userLogged
         val webSocketConfig = WebSocketConfig(applicationContext)
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val session: StompSession = withContext(Dispatchers.IO) {
                     webSocketConfig.connect()
                 }
-                val subs: Flow<String> = session.subscribeText("/app/chats")
+                val subs: Flow<String> = session.subscribeText("/user/${nickname}/queue/chats")
 
-
-                val teamList: List<Team> = jsonStringToTeamList(subs.first());
+                var teamList: HashMap<Int, Team> = HashMap()
+                subs.collectLatest {
+                    Log.i("STOMP", "Received message: $it")
+                    teamList = jsonStringToTeamList(it, teamList)
+                    if(teamList.size > 1)
+                        teamList = removeDuplicates(teamList, teamList[teamList.keys.max()]!!.id, teamList.keys.max()!!)
+                    showChatRooms(teamList)
+                }
 
 
                 Log.i("STOMP", "Connected to STOMP")
 
-                showChatRooms(teamList)
 
             } catch (e: Exception) {
                 Log.e("STOMP", "Error: " + e.message + e.stackTraceToString())
             }
         }
     }
-    fun jsonStringToTeamList(jsonString: String): List<Team> {
+    fun jsonStringToTeamList(jsonString: String, teamList: HashMap<Int, Team>): HashMap<Int, Team> {
         val gson = Gson()
         val listType = object : TypeToken<List<Team>>() {}.type
-        return gson.fromJson(jsonString, listType)
+        var teams: List<Team> =  gson.fromJson(jsonString, listType)
+        teams.forEach { team ->
+            var i = teamList.keys.maxOrNull()
+            if(i == null) i = 0
+            else i++
+            Log.i("TEAM", "MAX: ${i}")
+            teamList[i] = team
+        }
+        return teamList
     }
 
-    fun showChatRooms(teams: List<Team>) {
+    fun removeDuplicates(teams: HashMap<Int, Team>, teamId: String, key: Int): HashMap<Int, Team> {
+        var keyToRemove = -1
+        teams.forEach {
+            if(it.value.id == teamId && it.key != key) {
+                keyToRemove = it.key
+            }
+        }
+        if(keyToRemove != -1)
+            teams.remove(keyToRemove)
+        return teams
+    }
+    fun showChatRooms(teams: HashMap<Int, Team>) {
         val scrollContainer = binding.motionLayoutContainer
         val motionLayout = layoutInflater.inflate(R.layout.motion_layout, scrollContainer, false)
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
 
-        teams?.forEach { team ->
-            val roomCard = layoutInflater.inflate(R.layout.card_chat_item , scrollView , false)
+        var j = teams.keys.max()
+        for (i in j downTo  0 step 1) {
+            if(teams[i] != null) {
+                val roomCard = layoutInflater.inflate(R.layout.card_chat_item , scrollView , false)
 
-            val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
-            teamName.text = team.roomName
+                val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
+                teamName.text = teams[i]!!.roomName
 
-            val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
-            latestMsg.text = team.latestMessage
+                val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
+                latestMsg.text = teams[i]!!.latestMessage
 
-            val image = roomCard.findViewById<ImageView>(R.id.image_group)
-            image.setOnClickListener {
-                startMoreFragment(team.id)
+                val image = roomCard.findViewById<ImageView>(R.id.image_group)
+                image.setOnClickListener {
+                    startMoreFragment(teams[i]!!.id)
+                }
+
+                Glide
+                    .with(applicationContext)
+                    .load(teams[i]!!.imgUrl)
+                    .centerCrop()
+                    .into(image)
+
+                val cardChat = roomCard.findViewById<LinearLayout>(R.id.card_chat_item)
+
+                cardChat.setOnClickListener {
+                    val intent = Intent(this, ChatActivity::class.java)
+                    intent.putExtra("teamId", teams[i]!!.id)
+
+                    startActivity(intent)
+                }
+
+                scrollView.addView(roomCard)
             }
-
-            Glide
-                .with(applicationContext)
-                .load(team.imgUrl)
-                .centerCrop()
-                .into(image)
-
-            val cardChat = roomCard.findViewById<LinearLayout>(R.id.card_chat_item)
-
-            cardChat.setOnClickListener {
-                val intent = Intent(this, ChatActivity::class.java)
-                intent.putExtra("teamId", team.id)
-
-                startActivity(intent)
-            }
-
-            scrollView.addView(roomCard)
         }
-
         scrollContainer.removeAllViews()
         scrollContainer.addView(motionLayout)
     }
