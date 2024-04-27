@@ -17,6 +17,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/memberImage"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/image_test"
@@ -43,14 +44,16 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
                         <TextView
+                            android:id="@+id/memberName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Fulano de tal"
                             android:textSize="18sp"
                             android:fontFamily="@font/gordita_medium"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/white"/>
                     </LinearLayout>
                     <TextView
+                        android:id="@+id/memberNick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="\@fulano2435"
@@ -60,6 +63,7 @@
                         />
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/memberRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"

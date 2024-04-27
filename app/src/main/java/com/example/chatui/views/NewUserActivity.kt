@@ -30,5 +30,10 @@ class NewUserActivity : AppCompatActivity() {
             intent.putExtra("param", Environments.GOOGLE_PARAM)
             startActivity(intent)
         }
+
+        binding.btnSignIn.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatui.databinding.ActivityLoginBinding
 import com.example.chatui.models.User
+import com.example.chatui.services.SaveUserData
 import com.example.chatui.utils.Environments
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val loginResponse = response.body()
                         saveToken(loginResponse?.accessToken.toString(), loginResponse!!.expiresIn)
-                        saveLogedUser()
+                        SaveUserData(applicationContext).saveLogedUser()
                         startActivity(Intent(this@LoginActivity, ChatRoomActivity::class.java))
                         finish()
                     }
@@ -83,29 +84,9 @@ class LoginActivity : AppCompatActivity() {
             })
 
     }
+
     fun saveToken(token: String, expiresIn: Long) {
         session.accessToken = "Bearer $token"
         session.accessTokenExpiration = Date().time.plus(expiresIn * 1000).toString()
-    }
-
-    fun saveLogedUser() {
-        val service = NetworkUtils.createServiceUser()
-        val accessToken = session.accessToken
-
-        if (accessToken != null) {
-            service.getUser(accessToken)
-                .enqueue(object : Callback<User> {
-                    override fun onResponse(call: Call<User>, response: Response<User>) {
-                        if (response.isSuccessful) {
-                            val user = response.body()
-                            session.userLogged = user?.nickname.toString()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<User>, t: Throwable) {
-                        Log.i("LOGIN", t.message.toString())
-                    }
-                })
-        }
     }
 }

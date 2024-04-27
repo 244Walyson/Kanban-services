@@ -12,7 +12,7 @@
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#A1000000" />
+        android:background="#77210A1F" />
 
     <LinearLayout
         android:layout_width="match_parent"

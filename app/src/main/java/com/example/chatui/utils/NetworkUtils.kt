@@ -50,5 +50,9 @@ class NetworkUtils {
         fun createServiceSaveToken(): SaveFcmTokenClient {
             return getRetrofitInstanceChat().create(SaveFcmTokenClient::class.java)
         }
+
+        fun createServiceTeam(): TeamClient {
+            return getRetrofitInstanceChat().create(TeamClient::class.java)
+        }
     }
 }

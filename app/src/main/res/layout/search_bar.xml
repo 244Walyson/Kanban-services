@@ -1,0 +1,11 @@
+<EditText
+    android:id="@+id/searchBarEdtText"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:hint="Buscar chat..."
+    android:background="@null"
+    android:layout_gravity="left"
+    android:layout_marginHorizontal="15dp"
+    android:textColor="@color/white"
+    android:textColorHint="@color/gray_tertiary"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

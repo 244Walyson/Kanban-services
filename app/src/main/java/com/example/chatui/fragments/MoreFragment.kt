@@ -1,59 +1,142 @@
 package com.example.chatui.fragments
 
+import SessionManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.addCallback
+import com.bumptech.glide.Glide
 import com.example.chatui.R
+import com.example.chatui.databinding.FragmentMoreBinding
+import com.example.chatui.models.FullTeam
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val TEAM_ID = "param1"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MoreFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class MoreFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var teamId: String? = null
+    private lateinit var binding: FragmentMoreBinding
+    private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentMoreBinding.inflate(layoutInflater)
+        session = SessionManager(requireContext())
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            teamId = it.getString(TEAM_ID)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            returnToActivity()
+        }
+
+        fetchTeamDetails()
+
     }
 
+    private fun returnToActivity() {
+        requireActivity().findViewById<FrameLayout>(R.id.chatFrameLayout).visibility = View.GONE
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.remove(this@MoreFragment)
+        fragmentTransaction.commit()
+    }
+    private fun fetchTeamDetails() {
+        val service = NetworkUtils.createServiceTeam()
+        val token = session.accessToken
+
+        Log.i("MORE FRAG", "TOKEN $token")
+
+        service.getTeam(teamId!!, token!!)
+            .enqueue(object : Callback<FullTeam> {
+            override fun onResponse(call: Call<FullTeam>, response: Response<FullTeam>) {
+                if (response.isSuccessful) {
+                    val team = response.body()
+                    Log.i("MORE FRAG", "Team details: ${team?.name}")
+                    showTeamDetails(team!!)
+                }
+                Log.i("MORE FRAG", "Team details: $response")
+            }
+
+            override fun onFailure(call: Call<FullTeam>, t: Throwable) {
+                Log.e("MORE FRAG", "Error fetching team details", t)
+            }
+        })
+    }
+    private fun showTeamDetails(team: FullTeam) {
+
+        Log.i("MORE FRAG", "Team details: ${team.name}")
+        Log.i("MORE FRAG", "Team details: ${team.imgUrl}")
+        Log.i("MORE FRAG", "Team details: ${team.description}")
+        Log.i("MORE FRAG", "Team details: ${team.occupationArea}")
+
+        val name = binding.teamName
+        name.text = team.name
+
+
+        val description = binding.teamDescription
+        description.text = team.description
+
+        val teamImage = binding.teamImage
+        Glide
+            .with(requireContext())
+            .load(team.imgUrl)
+            .placeholder(R.drawable.color7)
+            .centerCrop()
+            .into(teamImage)
+
+
+        val members = binding.usersList
+        team.members?.forEach() { member ->
+            val memberView = layoutInflater.inflate(R.layout.card_chat_item_group, members, false)
+            val memberName = memberView.findViewById<TextView>(R.id.memberName)
+            val memberUsername = memberView.findViewById<TextView>(R.id.memberNick)
+            val memberImage = memberView.findViewById<ImageView>(R.id.memberImage)
+
+            memberName.text = member.username
+            memberUsername.text = member.nickname
+
+            Glide
+                .with(requireContext())
+                .load(member.imgUrl)
+                .placeholder(R.drawable.color7)
+                .centerCrop()
+                .into(memberImage)
+
+            members.addView(memberView)
+        }
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_more, container, false)
+        binding = FragmentMoreBinding.inflate(inflater, container, false)
+
+        val backButton = binding.moreBackButton
+        backButton.setOnClickListener {
+            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_slide_in_top)
+            returnToActivity()
+        }
+
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MoreFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(teamId: String) =
             MoreFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString(TEAM_ID, teamId)
                 }
             }
     }

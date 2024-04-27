@@ -10,8 +10,10 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatui.databinding.ActivityWebAuthBinding
+import com.example.chatui.services.SaveUserData
 import com.example.chatui.utils.Environments
 import org.json.JSONObject
+import java.util.Date
 
 
 class WebAuthActivity : AppCompatActivity() {
@@ -53,9 +55,8 @@ class WebAuthActivity : AppCompatActivity() {
                         try {
                             val stringBody = body.replace("\\", "")
                              val jsonObject = JSONObject(stringBody.substring(stringBody.indexOf("{"), stringBody.lastIndexOf("}") + 1));
-                            session.accessToken = "Bearer ${jsonObject.getString("access_token")}"
-                            Log.d("TOKEN", session.accessToken.toString())
-                            Log.d("JSON", jsonObject.toString())
+                            saveToken(jsonObject.getString("access_token"), jsonObject.getLong("expires_in"))
+                            SaveUserData(applicationContext).saveLogedUser()
                             startActivity(Intent(this@WebAuthActivity, ChatRoomActivity::class.java))
                             finish()
                         } catch (e: Exception) {
@@ -65,5 +66,9 @@ class WebAuthActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    fun saveToken(token: String, expiresIn: Long) {
+        session.accessToken = "Bearer $token"
+        session.accessTokenExpiration = Date().time.plus(expiresIn * 1000).toString()
     }
 }

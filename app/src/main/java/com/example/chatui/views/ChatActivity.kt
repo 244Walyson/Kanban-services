@@ -3,6 +3,7 @@ package com.example.chatui.views
 import SessionManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.FOCUS_DOWN
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatBinding
+import com.example.chatui.fragments.MoreFragment
 import com.example.chatui.models.Message
 import com.example.chatui.models.MessageSent
 import com.example.chatui.models.Team
@@ -48,6 +50,7 @@ class ChatActivity : AppCompatActivity() {
         binding.btnSend.setOnClickListener {
             sendMessage()
         }
+
     }
 
     fun sendMessage() {
@@ -125,14 +128,47 @@ class ChatActivity : AppCompatActivity() {
         val roomDesc = headerChat.findViewById<TextView>(R.id.room_description)
         roomDesc.text = team.description
 
+        val peopleCount = headerChat.findViewById<TextView>(R.id.people_count)
+        peopleCount.text = team.membersCount.toString()
+
         val roomImage = headerChat.findViewById<ImageView>(R.id.userImage)
         Glide
             .with(applicationContext)
             .load(team.imgUrl)
             .centerCrop()
             .into(roomImage)
+
+        roomImage.setOnClickListener {
+            startFragment(team.id)
+        }
+
+        headerChat.findViewById<ImageView>(R.id.people_icon).setOnClickListener {
+            startFragment(team.id)
+        }
+
+        roomTitle.setOnClickListener {
+            startFragment(team.id)
+        }
+
+        headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         toolbar.addView(headerChat)
         showMessage(team.messages)
+    }
+
+    private fun startFragment(teamId: String) {
+        binding.chatFrameLayout.visibility = View.VISIBLE
+
+        val fragment = MoreFragment.newInstance(teamId)
+
+        val fragmentManager = supportFragmentManager
+
+        val transaction = fragmentManager.beginTransaction()
+
+        transaction.replace(R.id.chatFrameLayout, fragment)
+        transaction.commit()
     }
 
     fun showMessage(message: List<Message>) {
