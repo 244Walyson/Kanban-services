@@ -39,9 +39,6 @@ class MoreFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback {
             returnToActivity()
         }
-
-        fetchTeamDetails()
-
     }
 
     private fun returnToActivity() {
@@ -121,6 +118,8 @@ class MoreFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMoreBinding.inflate(inflater, container, false)
+
+        fetchTeamDetails()
 
         val backButton = binding.moreBackButton
         backButton.setOnClickListener {

@@ -123,6 +123,7 @@ class ChatActivity : AppCompatActivity() {
         val headerChat = layoutInflater.inflate(R.layout.header_chat, toolbar, false)
 
         val roomTitle = headerChat.findViewById<TextView>(R.id.room_name)
+        roomTitle.background = null
         roomTitle.text = team.roomName
 
         val roomDesc = headerChat.findViewById<TextView>(R.id.room_description)
@@ -153,7 +154,7 @@ class ChatActivity : AppCompatActivity() {
         headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
+        binding.chatToolbar.removeAllViews()
         toolbar.addView(headerChat)
         showMessage(team.messages)
     }

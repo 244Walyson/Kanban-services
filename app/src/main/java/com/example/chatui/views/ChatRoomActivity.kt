@@ -17,7 +17,9 @@ import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
+import com.example.chatui.fragments.ChatFragment
 import com.example.chatui.fragments.MoreFragment
+import com.example.chatui.fragments.ProfileFragment
 import com.example.chatui.models.FcmToken
 import com.example.chatui.models.Team
 import com.example.chatui.notification.MessageNotification
@@ -71,9 +73,10 @@ class ChatRoomActivity : AppCompatActivity() {
         setSearch()
         setFilter()
 
-        binding.txtAll.setOnClickListener {
-            startFragment("");
+        binding.userName.setOnClickListener {
+            startProfileFragment();
         }
+
     }
 
     private fun setSearch() {
@@ -149,7 +152,20 @@ class ChatRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun startFragment(teamId: String) {
+    private fun startProfileFragment() {
+        binding.chatFrameLayout.visibility = View.VISIBLE
+
+        val fragment = ProfileFragment.newInstance()
+
+        val fragmentManager = supportFragmentManager
+
+        val transaction = fragmentManager.beginTransaction()
+
+        transaction.replace(R.id.chatFrameLayout, fragment)
+        transaction.commit()
+    }
+
+    private fun startMoreFragment(teamId: String) {
         binding.chatFrameLayout.visibility = View.VISIBLE
 
         val fragment = MoreFragment.newInstance(teamId)
@@ -204,7 +220,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
             val image = roomCard.findViewById<ImageView>(R.id.image_group)
             image.setOnClickListener {
-                startFragment(team.id)
+                startMoreFragment(team.id)
             }
 
             Glide
@@ -218,6 +234,7 @@ class ChatRoomActivity : AppCompatActivity() {
             cardChat.setOnClickListener {
                 val intent = Intent(this, ChatActivity::class.java)
                 intent.putExtra("teamId", team.id)
+
                 startActivity(intent)
             }
 

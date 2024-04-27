@@ -1,60 +1,107 @@
 package com.example.chatui.fragments
 
+import SessionManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.activity.addCallback
+import com.bumptech.glide.Glide
 import com.example.chatui.R
+import com.example.chatui.databinding.FragmentProfileBinding
+import com.example.chatui.models.User
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var binding: FragmentProfileBinding
+    private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            returnToActivity()
         }
+
+        binding = FragmentProfileBinding.inflate(layoutInflater)
+    }
+
+    private fun fetchUserData() {
+        val token = session.accessToken
+        val service = NetworkUtils.createServiceUser()
+
+        service.getUser(token!!)
+            .enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    if (response.isSuccessful) {
+                        val user = response.body()
+                        if (user != null) {
+                            showUserDetails(user)
+                        }
+                    }
+                    Log.i("PROFILE FRAG", "User data fetched")
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e("PROFILE FRAG", "Error fetching user data", t)
+                }
+            })
+    }
+
+    private fun showUserDetails(user: User) {
+        val userName = binding.userName
+        userName.text = user.username
+
+        val nickname = binding.userNick
+        nickname.text = user.nickname
+
+        val userImage = binding.userImage
+
+        Glide
+            .with(this)
+            .load(user.imgUrl)
+            .centerCrop()
+            .into(userImage)
+
+        Log.i("PROFILE FRAG", "User details: ${user.username}")
+    }
+    private fun returnToActivity() {
+        requireActivity().findViewById<FrameLayout>(R.id.chatFrameLayout).visibility = View.GONE
+        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragmentTransaction.remove(this@ProfileFragment)
+        fragmentTransaction.commit()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        session = SessionManager(requireContext())
+        fetchUserData()
+
+        val backButton = binding.backButton
+        backButton.setOnClickListener {
+            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_slide_in_top)
+            returnToActivity()
+        }
+
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+
             }
     }
 }

@@ -10,7 +10,7 @@ class TeamFull {
     var roomName: String = ""
     @SerializedName("imgUrl")
     var imgUrl: String = ""
-    @SerializedName("membersCount")
+    @SerializedName("totalMembers")
     var membersCount: Int = 0
     @SerializedName("latestMessage")
     var latestMessage: String = ""
