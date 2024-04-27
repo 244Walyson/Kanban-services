@@ -24,14 +24,13 @@
                 android:layout_gravity="start"
                 app:tint="@color/white"/>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/userImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:background="@color/black_tertiary"
-                app:shapeAppearanceOverlay="@style/Circle"
-                android:scaleType="centerCrop"/>
+            <LinearLayout
+                android:id="@+id/userInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <include layout="@layout/profile_image"/>
+            </LinearLayout>
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"

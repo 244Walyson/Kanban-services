@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.activity.addCallback
 import com.bumptech.glide.Glide
 import com.example.chatui.R
@@ -56,19 +57,25 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showUserDetails(user: User) {
+
         val userName = binding.userName
         userName.text = user.username
 
         val nickname = binding.userNick
         nickname.text = user.nickname
 
-        val userImage = binding.userImage
+        val userInfo = binding.userInfo
+        val userImage = layoutInflater.inflate(R.layout.profile_image, userInfo, false)
+        val imageView = userImage.findViewById<ImageView>(R.id.userImage)
 
         Glide
             .with(this)
             .load(user.imgUrl)
             .centerCrop()
-            .into(userImage)
+            .into(imageView)
+
+        userInfo.removeAllViews()
+        userInfo.addView(userImage)
 
         Log.i("PROFILE FRAG", "User details: ${user.username}")
     }

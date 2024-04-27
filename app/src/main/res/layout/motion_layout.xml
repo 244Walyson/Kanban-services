@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:backgroundTint="@android:color/transparent"
+    app:layoutDescription="@xml/motion_scene">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/TODO">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingHorizontal="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/ScrollChats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/background"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:background="#0178d9"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+        app:layout_constraintEnd_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toStartOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="@+id/imageButton"
+        app:roundPercent="1" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:drawableTop="@drawable/icon_home_white"
+        android:text="Inicio"
+        android:textAllCaps="false"
+        app:layout_constraintCircle="@id/background"
+        app:layout_constraintCircleAngle="270"
+        app:layout_constraintCircleRadius="180dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:drawableTop="@drawable/icon_chat"
+        android:text="Conversas"
+        android:textAllCaps="false"
+        app:layout_constraintCircle="@id/background"
+        app:layout_constraintCircleAngle="330"
+        app:layout_constraintCircleRadius="200dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:drawableTop="@drawable/icon_search_white"
+        android:text="Buscar"
+        android:textAllCaps="false"
+        app:layout_constraintCircle="@id/background"
+        app:layout_constraintCircleAngle="300"
+        app:layout_constraintCircleRadius="200dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:drawableTop="@drawable/icon_profile_white"
+        android:text="Perfil"
+        android:textAllCaps="false"
+        app:layout_constraintCircle="@id/background"
+        app:layout_constraintCircleAngle="0"
+        app:layout_constraintCircleRadius="200dp" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="64dp"
+        android:rotation="45"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:background="@drawable/search_bar_shape"
+        android:backgroundTint="@color/white"
+        android:tint="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:iconSize="30dp"
+        android:src="@drawable/icon_add"
+        app:srcCompat="@drawable/icon_add" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

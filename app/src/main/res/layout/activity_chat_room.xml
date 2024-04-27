@@ -123,19 +123,12 @@
                 android:background="@color/white"/>
         </LinearLayout>
 
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/motionLayoutContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/ScrollChats"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-        </ScrollView>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <include layout="@layout/motion_layout"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

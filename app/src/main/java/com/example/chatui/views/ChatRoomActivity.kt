@@ -77,6 +77,7 @@ class ChatRoomActivity : AppCompatActivity() {
             startProfileFragment();
         }
 
+        //setContentView(R.layout.motion_layout)
     }
 
     private fun setSearch() {
@@ -207,9 +208,11 @@ class ChatRoomActivity : AppCompatActivity() {
     }
 
     fun showChatRooms(teams: List<Team>) {
-        val scrollView = binding.ScrollChats
+        val scrollContainer = binding.motionLayoutContainer
+        val motionLayout = layoutInflater.inflate(R.layout.motion_layout, scrollContainer, false)
+        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
 
-        teams?.forEach {team ->
+        teams?.forEach { team ->
             val roomCard = layoutInflater.inflate(R.layout.card_chat_item , scrollView , false)
 
             val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
@@ -239,8 +242,10 @@ class ChatRoomActivity : AppCompatActivity() {
             }
 
             scrollView.addView(roomCard)
-
         }
+
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(motionLayout)
     }
 
 
