@@ -1,6 +1,7 @@
 package com.kanban.chat.services;
 
-import com.kanban.chat.dtos.ChatRoomDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kanban.chat.dtos.*;
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.ChatMessageEntity;
@@ -25,13 +26,19 @@ public class ChatRoomService {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private UserService userService;
     @Autowired
     private NotificationService notificationService;
 
 
-    public ChatRoomEntity findChatRoomById(String id) {
-        return chatRoomRepository.findById(id).orElse(null);
+    public FullTeamDTO findChatRoomById(String id) {
+        ChatRoomEntity chatRoom = chatRoomRepository.findById(id).orElse(null);
+        List<UserDTO> members = userRepository.findByChatRoomEntityId(id).stream().map(UserDTO::new).toList();
+        FullTeamDTO dto = new FullTeamDTO(chatRoom);
+        dto.setMembers(members);
+        return dto;
     }
 
     @Transactional
@@ -51,8 +58,14 @@ public class ChatRoomService {
 
 
     @Transactional
-    public ChatRoomEntity getChatRoom(String roomId) {
-        return chatRoomRepository.findById(roomId).get();
+    public ChatDTO getChatRoom(String roomId) {
+        ChatDTO chatRoom = new ChatDTO(chatRoomRepository.findById(roomId).get());
+            try {
+                log.info("ChatRoom: {}", chatRoom.getTotalMembers());
+            } catch (Exception e) {
+                log.error("Error: {}", e.getMessage());
+            }
+        return chatRoom;
     }
 
     public List<ChatRoomDTO> findAll() {
@@ -60,7 +73,7 @@ public class ChatRoomService {
         return chatRooms;
     }
 
-    public List<ChatRoomEntity> findAllByUserNick(String nickName) {
-        return chatRoomRepository.findAllByMembersNickName(nickName);
+    public List<ChatRoomDTO> findAllByUserNick(String nickName) {
+        return chatRoomRepository.findAllByMembersNickName(nickName).stream().map(ChatRoomDTO::new).toList();
     }
 }

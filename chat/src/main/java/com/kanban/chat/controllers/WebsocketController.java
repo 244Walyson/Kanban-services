@@ -2,6 +2,8 @@ package com.kanban.chat.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kanban.chat.dtos.ChatDTO;
+import com.kanban.chat.dtos.ChatRoomDTO;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.ChatMessageEntity;
 import com.kanban.chat.models.entities.ChatRoomEntity;
@@ -68,7 +70,7 @@ public class WebsocketController {
     }
 
     @SubscribeMapping("/{roomId}/queue/messages")
-    public ChatRoomEntity sendOneTimeMessage(@DestinationVariable String roomId, @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+    public ChatDTO sendOneTimeMessage(@DestinationVariable String roomId, @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
         String nickName = String.valueOf(sessionAttributes.get("nickName"));
         if(authService.isMemberOfChat(nickName, roomId)){
             return chatRoomService.getChatRoom(roomId);
@@ -78,7 +80,7 @@ public class WebsocketController {
     }
 
     @SubscribeMapping("/chats")
-    public List<ChatRoomEntity> sendOneTimeMessage(@Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
+    public List<ChatRoomDTO> sendOneTimeMessage(@Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
         String nickName = String.valueOf(sessionAttributes.get("nickName"));
         log.info("Messages sent: " + chatRoomService.findAllByUserNick(nickName).size());
         return chatRoomService.findAllByUserNick(nickName);

@@ -1,6 +1,8 @@
 package com.kanban.chat.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.kanban.chat.dtos.ChatDTO;
+import com.kanban.chat.dtos.ChatRoomDTO;
 import com.kanban.chat.models.entities.ChatMessageEntity;
 import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
@@ -30,7 +32,7 @@ public class Controllers {
  private ChatRoomService chatRoomService;
 
   @GetMapping("/{id}")
-  public ChatRoomEntity ok(@PathVariable String id) {
+  public ChatDTO ok(@PathVariable String id) {
     return chatRoomService.getChatRoom(id);
   }
 

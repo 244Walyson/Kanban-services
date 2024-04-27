@@ -10,6 +10,7 @@ public class ChatRoomDTO {
     private String imgUrl;
     private String latestMessage;
 
+
     public ChatRoomDTO() {
     }
 
@@ -60,4 +61,5 @@ public class ChatRoomDTO {
     public void setLatestMessage(String latestMessage) {
         this.latestMessage = latestMessage;
     }
+
 }

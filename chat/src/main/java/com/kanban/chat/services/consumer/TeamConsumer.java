@@ -41,14 +41,14 @@ public class TeamConsumer {
             TeamDTO teamDTO = objectMapper.convertValue(payloadNode, TeamDTO.class);
             teamDTO.setImgUrl(payloadNode.get("img_url").asText());
 
-            if(chatRoomRepository.existsById(teamDTO.getId().toString())) {
+            if(chatRoomRepository.existsById(teamDTO.getId())) {
                 log.info("Team already exists in the database");
                 return;
             }
 
             var chatRoom = new ChatRoomEntity()
                     .builder()
-                    .id(teamDTO.getId().toString())
+                    .id(teamDTO.getId())
                     .roomName(teamDTO.getName())
                     .imgUrl(teamDTO.getImgUrl())
                     .description(teamDTO.getDescription())
