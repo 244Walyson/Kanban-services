@@ -60,13 +60,12 @@ public class WebsocketController {
                                @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) throws JsonProcessingException {
 
        String nickName = String.valueOf(sessionAttributes.get("nickName"));
-
         if(!authService.isMemberOfChat(nickName, roomId)){
             return;
         }
         ChatMessageEntity msgEntity = chatRoomService.saveMessage(chatMessage, roomId, nickName);
         messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", msgEntity);
-
+        chatService.sendToChatMembers(roomId);
     }
 
     @SubscribeMapping("/{roomId}/queue/messages")
@@ -79,7 +78,7 @@ public class WebsocketController {
         return null;
     }
 
-    @SubscribeMapping("/chats")
+    @SubscribeMapping("/{nick}/queue/chats")
     public List<ChatRoomDTO> sendOneTimeMessage(@Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
         String nickName = String.valueOf(sessionAttributes.get("nickName"));
         log.info("Messages sent: " + chatRoomService.findAllByUserNick(nickName).size());
