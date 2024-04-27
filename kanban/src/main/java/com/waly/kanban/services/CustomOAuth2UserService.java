@@ -2,6 +2,8 @@ package com.waly.kanban.services;
 
 import com.waly.kanban.dto.CustomOAuth2User;
 import com.waly.kanban.entities.User;
+import com.waly.kanban.entities.UserOutbox;
+import com.waly.kanban.repositories.UserOutboxRepository;
 import com.waly.kanban.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserOutboxRepository userOutboxRepository;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user =  super.loadUser(userRequest);
@@ -28,7 +33,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setName(user.getAttribute("name"));
             userEntity.setImgUrl(user.getAttribute("avatar_url"));
             userEntity.setNickname(user.getAttribute("login"));
-            userRepository.save(userEntity);
+            userEntity = userRepository.save(userEntity);
+            userOutboxRepository.save(new UserOutbox(userEntity));
         }
         return new CustomOAuth2User(user);
     }

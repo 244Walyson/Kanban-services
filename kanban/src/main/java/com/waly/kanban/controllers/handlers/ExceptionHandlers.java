@@ -46,7 +46,7 @@ public class ExceptionHandlers {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<CustomError> databaseException(DatabaseException e, HttpServletRequest request){
         CustomError error = new CustomError();
-        int status = HttpStatus.NOT_FOUND.value();
+        int status = HttpStatus.BAD_REQUEST.value();
         error.setStatus(status);
         error.setMessage(e.getMessage());
         error.setTimestamp(Instant.now());
