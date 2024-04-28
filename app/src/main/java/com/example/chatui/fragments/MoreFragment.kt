@@ -3,12 +3,14 @@ package com.example.chatui.fragments
 import SessionManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.addCallback
 import com.bumptech.glide.Glide
@@ -27,6 +29,7 @@ class MoreFragment : Fragment() {
     private var teamId: String? = null
     private lateinit var binding: FragmentMoreBinding
     private lateinit var session: SessionManager
+    private lateinit var fullTeam: FullTeam
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +62,8 @@ class MoreFragment : Fragment() {
                 if (response.isSuccessful) {
                     val team = response.body()
                     Log.i("MORE FRAG", "Team details: ${team?.name}")
-                    showTeamDetails(team!!)
+                    fullTeam = team!!
+                    showTeamDetails(team)
                 }
                 Log.i("MORE FRAG", "Team details: $response")
             }
@@ -92,8 +96,15 @@ class MoreFragment : Fragment() {
             .into(teamImage)
 
 
+        listMembers()
+
+    }
+
+    private fun listMembers() {
         val members = binding.usersList
-        team.members?.forEach() { member ->
+        members.removeAllViews()
+
+        fullTeam.members?.forEach() { member ->
             val memberView = layoutInflater.inflate(R.layout.card_chat_item_group, members, false)
             val memberName = memberView.findViewById<TextView>(R.id.memberName)
             val memberUsername = memberView.findViewById<TextView>(R.id.memberNick)
@@ -101,6 +112,8 @@ class MoreFragment : Fragment() {
 
             memberName.text = member.username
             memberUsername.text = member.nickname
+
+            Log.i("MORE FRAG", "Member details: ${member.imgUrl}")
 
             Glide
                 .with(requireContext())
@@ -111,8 +124,45 @@ class MoreFragment : Fragment() {
 
             members.addView(memberView)
         }
-
     }
+    private fun listBoards() {
+        val listMembers = binding.usersList
+        listMembers.removeAllViews()
+
+        var linearLayout: LinearLayout? = null
+        var i = 1
+        val boards = fullTeam.boards!!
+        boards.forEachIndexed { index, board ->
+
+            if(linearLayout == null){
+                linearLayout = LinearLayout(requireContext())
+                linearLayout!!.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                linearLayout!!.gravity = Gravity.CENTER
+                if (i == boards.size) linearLayout!!.gravity = Gravity.START
+            }
+
+            val boardView = layoutInflater.inflate(R.layout.card_board, listMembers, false)
+            val boardName = boardView.findViewById<TextView>(R.id.boardName)
+            val totalCards = boardView.findViewById<TextView>(R.id.totalCards)
+
+            boardName.text = board.title
+            totalCards.text = board.totalCards.toString()
+            linearLayout!!.addView(boardView)
+
+            if(i % 2 == 0 || i ==  boards.size ) {
+                Log.i("AQUI", "AQUI $i size ${boards.size}")
+                listMembers.addView(linearLayout)
+                linearLayout = null
+                i++
+                return@forEachIndexed
+            }
+            i++
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -120,6 +170,19 @@ class MoreFragment : Fragment() {
         binding = FragmentMoreBinding.inflate(inflater, container, false)
 
         fetchTeamDetails()
+        val teamMembers = binding.teamMembers
+        val teamBoards = binding.teamBoards
+
+        teamMembers.setOnClickListener {
+            teamBoards.setTextColor(resources.getColor(R.color.gray_tertiary))
+            teamMembers.setTextColor(resources.getColor(R.color.white))
+            listMembers()
+        }
+        teamBoards.setOnClickListener {
+            teamMembers.setTextColor(resources.getColor(R.color.gray_tertiary))
+            teamBoards.setTextColor(resources.getColor(R.color.white))
+            listBoards()
+        }
 
         val backButton = binding.moreBackButton
         backButton.setOnClickListener {

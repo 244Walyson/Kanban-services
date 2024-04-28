@@ -52,7 +52,7 @@ class NetworkUtils {
         }
 
         fun createServiceTeam(): TeamClient {
-            return getRetrofitInstanceChat().create(TeamClient::class.java)
+            return getRetrofitInstance().create(TeamClient::class.java)
         }
     }
 }

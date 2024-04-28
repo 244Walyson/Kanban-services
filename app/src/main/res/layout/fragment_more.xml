@@ -54,17 +54,19 @@
                 android:paddingHorizontal="70dp"
                 android:layout_marginTop="20dp">
                 <TextView
+                    android:id="@+id/teamMembers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#Participantes"
+                    android:text="Participantes"
                     android:textColor="@color/white"
                     android:fontFamily="@font/gordita_medium"
                     android:textSize="20dp"
                     android:layout_weight="1"/>
                 <TextView
+                    android:id="@+id/teamBoards"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#Projeto"
+                    android:text="Boards"
                     android:fontFamily="@font/gordita_medium"
                     android:textSize="20dp"
                     android:textColor="@color/gray_primary"/>
@@ -73,7 +75,8 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
             <LinearLayout
                 android:id="@+id/usersList"
                 android:layout_width="match_parent"

@@ -16,10 +16,24 @@ class FullTeam {
     var totalCollaborators: Int? = null
     @SerializedName("imgUrl")
     var imgUrl: String? = null
-    @SerializedName("members")
+    @SerializedName("collaborators")
     var members: List<User>? = null
+    @SerializedName("totalBoards")
+    var totalBoards: Int? = null
+    @SerializedName("boards")
+    var boards: List<Board>? = null
 
-    constructor( id: String, name: String, occupationArea: String, description: String, totalCollaborators: Int, imgUrl: String, members: List<User>) {
+    constructor(
+        id: String?,
+        name: String?,
+        occupationArea: String?,
+        description: String?,
+        totalCollaborators: Int?,
+        imgUrl: String?,
+        members: List<User>?,
+        totalBoards: Int?,
+        boards: List<Board>?
+    ) {
         this.id = id
         this.name = name
         this.occupationArea = occupationArea
@@ -27,6 +41,8 @@ class FullTeam {
         this.totalCollaborators = totalCollaborators
         this.imgUrl = imgUrl
         this.members = members
+        this.totalBoards = totalBoards
+        this.boards = boards
     }
 
     constructor()

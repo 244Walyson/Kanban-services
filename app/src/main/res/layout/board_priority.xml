@@ -1,0 +1,9 @@
+<com.google.android.material.imageview.ShapeableImageView
+    android:layout_width="16dp"
+    android:layout_height="16dp"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"
+    android:background="#2FFF00"
+    app:shapeAppearanceOverlay="@style/Circle"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

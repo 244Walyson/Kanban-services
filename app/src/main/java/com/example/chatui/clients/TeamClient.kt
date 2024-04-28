@@ -8,7 +8,7 @@ import retrofit2.http.Path
 
 interface TeamClient {
 
-    @GET("/chat-room/{teamId}")
+    @GET("/teams/{teamId}")
     fun getTeam(@Path("teamId") teamId: String, @Header("Authorization") authorization: String): Call<FullTeam>
 
 }

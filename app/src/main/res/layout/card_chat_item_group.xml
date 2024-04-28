@@ -18,8 +18,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/memberImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
                 android:src="@drawable/image_test"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -74,10 +74,10 @@
 
         </LinearLayout>
         <View
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
-            android:background="@color/gray_primary"/>
+            android:background="@color/black_tertiary"/>
 
     </LinearLayout>
 
