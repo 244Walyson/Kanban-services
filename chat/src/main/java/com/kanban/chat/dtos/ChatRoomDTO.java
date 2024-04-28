@@ -2,6 +2,9 @@ package com.kanban.chat.dtos;
 
 import com.kanban.chat.models.entities.ChatRoomEntity;
 import lombok.Data;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
+
+import java.util.Date;
 
 public class ChatRoomDTO {
 
@@ -9,15 +12,17 @@ public class ChatRoomDTO {
     private String roomName;
     private String imgUrl;
     private String latestMessage;
+    private String lastActivity;
 
 
     public ChatRoomDTO() {
     }
 
-    public ChatRoomDTO(String id, String roomName, String imgUrl, String latestMessage) {
+    public ChatRoomDTO(String id, String roomName, String imgUrl, String latestMessage, String lastActivity) {
         this.id = id;
         this.roomName = roomName;
         this.imgUrl = imgUrl;
+        this.lastActivity = lastActivity;
         this.latestMessage = latestMessage;
     }
 
@@ -62,4 +67,11 @@ public class ChatRoomDTO {
         this.latestMessage = latestMessage;
     }
 
+    public String getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(String lastActivity) {
+        this.lastActivity = lastActivity;
+    }
 }

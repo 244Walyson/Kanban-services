@@ -16,9 +16,12 @@ public class UserMinDTO {
     private Long id;
     private String name;
     private String email;
+    private String nickname;
+
     public UserMinDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getUsername();
+        this.nickname = user.getNickname();
     }
 }

@@ -60,11 +60,6 @@ public class ChatRoomService {
     @Transactional
     public ChatDTO getChatRoom(String roomId) {
         ChatDTO chatRoom = new ChatDTO(chatRoomRepository.findById(roomId).get());
-            try {
-                log.info("ChatRoom: {}", chatRoom.getTotalMembers());
-            } catch (Exception e) {
-                log.error("Error: {}", e.getMessage());
-            }
         return chatRoom;
     }
 

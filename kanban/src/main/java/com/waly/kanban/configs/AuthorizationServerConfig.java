@@ -70,6 +70,7 @@ public class AuthorizationServerConfig {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+
 	@Autowired
 	private UserService userService;
 
@@ -162,6 +163,7 @@ public class AuthorizationServerConfig {
 			CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
 			String nickname = userService.findUserByEmail(user.getUsername()).getNickname();
 			List<String> authorities = user.getAuthorities().stream().map(x -> x.getAuthority()).toList();
+
 			if (context.getTokenType().getValue().equals("access_token")) {
 				// @formatter:off
 				context.getClaims()
@@ -195,6 +197,8 @@ public class AuthorizationServerConfig {
 		// Crie uma instância de JWTClaimsSet.Builder
 		JWTClaimsSet.Builder claimsSetBuilder = new JWTClaimsSet.Builder();
 
+		var newUsername = username;
+		if (username == null) newUsername = nickname;
 
 		// Defina os claims do token
 		var jwt = Jwts.builder()
@@ -205,7 +209,7 @@ public class AuthorizationServerConfig {
 				.setNotBefore(issTime) // nbf
 				.setExpiration(expiration) // exp
 				.claim("nick", nickname)
-				.claim("username", username)
+				.claim("username", newUsername)
 				.claim("authorities", authorities)
 				.signWith(SignatureAlgorithm.RS256, rsaKey.toRSAPrivateKey())
 				.compact();

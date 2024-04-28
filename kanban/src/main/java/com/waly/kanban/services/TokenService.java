@@ -31,12 +31,12 @@ public class TokenService {
             OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
             log.info(oidcUser.getAttributes().toString());
             user = userService.findUserByEmail(oidcUser.getEmail());
-            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_USER"));
+            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_MEMBER"));
         } catch (Exception e) {
             OAuth2User userOauth = (OAuth2User) authentication.getPrincipal();
             log.info(userOauth.getAttributes().toString());
             user = userService.findUserByNickname(userOauth.getAttribute("login"));
-            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_USER"));
+            return authorizationServerConfig.generateToken(user.getUsername(), user.getNickname(), Arrays.asList("ROLE_MEMBER"));
         }
 
     }

@@ -33,6 +33,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setName(user.getAttribute("name"));
             userEntity.setImgUrl(user.getAttribute("avatar_url"));
             userEntity.setNickname(user.getAttribute("login"));
+
+            if(userEntity.getEmail() == null) userEntity.setEmail(user.getAttribute("login").toString().concat("@github.com"));
+
             userEntity = userRepository.save(userEntity);
             userOutboxRepository.save(new UserOutbox(userEntity));
         }
