@@ -17,11 +17,13 @@ public class UserMinDTO {
     private String name;
     private String email;
     private String nickname;
+    private String imgUrl;
 
     public UserMinDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getUsername();
         this.nickname = user.getNickname();
+        this.imgUrl = user.getImgUrl();
     }
 }
