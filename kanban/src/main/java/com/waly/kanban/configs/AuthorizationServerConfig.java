@@ -45,19 +45,29 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Configuration
-public class AuthorizationServerConfig {
+	public class AuthorizationServerConfig {
 
 	@Value("${security.client-id}")
 	private String clientId;
@@ -73,6 +83,11 @@ public class AuthorizationServerConfig {
 
 	@Autowired
 	private UserService userService;
+
+	@Value("${security.jwt.key-path}")
+	private String keyPath;
+
+	private static final String kid = "IkVzdGUtZS1tZXUtS2lkLVBlcnNvbmFsaXplZCI=";
 
 	private static RSAKey rsaKey;
 
@@ -188,7 +203,6 @@ public class AuthorizationServerConfig {
 		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 	}
 
-
 	public AccessToken generateToken(String username, String nickname, List<String> authorities) {
 
 		try {
@@ -223,14 +237,102 @@ public class AuthorizationServerConfig {
 	}
 
 
-	private static RSAKey generateRsa() {
-		KeyPair keyPair = generateRsaKey();
-		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(UUID.randomUUID().toString()).build();
+
+
+	private void savePrivateKeyToFile(PrivateKey privateKey) {
+		try (FileOutputStream fos = new FileOutputStream(keyPath + "private-key.pem")) {
+
+			String privateKeyBase64 = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+
+			fos.write("-----BEGIN RSA PRIVATE KEY-----\n".getBytes());
+			fos.write(privateKeyBase64.getBytes());
+			fos.write("\n-----END RSA PRIVATE KEY-----\n".getBytes());
+
+			System.out.println("Par de chaves salvo em " + keyPath + "private-key.pem");
+
+			System.out.println("Par de chaves salvo em " + keyPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private static KeyPair generateRsaKey() {
+	private void savePublicKeyToFile(PublicKey publicKey) {
+		try (FileOutputStream fos = new FileOutputStream(keyPath + "public-key.pem")) {
+
+			String publicKeyBase64 = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+
+			// Escrever as chaves no arquivo
+			fos.write("-----BEGIN RSA PUBLIC KEY-----\n".getBytes());
+			fos.write(publicKeyBase64.getBytes());
+			fos.write("\n-----END RSA PUBLIC KEY-----\n".getBytes());
+
+			System.out.println("Par de chaves salvo em " + keyPath + "public-key.pem");
+
+			System.out.println("Par de chaves salvo em " + keyPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public RSAPublicKey readX509PublicKey() {
+		try {
+			String key = new String(Files.readAllBytes(Paths.get(keyPath + "public-key.pem")), Charset.defaultCharset());
+
+			String publicKeyPEM = key
+					.replace("-----BEGIN RSA PUBLIC KEY-----", "")
+					.replaceAll(System.lineSeparator(), "")
+					.replace("-----END RSA PUBLIC KEY-----", "");
+
+			byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+			return (RSAPublicKey) keyFactory.generatePublic(keySpec);
+		}catch (Exception e) {
+			return null;
+		}
+	}
+
+	public RSAPrivateKey readPKCS8PrivateKey() throws Exception {
+		String key = new String(Files.readAllBytes(Paths.get(keyPath + "private-key.pem")), Charset.defaultCharset());
+
+		String privateKeyPEM = key
+				.replace("-----BEGIN RSA PRIVATE KEY-----", "")
+				.replaceAll(System.lineSeparator(), "")
+				.replace("-----END RSA PRIVATE KEY-----", "");
+
+		byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
+
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+		return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+	}
+
+
+	private RSAKey generateRsa() {
+		RSAPublicKey publicKey;
+		RSAPrivateKey privateKey;
+		try {
+			publicKey = readX509PublicKey();
+			privateKey = readPKCS8PrivateKey();
+			RSAKey rsaKey1 = new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(kid).build();
+			if (rsaKey1 != null) {
+				log.info("RSA key loaded from file");
+				log.info(rsaKey1.toJSONString());
+				return rsaKey1;
+			}
+		} catch (Exception e) {
+			log.error("RSA key not found in file");
+		}
+		KeyPair keyPair = generateRsaKey();
+		publicKey = (RSAPublicKey) keyPair.getPublic();
+		privateKey = (RSAPrivateKey) keyPair.getPrivate();
+		savePublicKeyToFile(publicKey);
+		savePrivateKeyToFile(privateKey);
+		return new RSAKey.Builder(publicKey).privateKey(privateKey).keyID(kid).build();
+	}
+
+	private KeyPair generateRsaKey() {
 		KeyPair keyPair;
 		try {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
