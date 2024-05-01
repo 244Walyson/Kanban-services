@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chatui.MainActivity
 import com.example.chatui.databinding.ActivitySplashScreenBinding
 import java.util.Date
 
@@ -19,7 +20,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
 
         if(verifyTokenExpiration()) {
-            Intent(this, ChatRoomActivity::class.java).also {
+            Intent(this, MainActivity::class.java).also {
                 startActivity(it)
                 finish()
             }

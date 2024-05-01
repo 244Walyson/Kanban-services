@@ -39,7 +39,7 @@
         app:roundPercent="1" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0000"
@@ -51,7 +51,7 @@
         app:layout_constraintCircleRadius="180dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0000"
@@ -63,7 +63,7 @@
         app:layout_constraintCircleRadius="200dp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/button_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0000"
@@ -75,7 +75,7 @@
         app:layout_constraintCircleRadius="200dp" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/button_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0000"
@@ -90,8 +90,8 @@
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="60dp"
         android:rotation="45"
         android:scaleX="2"
         android:scaleY="2"
@@ -100,7 +100,7 @@
         android:tint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:iconSize="20dp"
+        app:iconSize="10dp"
         android:src="@drawable/icon_add"
         app:srcCompat="@drawable/icon_add" />
 

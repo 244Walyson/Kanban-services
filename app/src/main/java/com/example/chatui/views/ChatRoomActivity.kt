@@ -24,6 +24,7 @@ import com.example.chatui.models.FcmToken
 import com.example.chatui.models.Team
 import com.example.chatui.notification.MessageNotification
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -243,10 +244,13 @@ class ChatRoomActivity : AppCompatActivity() {
         val motionLayout = layoutInflater.inflate(R.layout.motion_layout, scrollContainer, false)
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
 
-        var j = teams.keys.max()
+        Log.i("SHOW CHAT ROOM", "Showing chat rooms ${teams.keys.maxOrNull()}")
+
+        var j = teams.keys.maxOrNull() ?: return
         for (i in j downTo  0 step 1) {
             if(teams[i] != null) {
                 val roomCard = layoutInflater.inflate(R.layout.card_chat_item , scrollView , false)
+                val cardImage = layoutInflater.inflate(R.layout.home_image, scrollContainer, false)
 
                 val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
                 teamName.text = teams[i]!!.roomName
@@ -254,7 +258,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
                 latestMsg.text = teams[i]!!.latestMessage
 
-                val image = roomCard.findViewById<ImageView>(R.id.image_group)
+                val image = cardImage.findViewById<ShapeableImageView>(R.id.statusImage)
                 image.setOnClickListener {
                     startMoreFragment(teams[i]!!.id)
                 }
@@ -264,6 +268,8 @@ class ChatRoomActivity : AppCompatActivity() {
                     .load(teams[i]!!.imgUrl)
                     .centerCrop()
                     .into(image)
+
+                roomCard.findViewById<LinearLayout>(R.id.cardImage).addView(cardImage)
 
                 val cardChat = roomCard.findViewById<LinearLayout>(R.id.card_chat_item)
 

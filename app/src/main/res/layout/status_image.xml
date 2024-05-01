@@ -1,0 +1,17 @@
+<LinearLayout android:layout_height="73dp"
+    android:layout_width="73dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/image_shape"
+    android:gravity="center"
+    android:layout_marginHorizontal="3dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/color11"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/Circle"/>
+
+</LinearLayout>

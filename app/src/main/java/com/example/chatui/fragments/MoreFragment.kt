@@ -1,6 +1,7 @@
 package com.example.chatui.fragments
 
 import SessionManager
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -17,6 +18,8 @@ import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.databinding.FragmentMoreBinding
 import com.example.chatui.models.FullTeam
+import com.example.chatui.views.ChatActivity
+import com.example.chatui.views.ChatRoomActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,11 +48,14 @@ class MoreFragment : Fragment() {
     }
 
     private fun returnToActivity() {
-        requireActivity().findViewById<FrameLayout>(R.id.chatFrameLayout).visibility = View.GONE
-        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        fragmentTransaction.remove(this@MoreFragment)
-        fragmentTransaction.commit()
+        if (isAdded) {
+            val intent = Intent(requireContext(), ChatActivity::class.java)
+            intent.putExtra("teamId", teamId)
+            startActivity(intent)
+            return
+        }
     }
+
     private fun fetchTeamDetails() {
         val service = NetworkUtils.createServiceTeam()
         val token = session.accessToken
@@ -58,21 +64,22 @@ class MoreFragment : Fragment() {
 
         service.getTeam(teamId!!, token!!)
             .enqueue(object : Callback<FullTeam> {
-            override fun onResponse(call: Call<FullTeam>, response: Response<FullTeam>) {
-                if (response.isSuccessful) {
-                    val team = response.body()
-                    Log.i("MORE FRAG", "Team details: ${team?.name}")
-                    fullTeam = team!!
-                    showTeamDetails(team)
+                override fun onResponse(call: Call<FullTeam>, response: Response<FullTeam>) {
+                    if (response.isSuccessful) {
+                        val team = response.body()
+                        Log.i("MORE FRAG", "Team details: ${team?.name}")
+                        fullTeam = team!!
+                        showTeamDetails(team)
+                    }
+                    Log.i("MORE FRAG", "Team details: $response")
                 }
-                Log.i("MORE FRAG", "Team details: $response")
-            }
 
-            override fun onFailure(call: Call<FullTeam>, t: Throwable) {
-                Log.e("MORE FRAG", "Error fetching team details", t)
-            }
-        })
+                override fun onFailure(call: Call<FullTeam>, t: Throwable) {
+                    Log.e("MORE FRAG", "Error fetching team details", t)
+                }
+            })
     }
+
     private fun showTeamDetails(team: FullTeam) {
 
         Log.i("MORE FRAG", "Team details: ${team.name}")
@@ -125,6 +132,7 @@ class MoreFragment : Fragment() {
             members.addView(memberView)
         }
     }
+
     private fun listBoards() {
         val listMembers = binding.usersList
         listMembers.removeAllViews()
@@ -134,7 +142,7 @@ class MoreFragment : Fragment() {
         val boards = fullTeam.boards!!
         boards.forEachIndexed { index, board ->
 
-            if(linearLayout == null){
+            if (linearLayout == null) {
                 linearLayout = LinearLayout(requireContext())
                 linearLayout!!.layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -152,7 +160,7 @@ class MoreFragment : Fragment() {
             totalCards.text = board.totalCards.toString()
             linearLayout!!.addView(boardView)
 
-            if(i % 2 == 0 || i ==  boards.size ) {
+            if (i % 2 == 0 || i == boards.size) {
                 Log.i("AQUI", "AQUI $i size ${boards.size}")
                 listMembers.addView(linearLayout)
                 linearLayout = null
@@ -186,7 +194,10 @@ class MoreFragment : Fragment() {
 
         val backButton = binding.moreBackButton
         backButton.setOnClickListener {
-            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_slide_in_top)
+            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(
+                requireContext(),
+                androidx.appcompat.R.anim.abc_slide_in_top
+            )
             returnToActivity()
         }
 

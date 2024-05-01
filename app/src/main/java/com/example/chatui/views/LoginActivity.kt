@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chatui.MainActivity
 import com.example.chatui.databinding.ActivityLoginBinding
 import com.example.chatui.models.User
 import com.example.chatui.services.SaveUserData
@@ -73,8 +74,10 @@ class LoginActivity : AppCompatActivity() {
                         val loginResponse = response.body()
                         saveToken(loginResponse?.accessToken.toString(), loginResponse!!.expiresIn)
                         SaveUserData(applicationContext).saveLogedUser()
-                        startActivity(Intent(this@LoginActivity, ChatRoomActivity::class.java))
+                        //startActivity(Intent(this@LoginActivity, ChatRoomActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
+
                     }
                 }
 

@@ -54,5 +54,9 @@ class NetworkUtils {
         fun createServiceTeam(): TeamClient {
             return getRetrofitInstance().create(TeamClient::class.java)
         }
+
+        fun createServiceTeamFull(): TeamFullClient {
+            return getRetrofitInstance().create(TeamFullClient::class.java)
+        }
     }
 }

@@ -1,12 +1,16 @@
 package com.example.chatui.views
 
 import SessionManager
+import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.FOCUS_DOWN
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.chatui.R
@@ -51,9 +55,17 @@ class ChatActivity : AppCompatActivity() {
             sendMessage()
         }
 
-    }
+            onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        }
 
-    fun sendMessage() {
+        private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@ChatActivity, ChatRoomActivity::class.java))
+                Log.d(TAG, "onBackPressedCallback: handleOnBackPressed")
+            }
+        }
+
+        fun sendMessage() {
         val message = binding.edtMessage.text.toString()
         if(message.isEmpty()) return;
         binding.edtMessage.text.clear()
@@ -120,8 +132,9 @@ class ChatActivity : AppCompatActivity() {
     fun showChatRoom(team: TeamFull) {
         Log.i("TEAM", "TEAM: $team")
         val toolbar = binding.chatToolbar
+        val newHeaderChat = layoutInflater.inflate(R.layout.header_chat, toolbar, false)
+        toolbar.addView(newHeaderChat)
         val headerChat = layoutInflater.inflate(R.layout.header_chat, toolbar, false)
-
         val roomTitle = headerChat.findViewById<TextView>(R.id.room_name)
         roomTitle.background = null
         roomTitle.text = team.roomName
@@ -152,7 +165,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            startActivity(Intent(this, ChatRoomActivity::class.java))
         }
         binding.chatToolbar.removeAllViews()
         toolbar.addView(headerChat)
@@ -215,4 +228,5 @@ class ChatActivity : AppCompatActivity() {
             .into(senderImage)
         chatContainer.addView(otherMessage)
     }
+
 }

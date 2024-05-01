@@ -9,16 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/image_group"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:src="@drawable/image_test"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="7dp"
-            android:layout_marginRight="7dp"
-            app:shapeAppearanceOverlay="@style/Circle" />
+        <LinearLayout
+            android:id="@+id/cardImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/card_chat_item"
             android:layout_width="wrap_content"

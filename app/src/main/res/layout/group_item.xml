@@ -11,15 +11,13 @@
 
     <!-- ImageView -->
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
+        android:id="@+id/gradientImage"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:shapeAppearanceOverlay="@style/RoundedTop"
-        android:src="@drawable/color4"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:layout_weight="1" />
-
 
     <ImageView
         android:layout_width="40dp"
@@ -37,13 +35,16 @@
         android:orientation="vertical"
         android:paddingHorizontal="10dp">
         <TextView
+            android:id="@+id/mainTeamName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Backend"
+            android:text="Equipe Backend"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="16dp"
+            android:maxLines="1"
             android:fontFamily="@font/poppins_semibold"/>
         <TextView
+            android:id="@+id/mainTeamDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-5dp"
