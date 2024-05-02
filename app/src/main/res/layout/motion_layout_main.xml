@@ -7,149 +7,160 @@
     android:backgroundTint="@android:color/transparent"
     app:layoutDescription="@xml/motion_scene">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/TODO"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp">
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                    <include layout="@layout/status_image"/>
-                </LinearLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/TODO">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="vertical">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical">
+                   <HorizontalScrollView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
+                       <LinearLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:paddingBottom="10dp">
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                           <include layout="@layout/status_image"/>
+                       </LinearLayout>
+                   </HorizontalScrollView>
+               </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="20dp"
-            android:layout_marginVertical="20dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray_quaternary"
-                    android:text="Equipes"
-                    android:textSize="18dp"
-                    android:fontFamily="@font/poppins_bold"/>
-            </LinearLayout>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_more_black"
-                android:backgroundTint="@color/black"/>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:gravity="center"
+                   android:paddingEnd="20dp"
+                   android:layout_marginVertical="20dp">
+                   <LinearLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1">
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:textColor="@color/gray_quaternary"
+                           android:text="Equipes"
+                           android:textSize="18dp"
+                           android:fontFamily="@font/poppins_bold"/>
+                   </LinearLayout>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/icon_more_black"
+                       android:backgroundTint="@color/black"/>
 
-        </LinearLayout>
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:paddingEnd="10dp"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/mainTeams"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="10dp"
-                android:paddingLeft="5dp"
-                android:orientation="horizontal">
-            </LinearLayout>
-        </HorizontalScrollView>
+               </LinearLayout>
+               <HorizontalScrollView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginBottom="20dp"
+                   android:paddingEnd="10dp"
+                   android:scrollbars="none">
+                   <LinearLayout
+                       android:id="@+id/mainTeams"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:paddingBottom="10dp"
+                       android:paddingLeft="5dp"
+                       android:orientation="horizontal">
+                   </LinearLayout>
+               </HorizontalScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Suas Tasks"
-                android:textSize="18sp"
-                android:layout_weight="1"
-                android:textColor="@color/gray_quaternary"
-                android:fontFamily="@font/poppins_bold"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_more_black"
-                android:backgroundTint="@color/black"/>
-        </LinearLayout>
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="10dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <include layout="@layout/card_board_main"/>
-                <include layout="@layout/card_board_main"/>
-                <include layout="@layout/card_board_main"/>
-                <include layout="@layout/card_board_main"/>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:paddingEnd="20dp">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Suas Tasks"
+                       android:textSize="18sp"
+                       android:layout_weight="1"
+                       android:textColor="@color/gray_quaternary"
+                       android:fontFamily="@font/poppins_bold"/>
+                   <ImageView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:src="@drawable/icon_more_black"
+                       android:backgroundTint="@color/black"/>
+               </LinearLayout>
+               <HorizontalScrollView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:paddingEnd="10dp">
+                   <LinearLayout
+                       android:id="@+id/mainTasks"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Nada ainda"
+                           android:textSize="16sp"
+                           android:textColor="@color/gray_tertiary"
+                           android:fontFamily="@font/futura_medium"/>
 
-            </LinearLayout>
-        </HorizontalScrollView>
+                   </LinearLayout>
+               </HorizontalScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingEnd="20dp"
-                android:layout_marginTop="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recentes"
-                    android:textSize="18sp"
-                    android:layout_weight="1"
-                    android:textColor="@color/gray_quaternary"
-                    android:fontFamily="@font/poppins_bold"/>
+                   <LinearLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:paddingEnd="20dp"
+                       android:layout_marginTop="20dp">
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Recentes"
+                           android:textSize="18sp"
+                           android:layout_weight="1"
+                           android:textColor="@color/gray_quaternary"
+                           android:fontFamily="@font/poppins_bold"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_more_black"/>
-            </LinearLayout>
+                       <ImageView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:src="@drawable/icon_more_black"/>
+                   </LinearLayout>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingEnd="10dp"
-                    android:orientation="vertical">
-                    <include layout="@layout/card_chat_item"/>
-                    <include layout="@layout/card_chat_item"/>
-                    <include layout="@layout/card_chat_item"/>
-                    <include layout="@layout/card_chat_item"/>
-                    <include layout="@layout/card_chat_item"/>
-                </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
-    </LinearLayout>
+                   <ScrollView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content">
+                       <LinearLayout
+                           android:id="@+id/ScrollChatMain"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:paddingEnd="10dp"
+                           android:orientation="vertical">
+
+                       </LinearLayout>
+                   </ScrollView>
+               </LinearLayout>
+           </LinearLayout>
+
+       </LinearLayout>
+   </ScrollView>
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/background"

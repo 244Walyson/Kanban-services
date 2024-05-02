@@ -12,7 +12,7 @@
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#77210A1F" />
+        android:background="#D3000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,15 +22,22 @@
         tools:layout_editor_absoluteX="-78dp"
         tools:layout_editor_absoluteY="-76dp">
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
             android:textColor="@color/white"
-            android:text="Chat"
+            android:text="Login"
             android:fontFamily="@font/gordita_black"
-            android:textSize="60sp" />
+            android:textSize="20sp" />
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/image_logo"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,12 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#91FFFFFF"
+                android:backgroundTint="#E8FFFFFF"
                 android:maxLines="1"
                 android:hint="Email"
                 android:text="maria@gmail.com"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_regular"
+                android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/black_secondary" />
 
             <EditText
@@ -60,7 +67,7 @@
                 android:maxLines="1"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#91FFFFFF"
+                android:backgroundTint="#E8FFFFFF"
                 android:hint="Password"
                 android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_regular"
@@ -103,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Entrar com"
-                    android:textColor="#d9d9d9" />
+                    android:textColor="@color/gray_tertiary" />
 
                 <View
                     android:layout_width="80dp"
@@ -123,13 +130,15 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/icon_google"
-                    android:layout_marginHorizontal="10dp"/>
+                    android:layout_marginHorizontal="10dp"
+                    app:tint="@color/black" />
                 <ImageView
                     android:id="@+id/GithubLogin"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginHorizontal="10dp"
-                    android:src="@drawable/icon_github"/>
+                    android:src="@drawable/icon_github"
+                    app:tint="@color/black" />
             </LinearLayout>
             <TextView
                 android:id="@+id/txtSignUp"

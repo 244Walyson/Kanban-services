@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.txtSignUp.setOnClickListener {
             startActivity(Intent(this, NewUserActivity::class.java))
+            finish()
         }
 
         binding.GithubLogin.setOnClickListener {

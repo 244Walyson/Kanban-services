@@ -2,18 +2,23 @@ package com.example.chatui.views
 
 import SessionManager
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
+import com.example.chatui.MainActivity
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
@@ -43,11 +48,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Stack
 import java.util.zip.Inflater
+import kotlin.concurrent.thread
 
 class ChatRoomActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatRoomBinding
     private lateinit var session: SessionManager
+    private lateinit var motionLayout: MotionLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +64,22 @@ class ChatRoomActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionManager(applicationContext)
+        motionLayout = findViewById(R.id.motion_layout_id)
+
+
+        motionLayout.findViewById<Button>(R.id.button_home).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        motionLayout.findViewById<Button>(R.id.button_profile).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        motionLayout.findViewById<Button>(R.id.button_search).setOnClickListener {
+            openSearchFromMenu()
+        }
+
 
         websocketConnect()
 
@@ -84,7 +107,38 @@ class ChatRoomActivity : AppCompatActivity() {
             startProfileFragment();
         }
 
-        //setContentView(R.layout.motion_layout)
+        if(intent.getStringExtra("search").equals("true"))
+            openSearchFromMenu()
+
+    }
+
+    private fun openSearchFromMenu() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val search = binding.searchButton
+        val name = binding.userName
+        val searchBox = binding.searchBox
+        val searchBar = binding.searchChat
+        val edtView = layoutInflater.inflate(R.layout.search_bar, searchBar, false)
+        val edtText = edtView.findViewById<EditText>(R.id.searchBarEdtText)
+
+        name.text = ""
+        searchBox.setBackgroundResource(R.drawable.search_bar_shape)
+        searchBar.addView(edtView)
+        edtText.requestFocus()
+        imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
+
+        search.setOnClickListener {
+            if(name.text.isBlank() && edtText.text.isBlank()) {
+                name.text = "Chat"
+                searchBox.background = null
+                searchBar.removeAllViews()
+                return@setOnClickListener
+            }
+            if(!edtText.text.isBlank()) {
+
+                return@setOnClickListener
+            }
+        }
     }
 
     private fun setSearch() {
@@ -109,6 +163,9 @@ class ChatRoomActivity : AppCompatActivity() {
             name.text = ""
             searchBox.setBackgroundResource(R.drawable.search_bar_shape)
             searchBar.addView(edtView)
+            edtText.requestFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
         }
 
     }
@@ -241,7 +298,6 @@ class ChatRoomActivity : AppCompatActivity() {
     }
     fun showChatRooms(teams: HashMap<Int, Team>) {
         val scrollContainer = binding.motionLayoutContainer
-        val motionLayout = layoutInflater.inflate(R.layout.motion_layout, scrollContainer, false)
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
 
         Log.i("SHOW CHAT ROOM", "Showing chat rooms ${teams.keys.maxOrNull()}")

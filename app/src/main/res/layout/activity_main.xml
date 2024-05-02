@@ -64,7 +64,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:paddingLeft="10dp">
-                  <include layout="@layout/motion_layout_main"/>
+                  <include android:id="@+id/motion_base_item" layout="@layout/motion_layout_main"/>
               </LinearLayout>
 
             </LinearLayout>

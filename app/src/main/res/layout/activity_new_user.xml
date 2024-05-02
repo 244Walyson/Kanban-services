@@ -12,7 +12,7 @@
         android:id="@+id/darkOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#18353434" />
+        android:background="#D3000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,19 +27,17 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:text="Sign In"
             android:fontFamily="@font/gordita_black"
             android:textSize="20sp" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/color5"
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/image_logo"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/Circle"
-            android:layout_marginVertical="30dp"/>
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,11 +50,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#C8FFFFFF"
+                android:backgroundTint="#E8FFFFFF"
                 android:hint="Email"
                 android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_medium"
-                android:textColorHint="@color/black_secondary"
+                android:textColorHint="@color/gray_tertiary"
                 android:inputType="textEmailAddress"/>
 
             <EditText
@@ -66,25 +64,25 @@
                 android:inputType="textPassword"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#C8FFFFFF"
+                android:backgroundTint="#E8FFFFFF"
                 android:hint="Password"
                 android:maxLines="1"
                 android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_medium"
-                android:textColorHint="@color/black_secondary" />
+                android:textColorHint="@color/gray_tertiary" />
 
             <EditText
                 android:id="@+id/newNickname"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#C8FFFFFF"
+                android:backgroundTint="#E8FFFFFF"
                 android:hint="Nickname"
                 android:layout_marginTop="10dp"
                 android:paddingHorizontal="10dp"
                 android:maxLines="1"
                 android:fontFamily="@font/gordita_medium"
-                android:textColorHint="@color/black_secondary"
+                android:textColorHint="@color/gray_tertiary"
                 android:inputType="text"/>
 
 
@@ -116,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Entrar com"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/gray_tertiary" />
 
                 <View
                     android:layout_width="80dp"
@@ -153,7 +151,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="130dp"
                 android:padding="15dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="Ja tem uma conta? Faça login"
                 android:clickable="true"
                 android:focusable="true"
