@@ -11,4 +11,5 @@
         <item name="itemIconTint">@color/icon_colors</item>
         <item name="labelVisibilityMode">unlabeled</item>
     </style>
+
 </resources>

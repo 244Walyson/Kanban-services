@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FF081110"
     tools:context=".views.SplashScreenActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
