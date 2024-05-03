@@ -37,17 +37,19 @@ public class TokenValidator {
             throw new RuntimeException("Token is null or empty");
         }
 
-        log.info(token);
-        log.info(BASE_JWK_SET_URL);
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
 
             ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
 
+            long ttl = 60*60*1000; // 1 hour
+            long refreshTimeout = 60*1000;
 
             JWKSource<SecurityContext> keySource = JWKSourceBuilder
                     .create(new URL(BASE_JWK_SET_URL))
                     .retrying(true)
+                    .cache(true)
+                    .cache(ttl, refreshTimeout)
                     .build();
 
             JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS256;

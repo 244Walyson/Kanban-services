@@ -48,8 +48,6 @@ public class WebsocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageEntity chatMessage) throws JsonProcessingException {
-        log.info("Message received: " + new ObjectMapper().writeValueAsString(chatMessage));
-        //chatMessage = chatService.saveChatMessage(chatMessage);
         messagingTemplate.convertAndSendToUser("user", "/queue/messages", chatMessage);
     }
 
@@ -81,7 +79,6 @@ public class WebsocketController {
     @SubscribeMapping("/{nick}/queue/chats")
     public List<ChatRoomDTO> sendOneTimeMessage(@Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
         String nickName = String.valueOf(sessionAttributes.get("nickName"));
-        log.info("Messages sent: " + chatRoomService.findAllByUserNick(nickName).size());
         return chatRoomService.findAllByUserNick(nickName);
     }
 

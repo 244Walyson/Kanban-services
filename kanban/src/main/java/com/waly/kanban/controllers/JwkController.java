@@ -23,8 +23,6 @@ public class JwkController {
     @GetMapping(value = "/.well-known/jwks.json")
     public Map<String, Object> getJwks() throws JOSEException {
         RSAKey rsaKeyy = authorizationServer.getRsaKey();
-
-        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaa" + rsaKeyy.toString());
         JWKSet jwkSet = new JWKSet(rsaKeyy);
         return jwkSet.toJSONObject();
     }
