@@ -60,7 +60,14 @@
                android:textSize="22sp"
                android:layout_weight="1"
                android:fontFamily="@font/futura_italic"/>
-           <include layout="@layout/board_priority"/>
+           <LinearLayout
+               android:layout_width="20dp"
+               android:layout_height="20dp"
+               android:orientation="vertical"
+               android:layout_gravity="bottom"
+               android:layout_marginBottom="2dp">
+               <include layout="@layout/board_priority"/>
+           </LinearLayout>
        </LinearLayout>
 
 

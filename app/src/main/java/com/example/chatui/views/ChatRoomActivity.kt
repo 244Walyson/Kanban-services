@@ -10,19 +10,15 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.example.chatui.MainActivity
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
 import com.example.chatui.databinding.ActivityChatRoomBinding
-import com.example.chatui.fragments.ChatFragment
 import com.example.chatui.fragments.MoreFragment
 import com.example.chatui.fragments.ProfileFragment
 import com.example.chatui.models.FcmToken
@@ -33,12 +29,10 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.ktor.util.Hash
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.hildan.krossbow.stomp.StompSession
@@ -46,9 +40,6 @@ import org.hildan.krossbow.stomp.subscribeText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.Stack
-import java.util.zip.Inflater
-import kotlin.concurrent.thread
 
 class ChatRoomActivity : AppCompatActivity() {
 

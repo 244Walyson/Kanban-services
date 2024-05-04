@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var session: SessionManager
     private lateinit var motionLayout: MotionLayout
+    private lateinit var layoutContainer: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,14 +53,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionManager(applicationContext)
-        motionLayout = findViewById(R.id.motion_base_item)
+        motionLayout = findViewById(R.id.motion_layout_main_id)
+        layoutContainer = findViewById(R.id.main_layout)
 
-
-        binding.userName.setOnClickListener {
-            Intent(this, LoginActivity::class.java).also {
-                startActivity(it)
-            }
-        }
 
         val buttonHome = motionLayout.findViewById<Button>(R.id.button_home)
         val buttonProfile = motionLayout.findViewById<Button>(R.id.button_profile)
@@ -111,13 +107,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun showTeams(teams: List<TeamMin>?) {
         Log.i("Teams", "Show Teams")
-        val teamsLayout = binding.motionBaseMain
         val list = motionLayout.findViewById<LinearLayout>(R.id.mainTeams)
 
         teams?.forEach {team ->
             val gradient = getGradientDrawable()
             Log.i("TEAM", "TEAM ${team.roomName}")
-            val groupItem = layoutInflater.inflate(R.layout.group_item, teamsLayout, false)
+            val groupItem = layoutInflater.inflate(R.layout.group_item, motionLayout, false)
             val gradientImage = groupItem.findViewById<ImageView>(R.id.gradientImage)
             gradientImage.background = gradient
             val teamName = groupItem.findViewById<TextView>(R.id.mainTeamName)
@@ -126,8 +121,8 @@ class MainActivity : AppCompatActivity() {
             teamDesc.text = team.description
             list.addView(groupItem)
         }
-        teamsLayout.removeAllViews()
-        teamsLayout.addView(motionLayout)
+        layoutContainer.removeAllViews()
+        layoutContainer.addView(motionLayout)
     }
 
     private fun getGradientDrawable(): GradientDrawable {
@@ -202,7 +197,6 @@ class MainActivity : AppCompatActivity() {
         return teams
     }
     fun showChatRooms(teams: HashMap<Int, Team>) {
-        val scrollContainer = binding.motionBaseMain
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChatMain)
 
         Log.i("SHOW CHAT ROOM", "Showing chat rooms ${teams.keys.maxOrNull()}")
@@ -211,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         for (i in j downTo  0 step 1) {
             if(teams[i] != null) {
                 val roomCard = layoutInflater.inflate(R.layout.card_chat_item , scrollView , false)
-                val cardImage = layoutInflater.inflate(R.layout.home_image, scrollContainer, false)
+                val cardImage = layoutInflater.inflate(R.layout.home_image, scrollView, false)
 
                 val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
                 teamName.text = teams[i]!!.roomName
@@ -248,8 +242,8 @@ class MainActivity : AppCompatActivity() {
                 if(i==5) break;
             }
         }
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(motionLayout)
+        layoutContainer.removeAllViews()
+        layoutContainer.addView(motionLayout)
     }
 
 

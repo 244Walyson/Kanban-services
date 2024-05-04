@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowSplashScreenBrandingImage">@drawable/the_waly</item>
+        <item name="maxImageSize">300dp</item>
+        <item name="android:windowSplashScreenBackground">@color/black_primary</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animated_vector</item>
+        <item name="android:windowSplashScreenAnimationDuration">5</item>
+        <item name="postSplashScreenTheme">@style/Theme.ChatUi</item>
+    </style>
+
+</resources>

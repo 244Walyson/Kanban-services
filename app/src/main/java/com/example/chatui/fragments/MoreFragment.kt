@@ -98,7 +98,7 @@ class MoreFragment : Fragment() {
         Glide
             .with(requireContext())
             .load(team.imgUrl)
-            .placeholder(R.drawable.color7)
+            .placeholder(R.drawable.color5)
             .centerCrop()
             .into(teamImage)
 
@@ -125,7 +125,7 @@ class MoreFragment : Fragment() {
             Glide
                 .with(requireContext())
                 .load(member.imgUrl)
-                .placeholder(R.drawable.color7)
+                .placeholder(R.drawable.color5)
                 .centerCrop()
                 .into(memberImage)
 

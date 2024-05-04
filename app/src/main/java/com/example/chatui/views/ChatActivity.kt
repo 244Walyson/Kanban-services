@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.res.colorResource
 import com.bumptech.glide.Glide
 import com.example.chatui.R
 import com.example.chatui.configs.WebSocketConfig
@@ -218,15 +219,22 @@ class ChatActivity : AppCompatActivity() {
 
         val senderName = otherMessage.findViewById<TextView>(R.id.sender_name)
         senderName.text = msg.sender.name
+        senderName.setTextColor(getRandomColor())
 
         val senderImage = otherMessage.findViewById<ImageView>(R.id.senderImage)
         Glide
             .with(applicationContext)
             .load(msg.sender.imgUrl)
             .centerCrop()
-            .placeholder(R.drawable.color12)
+            .placeholder(R.drawable.color5)
             .into(senderImage)
         chatContainer.addView(otherMessage)
     }
 
+    private fun getRandomColor(): Int {
+        val r = (0..255).random()
+        val g = (0..255).random()
+        val b = (0..255).random()
+        return 0xff000000.toInt() or (r shl 16) or (g shl 8) or b
+    }
 }

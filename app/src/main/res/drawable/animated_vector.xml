@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/w">
+
+    <target
+        android:animation="@animator/translate_point"
+        android:name="point_group"/>
+
+    <target
+        android:animation="@animator/translate_w"
+        android:name="w_group"/>
+
+</animated-vector>

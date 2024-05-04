@@ -1,39 +1,40 @@
 package com.example.chatui.views
 
 import SessionManager
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import android.window.SplashScreen
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.chatui.MainActivity
-import com.example.chatui.R
+import com.example.chatui.databinding.ActivitySplashScreenBinding
+import com.example.chatui.viewModels.MainViewModel
 import java.util.Date
+
 
 class SplashScreenActivity : AppCompatActivity() {
 
 
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_splash_screen)
+        redirectBasedOnTokenValidity()
+    }
 
-        if(verifyTokenExpiration()) {
-            Intent(this, MainActivity::class.java).also {
-                startActivity(it)
-                finish()
-            }
-            return;
+    private fun redirectBasedOnTokenValidity() {
+        if (verifyTokenExpiration()) {
+            startActivity(Intent(this, MainActivity::class.java))
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
-        Intent(this, LoginActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
-
+        finish()
     }
 
     fun verifyTokenExpiration() : Boolean {

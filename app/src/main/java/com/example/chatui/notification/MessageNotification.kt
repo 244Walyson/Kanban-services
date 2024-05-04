@@ -43,7 +43,7 @@ class MessageNotification(private val context: Context) {
     public fun showNotification(title: String, message: String) {
         Log.i("MessageNotification", "showNotification: $title - $message")
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.w)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
