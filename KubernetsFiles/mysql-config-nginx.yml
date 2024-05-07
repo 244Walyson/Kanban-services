@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: kanban
+data:
+  default.conf: |
+    stream {
+        upstream mysql {
+            server mysql-service:3306;  # Nome do seu serviço MySQL
+        }
+        server {
+            listen 3306;
+            proxy_pass mysql;
+        }
+    }

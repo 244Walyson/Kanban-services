@@ -7,23 +7,24 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: longhorn
   resources:
     requests:
-      storage: 1Gi
+      storage: 2Gi
 
 ---
 
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: mysql-hpa
+  name: myapp
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: mysql
-  minReplicas: 3
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
@@ -31,6 +32,9 @@ spec:
       target:
         type: Utilization
         averageUtilization: 50
+
+
+
 
 ---
 
@@ -40,7 +44,7 @@ metadata:
   name: mysql
   namespace: kanban
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: mysql
@@ -58,11 +62,11 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: my-secret
-                  key: DB_PASSWORD
+                  name: mysql-secret
+                  key: DB_ROOT_PASSWORD
           resources:
             limits:
-              memory: "300Mi"
+              memory: "800Mi"
               cpu: "600m"
           volumeMounts:
             - name: mysql-persistent-storage

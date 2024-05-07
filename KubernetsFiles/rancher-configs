@@ -1,0 +1,11 @@
+
+curl https://releases.rancher.com/install-docker/23.0.2.sh | sh
+
+
+docker run -d --restart=unless-stopped \
+  -p 80:80 -p 443:443 \
+  --privileged \
+  -v /opt/rancher/var/lib:/var/lib/rancher \
+  rancher/rancher:latest
+
+rancher password => lCUTvOIgn6kfGgHr  
