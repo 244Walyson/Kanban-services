@@ -1,8 +1,9 @@
 
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: kanban-hpa
+  namespace: kanban
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -27,7 +28,7 @@ metadata:
   name: chat
   namespace: kanban
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: chat
@@ -51,11 +52,14 @@ spec:
         - name: FIREBASE_CONFIG_FILE
           value: "/app/keys/firebase.json"
         - name: KAFKA_BOOTSTRAP_SERVERS
-          value: "34.125.126.240:9092"
+          valueFrom:
+            secretKeyRef:
+              name: chat-secret
+              key: KAFKA_BOOTSTRAP_SERVERS
         - name: MONGO_DB_URI
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: chat-secret
               key: MONGO_DB_URI
         ports:
         - containerPort: 8090
@@ -102,5 +106,34 @@ spec:
             name: chat-service
             port: 
               number: 8090
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chat-websocket-ingress
+  namespace: kanban
+  labels:
+    name: chat-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"  # Tempo limite de leitura para 10 minutos
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"  # Tempo limite de envio para 10 minutos
+    nginx.ingress.kubernetes.io/websocket-services: "chat-ws-service"  # Nome do serviço de backend WebSocket
+    nginx.ingress.kubernetes.io/websocket-timeout: "3600"  # Tempo limite da conexão WebSocket para 10 minutos
+spec:
+  rules:
+  - host: chat.rancher.waly.dev.br
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/connect"
+        backend:
+          service:
+            name: chat-ws-service
+            port:
+              number: 8090
+
 
 

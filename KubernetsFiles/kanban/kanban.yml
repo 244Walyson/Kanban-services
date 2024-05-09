@@ -1,4 +1,3 @@
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -6,14 +5,15 @@ metadata:
   namespace: kanban
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
+  storageClassName: app-longhorn
   resources:
     requests:
       storage: 1Gi
 
 ---
 
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: kanban-hpa
@@ -64,52 +64,58 @@ spec:
         - name: JWT_DURATION
           value: "604800"
         - name: DB_HOST
-          value: "34.16.201.17"
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: DB_HOST
         - name: DB_PORT
           value: "3306"
         - name: DB_NAME
           value: "kanban"
         - name: KAFKA_BOOTSTRAP_SERVERS
-          value: 34.125.126.240:9092
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: KAFKA_BOOTSTRAP_SERVERS
         - name: CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: CLIENT_ID
         - name: CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: CLIENT_SECRET
         - name: GITHUB_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: GITHUB_CLIENT_ID
         - name: GITHUB_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: GITHUB_CLIENT_SECRET
         - name: GOOGLE_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: GOOGLE_CLIENT_ID
         - name: GOOGLE_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: GOOGLE_CLIENT_SECRET
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: DB_USERNAME
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: my-secret
+              name: kanban-secret
               key: DB_PASSWORD
         ports:
         - containerPort: 9090
@@ -156,3 +162,5 @@ spec:
             name: kanban-service
             port: 
               number: 9090
+
+

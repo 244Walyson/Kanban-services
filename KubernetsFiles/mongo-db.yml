@@ -52,7 +52,7 @@ spec:
       - name: mongo
         image: mongo:latest
         command: ["mongod"]
-        args: ["--dbpath", "/data/db"]
+        args: ["--dbpath", "/data/db", "--bind_ip_all"]  
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
@@ -85,17 +85,19 @@ metadata:
   namespace: kanban
   labels:
     app: mongo
+    namespace: kanban
 spec:
   ports:
   - port: 27017
     protocol: TCP
     targetPort: 27017
-    nodePort: 32019
+    nodePort: 32000
   selector:
     app: mongo
   type: NodePort
 status:
   loadBalancer: {}
+
 
 
 ---
@@ -119,3 +121,4 @@ spec:
                 name: mongo-service
                 port: 
                   number: 27017
+
