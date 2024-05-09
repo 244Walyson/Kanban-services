@@ -18,9 +18,7 @@ import java.util.Date
 
 class SplashScreenActivity : AppCompatActivity() {
 
-
     private val viewModel by viewModels<MainViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
