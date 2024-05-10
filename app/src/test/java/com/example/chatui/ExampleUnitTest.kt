@@ -1,4 +1,4 @@
-package com.example.chatui
+package com.waly.chat
 
 import org.junit.Test
 

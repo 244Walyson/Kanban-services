@@ -1,0 +1,9 @@
+<Button android:id="@+id/btnSignIn"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:text="Sign In"
+    android:backgroundTint="@color/white"
+    android:textColor="@color/black"
+    android:fontFamily="@font/gordita_black"
+    android:background="@drawable/input_message_shape"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

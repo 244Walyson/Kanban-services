@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:484322412237:android:88f4e7da0f1c810b1c4b84",
         "android_client_info": {
-          "package_name": "com.example.chatui"
+          "package_name": "com.waly.chat"
         }
       },
       "oauth_client": [],

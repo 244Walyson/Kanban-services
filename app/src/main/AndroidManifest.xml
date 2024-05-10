@@ -44,7 +44,7 @@
             android:name=".views.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.waly.chat.MainActivity"
             android:exported="false" />
 
         <meta-data

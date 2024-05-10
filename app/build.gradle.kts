@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.chatui"
+    namespace = "com.waly.chat"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.chatui"
+        applicationId = "com.waly.chat"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

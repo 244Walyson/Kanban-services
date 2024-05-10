@@ -24,6 +24,7 @@
 
 
         <TextView
+            android:id="@+id/txtErr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -46,12 +47,12 @@
             android:orientation="vertical"
             android:paddingHorizontal="50dp">
 
+
             <EditText
                 android:id="@+id/edtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#E8FFFFFF"
                 android:maxLines="1"
                 android:hint="Email"
                 android:text="maria@gmail.com"
@@ -69,7 +70,6 @@
                 android:maxLines="1"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#E8FFFFFF"
                 android:hint="Password"
                 android:textColor="@color/black"
                 android:paddingHorizontal="10dp"
@@ -86,15 +86,12 @@
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
-            <Button
-                android:id="@+id/btnLogin"
+            <LinearLayout
+                android:id="@+id/loginLoading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/black"
-                android:fontFamily="@font/gordita_black"
-                android:background="@drawable/input_message_shape"/>
+                android:orientation="vertical">
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.chatui",
+  "applicationId": "com.waly.chat",
   "variantName": "release",
   "elements": [
     {
