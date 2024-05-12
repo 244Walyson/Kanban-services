@@ -87,9 +87,8 @@ public class TeamConsumer {
                     .build();
 
 
-            if(!userRepository.existsById(userDTO.getId().toString())) {
-                user = userRepository.save(user);
-            }
+            user = userRepository.save(user);
+
             if(chatRoomRepository.checkIfUserIsMember(userDTO.getTeamId().toString(), userDTO.getNickname())) {
                 log.info("User already exists in the team");
                 return;
