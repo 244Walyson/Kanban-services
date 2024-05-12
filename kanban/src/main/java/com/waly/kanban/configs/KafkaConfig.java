@@ -32,6 +32,8 @@ public class KafkaConfig {
     private String addUserTopic;
     @Value("${spring.kafka.user.connection.topic}")
     private String userConnectionTopic;
+    @Value("${spring.kafka.user.notification.topic}")
+    private String userNotificationTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -81,5 +83,9 @@ public class KafkaConfig {
     @Bean
     public NewTopic addUserConnTopic() {
         return buildTopic(userConnectionTopic);
+    }
+    @Bean
+    public NewTopic addUserNotification() {
+        return buildTopic(userNotificationTopic);
     }
 }

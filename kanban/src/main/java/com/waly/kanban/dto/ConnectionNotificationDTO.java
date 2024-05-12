@@ -2,7 +2,9 @@ package com.waly.kanban.dto;
 
 import com.waly.kanban.entities.ConnectionNotification;
 import com.waly.kanban.entities.User;
+import lombok.ToString;
 
+@ToString
 public class ConnectionNotificationDTO {
 
     private Long id;
