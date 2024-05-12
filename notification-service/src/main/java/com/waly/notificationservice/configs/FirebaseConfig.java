@@ -1,4 +1,4 @@
-package com.kanban.chat.configs.firebase;
+package com.waly.notificationservice.configs;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

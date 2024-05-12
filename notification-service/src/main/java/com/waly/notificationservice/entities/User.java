@@ -1,10 +1,16 @@
 package com.waly.notificationservice.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tb_user")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String nickName;
+    private String nickname;
     private String email;
     private String imgUrl;
     private String token;
@@ -12,10 +18,10 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String nickName, String email, String imgUrl, String token) {
+    public User(Long id, String name, String nickname, String email, String imgUrl, String token) {
         this.id = id;
         this.name = name;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.email = email;
         this.imgUrl = imgUrl;
         this.token = token;
@@ -38,12 +44,12 @@ public class User {
         this.name = name;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getEmail() {

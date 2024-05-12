@@ -6,7 +6,6 @@ import java.util.Arrays;
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.*;
-import com.kanban.chat.repositories.ChatNotificationRepository;
 import com.kanban.chat.repositories.ChatRepository;
 import com.kanban.chat.repositories.ChatRoomRepository;
 import com.kanban.chat.repositories.UserRepository;

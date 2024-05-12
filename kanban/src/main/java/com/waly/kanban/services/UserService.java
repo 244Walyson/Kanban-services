@@ -148,8 +148,13 @@ public class UserService implements UserDetailsService {
 
         ConnectionNotificationDTO connectionNotificationDTO = new ConnectionNotificationDTO(connectionNotification);
 
-        kafkaProducer.sendUserNotification(connectionNotificationDTO.toString());
-        log.info("ConnectionNotificationDTO: " + connectionNotificationDTO.toString());
+        try {
+            String jsonConnectionNotification = new ObjectMapper().writeValueAsString(connectionNotificationDTO);
+
+            kafkaProducer.sendUserNotification(jsonConnectionNotification);
+        } catch (JsonProcessingException e) {
+            log.error("Erro ao serializar ConnectionNotificationDTO para JSON", e);
+        }
         return null;
     }
 

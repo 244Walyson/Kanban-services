@@ -1,18 +1,15 @@
 package com.kanban.chat.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanban.chat.dtos.*;
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.ChatMessageEntity;
-import com.kanban.chat.models.entities.ChatNotificationEntity;
 import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.models.entities.UserEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
 import com.kanban.chat.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

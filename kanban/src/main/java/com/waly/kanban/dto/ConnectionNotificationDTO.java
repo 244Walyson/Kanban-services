@@ -4,6 +4,9 @@ import com.waly.kanban.entities.ConnectionNotification;
 import com.waly.kanban.entities.User;
 import lombok.ToString;
 
+import java.time.Instant;
+import java.util.Date;
+
 @ToString
 public class ConnectionNotificationDTO {
 
@@ -11,8 +14,10 @@ public class ConnectionNotificationDTO {
     private UserMinDTO sender;
     private UserMinDTO receiver;
     private String message;
+    private Date createdAt;
 
     public ConnectionNotificationDTO() {
+        this.createdAt = new Date();
     }
 
     public ConnectionNotificationDTO(Long id, UserMinDTO sender, UserMinDTO receiver, String message) {
@@ -20,6 +25,7 @@ public class ConnectionNotificationDTO {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.createdAt = new Date();
     }
 
     public ConnectionNotificationDTO(ConnectionNotification connectionNotification) {
@@ -27,6 +33,7 @@ public class ConnectionNotificationDTO {
         this.sender = new UserMinDTO(connectionNotification.getSender());
         this.receiver = new UserMinDTO(connectionNotification.getReceiver());
         this.message = connectionNotification.getMessage();
+        this.createdAt = connectionNotification.getCreatedAt();
     }
 
     public Long getId() {
@@ -60,4 +67,9 @@ public class ConnectionNotificationDTO {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
 }

@@ -1,18 +1,19 @@
-package com.waly.kanban.entities;
+package com.waly.notificationservice.entities;
 
-import com.waly.kanban.dto.UserMinDTO;
+
 import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_connection_notification")
-public class ConnectionNotification {
+@Table(name = "tb_notification")
+public class UserNotification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String title;
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
@@ -21,16 +22,19 @@ public class ConnectionNotification {
     private User receiver;
     private String message;
     private Date createdAt;
+    private Status status;
 
-    public ConnectionNotification() {
-        createdAt = new Date();
+    public UserNotification() {
     }
 
-    public ConnectionNotification(User sender, User receiver, String message) {
+    public UserNotification(Long id, String title, User sender, User receiver, String message, Date createdAt, Status status) {
+        this.id = id;
+        this.title = title;
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
-        this.createdAt = new Date();
+        this.createdAt = createdAt;
+        this.status = status;
     }
 
     public Long getId() {
@@ -39,6 +43,14 @@ public class ConnectionNotification {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public User getSender() {
@@ -69,4 +81,15 @@ public class ConnectionNotification {
         return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
