@@ -165,8 +165,15 @@ public class UserService implements UserDetailsService {
         userConn = userConnectionRepository.save(userConn);
         UserConnectionDTO userConnDTO = new UserConnectionDTO(userConn);
 
+        try {
+            String jsonUserConn = new ObjectMapper().writeValueAsString(userConnDTO);
+
+            kafkaProducer.sendUserConnection(jsonUserConn);
+        } catch (JsonProcessingException e) {
+            log.error("Erro ao serializar UserConnectionDTO para JSON", e);
+        }
+
         log.info("UserConnectionDTO: " + userConnDTO.toString());
-        kafkaProducer.sendUserConnection(userConnDTO.toString());
 
         return null;
     }

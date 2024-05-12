@@ -9,20 +9,23 @@ public class UserEmbedded {
     private String id;
     private String name;
     private String nickName;
+    private String imgUrl;
 
     public UserEmbedded() {
     }
 
-    public UserEmbedded(String id, String name, String nickName) {
+    public UserEmbedded(String id, String name, String nickName, String imgUrl) {
         this.id = id;
         this.name = name;
         this.nickName = nickName;
+        this.imgUrl = imgUrl;
     }
 
     public UserEmbedded(UserEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.nickName = entity.getNickName();
+        this.imgUrl = entity.getImgUrl();
     }
 
     public String getId() {
@@ -45,8 +48,16 @@ public class UserEmbedded {
         return nickName;
     }
 
-    public void setnickName(String username) {
-        this.nickName = username;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 }
+

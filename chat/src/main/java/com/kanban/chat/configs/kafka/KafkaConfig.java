@@ -33,6 +33,14 @@ public class KafkaConfig {
     private String autoOffsetReset;
     @Value("${spring.kafka.consumer.team.save.success.topic}")
     private String teamSaveSuccessTopic;
+    @Value("${spring.kafka.add.user.topic}")
+    private String addUserTopic;
+    @Value("${spring.kafka.user.connection.topic}")
+    private String userConnectionTopic;
+    @Value("${spring.kafka.user.notification.topic}")
+    private String userNotificationTopic;
+    @Value("${spring.kafka.user.chat-created-notification.topic}")
+    private String chatCreatedNotificationTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -79,5 +87,20 @@ public class KafkaConfig {
     public NewTopic teamSaveSuccessTopic() {
         return buildTopic(teamSaveSuccessTopic);
     }
+
+    @Bean
+    public NewTopic addUserTopic() {
+        return buildTopic(addUserTopic);
+    }
+    @Bean
+    public NewTopic addUserConnTopic() {
+        return buildTopic(userConnectionTopic);
+    }
+    @Bean
+    public NewTopic addUserNotification() {
+        return buildTopic(userNotificationTopic);
+    }
+    @Bean
+    public NewTopic addChatCreatedNotification() { return buildTopic(chatCreatedNotificationTopic); }
 
 }

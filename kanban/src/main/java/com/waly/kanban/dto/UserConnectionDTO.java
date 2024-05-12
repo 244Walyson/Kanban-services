@@ -1,17 +1,17 @@
 package com.waly.kanban.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.waly.kanban.entities.UserConnection;
-import com.waly.kanban.entities.UserConnectionPK;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.ToString;
 
 @ToString
 public class UserConnectionDTO {
 
+    @JsonProperty("user1")
     private UserMinDTO user1;
+    @JsonProperty("user2")
     private UserMinDTO user2;
+    @JsonProperty("status")
     private boolean status = false;
 
     public UserConnectionDTO() {

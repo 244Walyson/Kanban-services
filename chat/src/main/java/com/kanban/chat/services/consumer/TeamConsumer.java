@@ -48,7 +48,7 @@ public class TeamConsumer {
 
             var chatRoom = new ChatRoomEntity()
                     .builder()
-                    .id(teamDTO.getId())
+                    .id("R".concat(teamDTO.getId()))
                     .roomName(teamDTO.getName())
                     .imgUrl(teamDTO.getImgUrl())
                     .description(teamDTO.getDescription())

@@ -15,6 +15,8 @@ public class KafkaProducer {
 
     @Value("${spring.kafka.consumer.team.save.success.topic}")
     private String successTopic;
+    @Value("${spring.kafka.user.chat-created-notification.topic}")
+    private String chatCreatedNotificationTopic;
 
     public void sendEvent(String payload) {
         try {
@@ -24,5 +26,15 @@ public class KafkaProducer {
             log.error("Error sending event topic {} with data {} ", successTopic, payload);
         }
     }
+
+    public void sendChatCreatedNotification(String payload) {
+        try {
+            log.info("Sending event topic {} with data {} ", chatCreatedNotificationTopic, payload);
+            kafkaTemplate.send(chatCreatedNotificationTopic, payload);
+        }catch (Exception e) {
+            log.error("Error sending event topic {} with data {} ", chatCreatedNotificationTopic, payload);
+        }
+    }
+
 
 }
