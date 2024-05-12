@@ -1,5 +1,7 @@
 package com.waly.kanban.controllers.handlers;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.waly.kanban.exceptions.CustomError;
 import com.waly.kanban.exceptions.DatabaseException;
 import com.waly.kanban.exceptions.NotFoundException;
@@ -51,6 +53,32 @@ public class ExceptionHandlers {
         error.setMessage(e.getMessage());
         error.setTimestamp(Instant.now());
         error.setError("Database Exception");
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+
+    }
+
+    @ExceptionHandler(AmazonS3Exception.class)
+    public ResponseEntity<CustomError> databaseException(AmazonS3Exception e, HttpServletRequest request){
+        CustomError error = new CustomError();
+        int status = HttpStatus.BAD_REQUEST.value();
+        error.setStatus(status);
+        error.setMessage(e.getMessage());
+        error.setTimestamp(Instant.now());
+        error.setError("Amazon Exception");
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+
+    }
+
+    @ExceptionHandler(AmazonClientException.class)
+    public ResponseEntity<CustomError> databaseException(AmazonClientException e, HttpServletRequest request){
+        CustomError error = new CustomError();
+        int status = HttpStatus.BAD_REQUEST.value();
+        error.setStatus(status);
+        error.setMessage(e.getMessage());
+        error.setTimestamp(Instant.now());
+        error.setError("Amazon Exception");
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
 
