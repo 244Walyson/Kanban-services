@@ -1,0 +1,37 @@
+[Unit]
+Description=Apache Zookeeper
+After=network.target
+
+[Service]
+Type=simple
+User=waly
+ExecStart=/home/waly/kafka/bin/zookeeper-server-start.sh /home/waly/kafka/config/zookeeper.properties
+ExecStop=/home/waly/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+[Unit]
+Description=Apache Kafka Server
+After=network.target
+
+[Service]
+Type=simple
+User=waly
+ExecStart=/home/waly/kafka/bin/kafka-server-start.sh /home/waly/kafka/config/server.properties
+ExecStop=/home/waly/kafka/bin/kafka-server-stop.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+listeners=INTERNAL://localhost:9093,EXTERNAL://0.0.0.0:9092
+advertised.listeners=INTERNAL://localhost:9093,EXTERNAL://34.16.181.132:9092
+listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+inter.broker.listener.name=EXTERNAL
+

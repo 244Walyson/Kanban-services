@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 @Slf4j
@@ -23,8 +24,11 @@ public class FirebaseConfig {
     public void initialize() {
         try {
             log.info("Firebase application initializing");
+
+            FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())).build();
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
                 log.info("Firebase application initialized");

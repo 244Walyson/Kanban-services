@@ -38,4 +38,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByEmail(String email);
     Boolean existsByNickname(String nickname);
 
+    @Query(value = """
+            SELECT u FROM User u
+            WHERE UPPER(u.email) LIKE UPPER(CONCAT('%', :query, '%%'))
+            OR UPPER(u.nickname) LIKE UPPER(CONCAT('%', :query, '%%'))
+            OR UPPER(u.name) LIKE UPPER(CONCAT('%', :query, '%%'))
+            """)
+    List<User> findByQuery(String query);
+
+    @Query(value = """
+            SELECT u.id AS id, u.name, u.nickname FROM User u
+            WHERE u.id = :id
+            """)
+    Optional<User> findMinById(Long id);
 }

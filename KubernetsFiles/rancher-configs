@@ -14,6 +14,11 @@ rancher password => pMkFCQAZ0JXRtriZ   username -> admin
 
 
 
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-1
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-2
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-3
+
+
 
 sudo certbot certonly --manual -d 'waly.dev.br' -d '*.waly.dev.br' -d '*.rancher.waly.dev.br' --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
 

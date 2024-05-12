@@ -21,6 +21,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -60,8 +62,8 @@ public class ResourceServerConfig {
 	@Order(1)
 	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
 
-		http.securityMatcher(PathRequest.toH2Console()).csrf(csrf -> csrf.disable())
-				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+		http.securityMatcher(PathRequest.toH2Console()).csrf(AbstractHttpConfigurer::disable)
+				.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 		return http.build();
 	}
 
@@ -69,8 +71,8 @@ public class ResourceServerConfig {
 	@Order(3)
 	public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf(csrf -> csrf.disable());
-		http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+		http.csrf(AbstractHttpConfigurer::disable);
+		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 		http.oauth2Login(oauth2 -> oauth2
 				.userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService)).successHandler(new AuthenticationSuccessHandler() {

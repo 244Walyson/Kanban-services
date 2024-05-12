@@ -9,8 +9,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: chat
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 1
   metrics:
   - type: Resource
     resource:
@@ -28,7 +28,7 @@ metadata:
   name: chat
   namespace: kanban
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: chat
@@ -42,8 +42,8 @@ spec:
         image: walymb/chat:latest
         resources:
           limits:
-            memory: "300Mi"
-            cpu: "600m"
+            memory: "500Mi"
+            cpu: "900m"
         env:
         - name: JWK_SET_URI
           value: http://kanban-service:9090/.well-known/jwks.json
@@ -52,10 +52,7 @@ spec:
         - name: FIREBASE_CONFIG_FILE
           value: "/app/keys/firebase.json"
         - name: KAFKA_BOOTSTRAP_SERVERS
-          valueFrom:
-            secretKeyRef:
-              name: chat-secret
-              key: KAFKA_BOOTSTRAP_SERVERS
+          value: 34.16.181.132:9092
         - name: MONGO_DB_URI
           valueFrom:
             secretKeyRef:
@@ -94,6 +91,12 @@ metadata:
   namespace: kanban
   labels:
     name: chat-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"  
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"  
+    nginx.ingress.kubernetes.io/websocket-timeout: "3600"
+    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-type: "cookies"
 spec:
   rules:
   - host: chat.rancher.waly.dev.br
@@ -106,34 +109,5 @@ spec:
             name: chat-service
             port: 
               number: 8090
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: chat-websocket-ingress
-  namespace: kanban
-  labels:
-    name: chat-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"  # Tempo limite de leitura para 10 minutos
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"  # Tempo limite de envio para 10 minutos
-    nginx.ingress.kubernetes.io/websocket-services: "chat-ws-service"  # Nome do serviço de backend WebSocket
-    nginx.ingress.kubernetes.io/websocket-timeout: "3600"  # Tempo limite da conexão WebSocket para 10 minutos
-spec:
-  rules:
-  - host: chat.rancher.waly.dev.br
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/connect"
-        backend:
-          service:
-            name: chat-ws-service
-            port:
-              number: 8090
-
 
 

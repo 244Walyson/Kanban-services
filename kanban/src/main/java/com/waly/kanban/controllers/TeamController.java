@@ -21,19 +21,16 @@ public class TeamController {
     @Autowired
     private TeamService service;
 
-    @PreAuthorize("hasAnyRole('ROLE_SYS_ADMIN', 'ROLE_MEMBER')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<TeamDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_SYS_ADMIN', 'ROLE_MEMBER')")
     @GetMapping
     public ResponseEntity<Page<TeamDTO>> findAll(@RequestParam(value = "query", defaultValue = "") String query, Pageable pageable){
         return ResponseEntity.ok().body(service.findAll(query, pageable));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_SYS_ADMIN', 'ROLE_MEMBER')")
     @PostMapping
     public ResponseEntity<TeamDTO> insert(@RequestBody TeamInsertDTO dto){
         TeamDTO teamDTO = service.insert(dto);

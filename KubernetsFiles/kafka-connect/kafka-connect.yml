@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-connect
+  namespace: kanban
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-connect
+  template:
+    metadata:
+      labels:
+        app: kafka-connect
+    spec:
+      containers:
+      - name: kafka-connect
+        image: confluentinc/cp-kafka-connect:7.5.4
+        ports:
+        - containerPort: 8083
+        env:
+        - name: CONNECT_BOOTSTRAP_SERVERS
+          value: "34.16.181.132:9092"
+        - name: CONNECT_REST_ADVERTISED_HOST_NAME
+          value: "kafka-connect"
+        - name: CONNECT_REST_PORT
+          value: "8083"
+        - name: CONNECT_GROUP_ID
+          value: "kafka-connect-group"
+        - name: CONNECT_CONFIG_STORAGE_TOPIC
+          value: "connect-configs"
+        - name: CONNECT_OFFSET_STORAGE_TOPIC
+          value: "connect-offsets"
+        - name: CONNECT_STATUS_STORAGE_TOPIC
+          value: "connect-status"
+        - name: CONNECT_KEY_CONVERTER
+          value: "org.apache.kafka.connect.json.JsonConverter"
+        - name: CONNECT_VALUE_CONVERTER
+          value: "org.apache.kafka.connect.json.JsonConverter"
+        - name: CONNECT_INTERNAL_KEY_CONVERTER
+          value: "org.apache.kafka.connect.json.JsonConverter"
+        - name: CONNECT_INTERNAL_VALUE_CONVERTER
+          value: "org.apache.kafka.connect.json.JsonConverter"
+        - name: CONNECT_PLUGIN_PATH
+          value: "/usr/share/java,/usr/share/confluent-hub-components,/data/connect-jars,/etc/kafka-connect/jars"
+        - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+          value: "1"
+        - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+          value: "1"
+        - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+          value: "1"
+        - name: CONNECT_LOG4J_ROOT_LOGLEVEL
+          value: "INFO"
+        - name: CONNECT_LOG4J_LOGGERS
+          value: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+        command:
+        - bash
+        - -c
+        - |
+          echo "Installing JDBC driver"
+          confluent-hub install debezium/debezium-connector-mysql:latest --no-prompt
+          confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.2.0
+          echo "Launching Kafka Connect worker"
+          /etc/confluent/docker/run
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-connect-service
+  namespace: kanban
+spec:
+  selector:
+    app: kafka-connect
+  ports:
+  - protocol: TCP
+    port: 8083
+    targetPort: 8083
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kafka-connect-ingress
+  namespace: kanban
+  labels:
+    name: kafka-connect-ingress
+spec:
+  rules:
+  - host: connect.rancher.waly.dev.br
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: kafka-connect-service
+            port: 
+              number: 8083

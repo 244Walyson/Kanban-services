@@ -1,30 +1,25 @@
 package com.waly.kanban.services;
 
-import com.waly.kanban.dto.UserDTO;
-import com.waly.kanban.dto.UserInsertDTO;
-import com.waly.kanban.dto.UserLoggedDTO;
-import com.waly.kanban.dto.UserUpdateDTO;
-import com.waly.kanban.entities.Role;
-import com.waly.kanban.entities.User;
-import com.waly.kanban.entities.UserOutbox;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.waly.kanban.dto.*;
+import com.waly.kanban.entities.*;
+import com.waly.kanban.exceptions.NotFoundException;
 import com.waly.kanban.projections.UserDetailsProjection;
+import com.waly.kanban.repositories.UserConnectionRepository;
 import com.waly.kanban.repositories.UserOutboxRepository;
 import com.waly.kanban.repositories.UserRepository;
+import com.waly.kanban.services.producer.KafkaProducer;
 import com.waly.kanban.util.CustonUserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +33,10 @@ public class UserService implements UserDetailsService {
     private UserOutboxRepository userOutboxRepository;
     @Autowired
     private CustonUserUtil custonUserUtil;
+    @Autowired
+    private UserConnectionRepository userConnectionRepository;
+    @Autowired
+    private KafkaProducer kafkaProducer;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -113,6 +112,7 @@ public class UserService implements UserDetailsService {
         return new UserDTO(user);
     }
 
+    @Transactional
     public void saveOauthUser(OidcUser oidcUser) {
         if(!repository.existsByEmail(oidcUser.getEmail())){
             User user = new User();
@@ -124,6 +124,40 @@ public class UserService implements UserDetailsService {
             userOutboxRepository.save(new UserOutbox(user));
             log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserMinDTO> findAll(String query) {
+        List<User> users = repository.findByQuery(query);
+        return users.stream().map(UserMinDTO::new).toList();
+    }
+
+    @Transactional
+    public Void connect(Long id) {
+        User user = authenticade();
+        User friend = repository.getReferenceById(id);
+        if(friend == null) throw new NotFoundException("User not found id:" + id);
+        UserConnection userConn = new UserConnection(new UserConnectionPK(user, friend), false);
+        userConnectionRepository.save(userConn);
+        return null;
+    }
+
+    @Transactional
+    public Void approveConnection(Long id) {
+        User user = authenticade();
+        User friend = repository.getReferenceById(id);
+        if(friend == null) throw new NotFoundException("User not found id:" + id);
+        UserConnection userConn = userConnectionRepository.findById(new UserConnectionPK(friend, user)).orElseThrow(() -> {
+            throw new NotFoundException("Connection not found");
+        });
+        userConn.setStatus(true);
+        userConn = userConnectionRepository.save(userConn);
+        UserConnectionDTO userConnDTO = new UserConnectionDTO(userConn);
+
+        log.info("UserConnectionDTO: " + userConnDTO.toString());
+        kafkaProducer.sendUserConnection(userConnDTO.toString());
+
+        return null;
     }
 
 }

@@ -30,6 +30,8 @@ public class KafkaConfig {
     private String autoOffsetReset;
     @Value("${spring.kafka.add.user.topic}")
     private String addUserTopic;
+    @Value("${spring.kafka.user.connection.topic}")
+    private String userConnectionTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -75,5 +77,9 @@ public class KafkaConfig {
     @Bean
     public NewTopic addUserTopic() {
         return buildTopic(addUserTopic);
+    }
+    @Bean
+    public NewTopic addUserConnTopic() {
+        return buildTopic(userConnectionTopic);
     }
 }

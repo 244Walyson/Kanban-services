@@ -1,36 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongo-pv-claim
+  name: mongo-pvc
   namespace: kanban
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: longhorn
+    - ReadWriteMany
+  storageClassName: longhorn-mongo
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
 
----
-
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: mongo-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: mongo
-  minReplicas: 1
-  maxReplicas: 3
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
 
 ---
 apiVersion: apps/v1
@@ -64,17 +44,13 @@ spec:
               secretKeyRef:
                 name: mongo-secret
                 key: DB_PASSWORD
-        resources:
-          limits:
-            memory: "300Mi"
-            cpu: "600m"
         volumeMounts:
           - name: mongo-persistent-storage
             mountPath: /data/db
       volumes:
         - name: mongo-persistent-storage
           persistentVolumeClaim:
-            claimName: mongo-pv-claim
+            claimName: mongo-pvc
 
 ---
 

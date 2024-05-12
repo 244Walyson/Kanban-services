@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -44,5 +46,20 @@ public class UserController {
     @GetMapping("/token")
     public ResponseEntity<AccessToken> getToken(Authentication authentication){
         return ResponseEntity.ok(tokenGenerator.getToken(authentication));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserMinDTO>> findByEmail(@RequestParam String query){
+        return ResponseEntity.ok(service.findAll(query));
+    }
+
+    @PostMapping("/connect/{id}")
+    public ResponseEntity<Void> connect(@PathVariable Long id) {
+        return ResponseEntity.ok(service.connect(id));
+    }
+
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<Void> approve(@PathVariable Long id) {
+        return ResponseEntity.ok(service.approveConnection(id));
     }
 }
