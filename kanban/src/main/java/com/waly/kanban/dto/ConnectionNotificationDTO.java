@@ -1,10 +1,7 @@
 package com.waly.kanban.dto;
 
-import com.waly.kanban.entities.ConnectionNotification;
-import com.waly.kanban.entities.User;
 import lombok.ToString;
 
-import java.time.Instant;
 import java.util.Date;
 
 @ToString
@@ -26,14 +23,6 @@ public class ConnectionNotificationDTO {
         this.receiver = receiver;
         this.message = message;
         this.createdAt = new Date();
-    }
-
-    public ConnectionNotificationDTO(ConnectionNotification connectionNotification) {
-        this.id = connectionNotification.getId();
-        this.sender = new UserMinDTO(connectionNotification.getSender());
-        this.receiver = new UserMinDTO(connectionNotification.getReceiver());
-        this.message = connectionNotification.getMessage();
-        this.createdAt = connectionNotification.getCreatedAt();
     }
 
     public Long getId() {

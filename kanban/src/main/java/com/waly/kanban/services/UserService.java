@@ -6,7 +6,6 @@ import com.waly.kanban.dto.*;
 import com.waly.kanban.entities.*;
 import com.waly.kanban.exceptions.NotFoundException;
 import com.waly.kanban.projections.UserDetailsProjection;
-import com.waly.kanban.repositories.ConnectionNotificationRepository;
 import com.waly.kanban.repositories.UserConnectionRepository;
 import com.waly.kanban.repositories.UserOutboxRepository;
 import com.waly.kanban.repositories.UserRepository;
@@ -36,8 +35,6 @@ public class UserService implements UserDetailsService {
     private CustonUserUtil custonUserUtil;
     @Autowired
     private UserConnectionRepository userConnectionRepository;
-    @Autowired
-    private ConnectionNotificationRepository connectionNotificationRepository;
     @Autowired
     private KafkaProducer kafkaProducer;
 
@@ -143,10 +140,7 @@ public class UserService implements UserDetailsService {
         UserConnection userConn = new UserConnection(new UserConnectionPK(user, friend), false);
         userConnectionRepository.save(userConn);
 
-        ConnectionNotification connectionNotification = new ConnectionNotification(user, friend, "New connection request");
-        connectionNotification = connectionNotificationRepository.save(connectionNotification);
-
-        ConnectionNotificationDTO connectionNotificationDTO = new ConnectionNotificationDTO(connectionNotification);
+        ConnectionNotificationDTO connectionNotificationDTO = new ConnectionNotificationDTO(null, new UserMinDTO(user), new UserMinDTO(friend), "New connection request");
 
         try {
             String jsonConnectionNotification = new ObjectMapper().writeValueAsString(connectionNotificationDTO);

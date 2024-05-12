@@ -36,12 +36,18 @@ public class NotificationConsumer {
             JsonNode jsonNode = objectMapper.readTree(message);
             UserNotification notification = objectMapper.convertValue(jsonNode, UserNotification.class);
 
+            buildMessageNotification(notification);
             sendPushNotification(notification);
 
         } catch (Exception e) {
             log.info("Error while processing notification");
             e.printStackTrace();
         }
+    }
+
+    private void buildMessageNotification(UserNotification notification) {
+        notification.setTitle("Novo pedido de conexão");
+        notification.setMessage("Você recebeu um novo pedido de conexão de " + notification.getSender().getNickname());
     }
 
 
@@ -56,36 +62,18 @@ public class NotificationConsumer {
             JsonNode jsonNode = objectMapper.readTree(message);
             UserNotification notification = objectMapper.convertValue(jsonNode, UserNotification.class);
 
-            User receiver = userRepository.findById(notification.getReceiver().getId()).orElse(null);
-            User sender = userRepository.findById(notification.getSender().getId()).orElse(null);
-
-            notification.setStatus(Status.DELIVERED);
-
-            if (sender == null) {
-                log.info("user {} not registered to receive notification", notification.getSender().getId());
-                log.info("user name {}", notification.getSender().getNickname());
-                userRepository.save(notification.getSender());
-            }
-
-            if (receiver == null) {
-                userRepository.save(notification.getReceiver());
-                log.info("user {} not registered to receive notification", notification.getReceiver().getId());
-                notification.setStatus(Status.FAILED);
-            }
-
-            notification.setTitle("Chat criado");
-            notification.setMessage("Um novo chat foi criado com " + notification.getSender().getNickname());
-            notification = chatUserRepository.save(notification);
-
-            if (notification.getStatus() == Status.FAILED) {
-                return;
-            }
-            notificationService.sendPushNotification(notification);
+            buildConnectionNotification(notification);
+            sendPushNotification(notification);
 
         } catch (Exception e) {
             log.info("Error while processing notification");
             e.printStackTrace();
         }
+    }
+
+    private void buildConnectionNotification(UserNotification notification) {
+        notification.setTitle("Chat criado");
+        notification.setMessage("Um novo chat foi criado com " + notification.getSender().getNickname());
     }
 
 
@@ -100,16 +88,13 @@ public class NotificationConsumer {
             sender = userRepository.save(notification.getSender());
         }
 
-        if (receiver == null) {
+        if (receiver == null || receiver.getToken() == null || receiver.getToken().isEmpty()) {
             receiver = userRepository.save(notification.getReceiver());
             log.info("user {} not registered to receive notification", notification.getReceiver().getId());
             notification.setStatus(Status.FAILED);
         }
 
-        notification.setTitle("Novo pedido de conexão");
-        notification.setMessage("Você recebeu um novo pedido de conexão de " + sender.getNickname());
-        notification.setSender(sender);
-        notification.setReceiver(receiver);
+
         notification = chatUserRepository.save(notification);
 
         log.info(new ObjectMapper().writeValueAsString(notification));
