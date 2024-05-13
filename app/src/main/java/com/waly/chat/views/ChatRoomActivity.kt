@@ -5,13 +5,17 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.bumptech.glide.Glide
@@ -46,6 +50,7 @@ class ChatRoomActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatRoomBinding
     private lateinit var session: SessionManager
     private lateinit var motionLayout: MotionLayout
+    private lateinit var allChat: MutableList<Team>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,24 +70,26 @@ class ChatRoomActivity : AppCompatActivity() {
         }
 
         motionLayout.findViewById<Button>(R.id.button_profile).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
         motionLayout.findViewById<Button>(R.id.button_search).setOnClickListener {
-            openSearchFromMenu()
+            setSearch()
         }
 
+        onBackPressedDispatcher.addCallback {
+            startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java))
+        }
 
-        websocketConnect()
 
         MessageNotification(this).createNotificationChannel()
 
         binding.backButton.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         setSearch()
-        setFilter()
+        //setFilter()
 
         binding.userName.setOnClickListener {
             startProfileFragment();
@@ -90,11 +97,12 @@ class ChatRoomActivity : AppCompatActivity() {
 
         if(intent.getStringExtra("search").equals("true"))
             openSearchFromMenu()
+        else
+            websocketConnect()
 
     }
 
     private fun openSearchFromMenu() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val search = binding.searchButton
         val name = binding.userName
         val searchBox = binding.searchBox
@@ -102,17 +110,19 @@ class ChatRoomActivity : AppCompatActivity() {
         val edtView = layoutInflater.inflate(R.layout.search_bar, searchBar, false)
         val edtText = edtView.findViewById<EditText>(R.id.searchBarEdtText)
 
+
         name.text = ""
         searchBox.setBackgroundResource(R.drawable.search_bar_shape)
         searchBar.addView(edtView)
         edtText.requestFocus()
-        imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
 
+        inflateSeachList()
         search.setOnClickListener {
             if(name.text.isBlank() && edtText.text.isBlank()) {
                 name.text = "Chat"
                 searchBox.background = null
                 searchBar.removeAllViews()
+                startActivity(Intent(this, ChatRoomActivity::class.java))
                 return@setOnClickListener
             }
             if(!edtText.text.isBlank()) {
@@ -135,10 +145,10 @@ class ChatRoomActivity : AppCompatActivity() {
                 name.text = "Chat"
                 searchBox.background = null
                 searchBar.removeAllViews()
+                startActivity(Intent(this, ChatRoomActivity::class.java))
                 return@setOnClickListener
             }
             if(!edtText.text.isBlank()) {
-
                 return@setOnClickListener
             }
             name.text = ""
@@ -147,30 +157,78 @@ class ChatRoomActivity : AppCompatActivity() {
             edtText.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
+            inflateSeachList()
         }
 
     }
-    private fun setFilter() {
-        val all = binding.txtAll
-        val teams = binding.txtTeams
-        val direct = binding.txtDirect
 
-        all.setOnClickListener {
-            all.setTextColor(resources.getColor(R.color.white))
-            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
-            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+    private fun inflateSeachList() {
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+        onBackPressedDispatcher.addCallback {
+            startActivity(Intent(this@ChatRoomActivity, ChatRoomActivity::class.java))
         }
-        teams.setOnClickListener {
-            all.setTextColor(resources.getColor(R.color.gray_tertiary))
-            teams.setTextColor(resources.getColor(R.color.white))
-            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+        binding.backButton.setOnClickListener {
+            startActivity(Intent(this, ChatRoomActivity::class.java))
         }
-        direct.setOnClickListener {
-            all.setTextColor(resources.getColor(R.color.gray_tertiary))
-            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
-            direct.setTextColor(resources.getColor(R.color.white))
-        }
+
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(scrollSearch)
     }
+
+//    private fun setFilter() {
+//        val all = binding.txtAll
+//        val teams = binding.txtTeams
+//        val direct = binding.txtDirect
+//
+//        all.setOnClickListener {
+//            all.setTextColor(resources.getColor(R.color.white))
+//            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            listAll()
+//        }
+//        teams.setOnClickListener {
+//            all.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            teams.setTextColor(resources.getColor(R.color.white))
+//            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            filterTeams()
+//        }
+//        direct.setOnClickListener {
+//            all.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
+//            direct.setTextColor(resources.getColor(R.color.white))
+//            filterDirect()
+//        }
+//    }
+
+    private fun listAll() {
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
+
+        scrollView.removeAllViews()
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(motionLayout)
+    }
+
+    private fun filterTeams() {
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
+
+        scrollView.removeAllViews()
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(motionLayout)
+    }
+
+    private fun filterDirect() {
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
+
+        scrollView.removeAllViews()
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(motionLayout)
+    }
+
+
 
     private fun startProfileFragment() {
         binding.chatFrameLayout.visibility = View.VISIBLE

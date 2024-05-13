@@ -73,61 +73,12 @@
 
         </LinearLayout>
 
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:paddingHorizontal="50dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/txtAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/gordita_medium"
-                    android:text="Todos"
-                    android:textColor="@color/white"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/txtTeams"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gordita_medium"
-                    android:gravity="center"
-                    android:text="Equipes"
-                    android:textColor="@color/gray_tertiary"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/txtDirect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/gordita_medium"
-                    android:text="Direct"
-                    android:textColor="@color/gray_tertiary"
-                    android:textSize="15dp" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"/>
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/motionLayoutContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
             <include android:id="@+id/motion_layout_id" layout="@layout/motion_layout"/>
         </LinearLayout>
     </LinearLayout>

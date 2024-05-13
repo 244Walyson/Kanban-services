@@ -8,7 +8,7 @@ data class Sender(
     val id: String,
     @SerializedName("name")
     val name: String,
-    @SerializedName("nickName")
+    @SerializedName("nickname")
     val nickName: String,
     @SerializedName("imgUrl")
     val imgUrl: String

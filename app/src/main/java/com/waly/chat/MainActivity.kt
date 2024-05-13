@@ -28,6 +28,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.waly.chat.models.FcmToken
+import com.waly.chat.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -92,10 +93,56 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun showHeader() {
+        val name = session.userLoggedName
+        val image = session.userLoggedImg
+        if (name != null) {
+            val txtName = motionLayout.findViewById<TextView>(R.id.userName)
+            txtName.text = name
+            val img = motionLayout.findViewById<ImageView>(R.id.mainUserImg)
+            Glide
+                .with(applicationContext)
+                .load(image)
+                .centerCrop()
+                .into(img)
+            layoutContainer.removeAllViews()
+            layoutContainer.addView(motionLayout)
+            return;
+        }
+        val service = NetworkUtils.createServiceUser()
+        val token = session.accessToken!!
+        service.getUser(token)
+            .enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    if (response.isSuccessful) {
+                        val user = response.body()
+                        session.userLoggedName = user?.username
+                        session.userLoggedImg = user?.username
+                        val txtName = motionLayout.findViewById<TextView>(R.id.userName)
+                        txtName.text = user?.username
+                        val img = motionLayout.findViewById<ImageView>(R.id.mainUserImg)
+                        Glide
+                            .with(applicationContext)
+                            .load(user?.imgUrl)
+                            .centerCrop()
+                            .into(img)
+                        layoutContainer.removeAllViews()
+                        layoutContainer.addView(motionLayout)
+                    }
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e("USER", "Failed to fetch user")
+                    Log.e("USER", t.message!!)
+                    Log.e("USER", t.cause.toString())
+                    t.printStackTrace()
+                }
+            })
+    }
     private fun saveFcmToken(token: String) {
         val session = SessionManager(applicationContext)
 
-        if(!session.tokenSaved){
+        if (!session.tokenSaved) {
             val tokenToSave: FcmToken = FcmToken(token)
             val service = NetworkUtils.createServiceSaveToken()
 
@@ -109,7 +156,10 @@ class MainActivity : AppCompatActivity() {
                             Log.i("PUSHH PUSHH ROOM", "Token saved")
                             return
                         }
-                        Log.e("PUSHH PUSHH ROOM", "Token not saved ${response.code()} ${response.message()}")
+                        Log.e(
+                            "PUSHH PUSHH ROOM",
+                            "Token not saved ${response.code()} ${response.message()}"
+                        )
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -152,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         Log.i("Teams", "Show Teams")
         val list = motionLayout.findViewById<LinearLayout>(R.id.mainTeams)
 
-        teams?.forEach {team ->
+        teams?.forEach { team ->
             val gradient = getGradientDrawable()
             Log.i("TEAM", "TEAM ${team.roomName}")
             val groupItem = layoutInflater.inflate(R.layout.group_item, motionLayout, false)
@@ -177,6 +227,7 @@ class MainActivity : AppCompatActivity() {
         gradientDrawable.orientation = GradientDrawable.Orientation.BL_TR
         return gradientDrawable
     }
+
     private fun showTasks() {}
 
     private fun getRandomColor(): Int {
@@ -196,12 +247,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 val subs: Flow<String> = session.subscribeText("/user/${nickname}/queue/chats")
 
-                var teamList: HashMap<Int, Team> = HashMap()
+                var teamList: MutableList<Team> = mutableListOf()
                 subs.collectLatest {
                     Log.i("STOMP", "Received message: $it")
-                    teamList = jsonStringToTeamList(it, teamList)
-                    if(teamList.size > 1)
-                        teamList = removeDuplicates(teamList, teamList[teamList.keys.max()]!!.id, teamList.keys.max()!!)
+                    teamList = jsonStringToTeamList(it)
                     showChatRooms(teamList)
                 }
 
@@ -214,53 +263,50 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    fun jsonStringToTeamList(jsonString: String, teamList: HashMap<Int, Team>): HashMap<Int, Team> {
+
+    fun jsonStringToTeamList(jsonString: String): MutableList<Team> {
         val gson = Gson()
         val listType = object : TypeToken<List<Team>>() {}.type
-        var teams: List<Team> =  gson.fromJson(jsonString, listType)
-        teams.forEach { team ->
-            var i = teamList.keys.maxOrNull()
-            if(i == null) i = 0
-            else i++
-            Log.i("TEAM", "MAX: ${i}")
-            teamList[i] = team
-        }
-        return teamList
+        var teams: List<Team> = gson.fromJson(jsonString, listType)
+        return teams.toMutableList()
     }
 
     fun removeDuplicates(teams: HashMap<Int, Team>, teamId: String, key: Int): HashMap<Int, Team> {
         var keyToRemove = -1
         teams.forEach {
-            if(it.value.id == teamId && it.key != key) {
+            if (it.value.id == teamId && it.key != key) {
                 keyToRemove = it.key
             }
         }
-        if(keyToRemove != -1)
+        if (keyToRemove != -1)
             teams.remove(keyToRemove)
         return teams
     }
-    fun showChatRooms(teams: HashMap<Int, Team>) {
+
+    fun showChatRooms(teams: MutableList<Team>) {
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChatMain)
 
-        Log.i("SHOW CHAT ROOM", "Showing chat rooms ${teams.keys.maxOrNull()}")
+        Log.i("SHOW CHAT ROOM", "Showing chat rooms ")
 
-        var j = teams.keys.maxOrNull() ?: return
-        for (i in j downTo  0 step 1) {
-            if(teams[i] != null) {
-                val roomCard = layoutInflater.inflate(R.layout.card_chat_item, scrollView , false)
+        var x = 0
+        teams.forEach { team ->
+            if (x >= 3) return@forEach;
+            if (team.id.contains("U")) {
+                x++
+                val roomCard = layoutInflater.inflate(R.layout.card_chat_item, scrollView, false)
                 val cardImage = layoutInflater.inflate(R.layout.home_image, scrollView, false)
 
                 val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
-                teamName.text = teams[i]!!.roomName
+                teamName.text = team.roomName
 
                 val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
-                latestMsg.text = teams[i]!!.latestMessage
+                latestMsg.text = team.latestMessage
 
                 val image = cardImage.findViewById<ShapeableImageView>(R.id.statusImage)
 
                 Glide
                     .with(applicationContext)
-                    .load(teams[i]!!.imgUrl)
+                    .load(team.imgUrl)
                     .centerCrop()
                     .into(image)
 
@@ -270,19 +316,17 @@ class MainActivity : AppCompatActivity() {
 
                 cardChat.setOnClickListener {
                     val intent = Intent(this, ChatActivity::class.java)
-                    intent.putExtra("teamId", teams[i]!!.id)
+                    intent.putExtra("teamId", team.id)
 
                     startActivity(intent)
                 }
                 image.setOnClickListener {
                     val intent = Intent(this, ChatActivity::class.java)
-                    intent.putExtra("teamId", teams[i]!!.id)
+                    intent.putExtra("teamId", team.id)
 
                     startActivity(intent)
                 }
-
                 scrollView.addView(roomCard)
-                if(i==5) break;
             }
         }
         layoutContainer.removeAllViews()
