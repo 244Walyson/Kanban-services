@@ -17,6 +17,8 @@ public class KafkaProducer {
     private String successTopic;
     @Value("${spring.kafka.user.chat-created-notification.topic}")
     private String chatCreatedNotificationTopic;
+    @Value("${spring.kafka.user.message-notification.topic}")
+    private String messageNotificationTopic;
 
     public void sendEvent(String payload) {
         try {
@@ -33,6 +35,15 @@ public class KafkaProducer {
             kafkaTemplate.send(chatCreatedNotificationTopic, payload);
         }catch (Exception e) {
             log.error("Error sending event topic {} with data {} ", chatCreatedNotificationTopic, payload);
+        }
+    }
+
+    public void sendChatMessageNotification(String payload) {
+        try {
+            log.info("Sending event topic {} with data {} ", messageNotificationTopic, payload);
+            kafkaTemplate.send(messageNotificationTopic, payload);
+        }catch (Exception e) {
+            log.error("Error sending event topic {} with data {} ", messageNotificationTopic, payload);
         }
     }
 

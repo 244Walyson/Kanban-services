@@ -35,6 +35,8 @@ public class KafkaConfig {
     private String userNotificationTopic;
     @Value("${spring.kafka.user.chat-created-notification.topic}")
     private String chatCreatedNotificationTopic;
+    @Value("${spring.kafka.user.message-notification.topic}")
+    private String messageNotificationTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -83,5 +85,7 @@ public class KafkaConfig {
     }
     @Bean
     public NewTopic addChatCreatedNotification() { return buildTopic(chatCreatedNotificationTopic); }
+    @Bean
+    public NewTopic addMessageNotification() { return buildTopic(messageNotificationTopic); }
 
 }

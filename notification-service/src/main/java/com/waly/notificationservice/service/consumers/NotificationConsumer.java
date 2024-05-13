@@ -30,13 +30,13 @@ public class NotificationConsumer {
             groupId = "${spring.kafka.consumer.group-id}",
             topics = "${spring.kafka.user.notification.topic}"
     )
-    public void consumerMessageNotification(String message) {
+    public void consumerConnectionRequestNotification(String message) {
         log.info("Chat: " + message);
         try {
             JsonNode jsonNode = objectMapper.readTree(message);
             UserNotification notification = objectMapper.convertValue(jsonNode, UserNotification.class);
 
-            buildMessageNotification(notification);
+            buildConnectionRequestNotification(notification);
             sendPushNotification(notification);
 
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class NotificationConsumer {
         }
     }
 
-    private void buildMessageNotification(UserNotification notification) {
+    private void buildConnectionRequestNotification(UserNotification notification) {
         notification.setTitle("Novo pedido de conexão");
         notification.setMessage("Você recebeu um novo pedido de conexão de " + notification.getSender().getNickname());
     }
@@ -106,5 +106,24 @@ public class NotificationConsumer {
         notificationService.sendPushNotification(notification);
     }
 
+
+    @Transactional
+    @KafkaListener(
+            groupId = "${spring.kafka.consumer.group-id}",
+            topics = "${spring.kafka.user.message-notification.topic}"
+    )
+    public void consumerMessageNotification(String message) {
+        log.info("Chat: " + message);
+        try {
+            JsonNode jsonNode = objectMapper.readTree(message);
+            UserNotification notification = objectMapper.convertValue(jsonNode, UserNotification.class);
+
+            sendPushNotification(notification);
+
+        } catch (Exception e) {
+            log.info("Error while processing notification");
+            e.printStackTrace();
+        }
+    }
 
 }

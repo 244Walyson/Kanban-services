@@ -26,4 +26,6 @@ public class UserDTO {
         this.email = userEntity.getEmail();
         this.imgUrl = userEntity.getImgUrl();
     }
+
+
 }

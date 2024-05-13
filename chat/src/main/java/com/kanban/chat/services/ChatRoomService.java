@@ -1,5 +1,6 @@
 package com.kanban.chat.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanban.chat.dtos.*;
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
@@ -8,7 +9,9 @@ import com.kanban.chat.models.entities.ChatRoomEntity;
 import com.kanban.chat.models.entities.UserEntity;
 import com.kanban.chat.repositories.ChatRoomRepository;
 import com.kanban.chat.repositories.UserRepository;
+import com.kanban.chat.services.producer.KafkaProducer;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +30,7 @@ public class ChatRoomService {
     @Autowired
     private UserService userService;
     @Autowired
-    private NotificationService notificationService;
+    private KafkaProducer kafkaProducer;
 
 
     public FullTeamDTO findChatRoomById(String id) {
@@ -48,7 +51,24 @@ public class ChatRoomService {
         chatRoom.addMessage(chatMessageEmbedded);
         chatRoomRepository.save(chatRoom);
 
-        notificationService.sendNotification(roomId, message.getContent(), user);
+        NotificationDTO notification = new NotificationDTO();
+        notification.setSender(new UserDTO(user));
+
+        List<UserEmbedded> members = chatRoom.getMembers();
+        for (UserEmbedded member : members) {
+            if (!member.getNickName().equals(sender)) {
+                UserDTO userDTO = new UserDTO(userRepository.findByNickName(member.getNickName()));
+                notification.setReceiver(userDTO);
+                notification.setTitle(sender);
+                notification.setMessage(message.getContent());
+
+                try {
+                    kafkaProducer.sendChatMessageNotification(new ObjectMapper().writeValueAsString(notification));
+                }catch (Exception e) {
+                    log.error("Error sending event topic with data {} ", notification);
+                }
+            }
+        }
 
         return message;
     }
