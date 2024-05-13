@@ -15,20 +15,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
-import com.waly.chat.R
-import com.waly.chat.configs.WebSocketConfig
-import com.waly.chat.databinding.ActivityMainBinding
-import com.waly.chat.models.Team
-import com.waly.chat.models.TeamFullResponse
-import com.waly.chat.models.TeamMin
-import com.waly.chat.views.ChatActivity
-import com.waly.chat.views.ChatRoomActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.waly.chat.configs.WebSocketConfig
+import com.waly.chat.databinding.ActivityMainBinding
 import com.waly.chat.models.FcmToken
+import com.waly.chat.models.Team
+import com.waly.chat.models.TeamFullResponse
+import com.waly.chat.models.TeamMin
 import com.waly.chat.models.User
+import com.waly.chat.views.ChatActivity
+import com.waly.chat.views.ChatRoomActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         fetchTeamData()
         websocketConnect()
+        showHeader()
 
         Log.i("FCM", "Fetching FCM registration token")
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -94,21 +94,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showHeader() {
-        val name = session.userLoggedName
-        val image = session.userLoggedImg
-        if (name != null) {
-            val txtName = motionLayout.findViewById<TextView>(R.id.userName)
-            txtName.text = name
-            val img = motionLayout.findViewById<ImageView>(R.id.mainUserImg)
-            Glide
-                .with(applicationContext)
-                .load(image)
-                .centerCrop()
-                .into(img)
-            layoutContainer.removeAllViews()
-            layoutContainer.addView(motionLayout)
-            return;
-        }
         val service = NetworkUtils.createServiceUser()
         val token = session.accessToken!!
         service.getUser(token)
@@ -120,12 +105,16 @@ class MainActivity : AppCompatActivity() {
                         session.userLoggedImg = user?.username
                         val txtName = motionLayout.findViewById<TextView>(R.id.userName)
                         txtName.text = user?.username
-                        val img = motionLayout.findViewById<ImageView>(R.id.mainUserImg)
+                        val imgLayout = motionLayout.findViewById<LinearLayout>(R.id.userImageLayout)
+                        val imgInf = layoutInflater.inflate(R.layout.home_image, imgLayout, false)
+                        val img = imgInf.findViewById<ImageView>(R.id.statusImage)
                         Glide
                             .with(applicationContext)
                             .load(user?.imgUrl)
                             .centerCrop()
                             .into(img)
+                        imgLayout.removeAllViews()
+                        imgLayout.addView(imgInf)
                         layoutContainer.removeAllViews()
                         layoutContainer.addView(motionLayout)
                     }
@@ -139,6 +128,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
+
     private fun saveFcmToken(token: String) {
         val session = SessionManager(applicationContext)
 

@@ -27,7 +27,6 @@
                    android:orientation="vertical">
 
                    <LinearLayout
-                       android:id="@+id/mainUserImg"
                        android:layout_width="match_parent"
                        android:layout_height="160dp"
                        android:gravity="center"
@@ -62,7 +61,12 @@
                                android:textSize="30dp" />
                        </LinearLayout>
 
-                       <include layout="@layout/home_image" />
+                       <LinearLayout
+                           android:id="@+id/userImageLayout"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content">
+                           <include android:id="@+id/mainUserImg" layout="@layout/home_image" />
+                       </LinearLayout>
                    </LinearLayout>
                </LinearLayout>
 
