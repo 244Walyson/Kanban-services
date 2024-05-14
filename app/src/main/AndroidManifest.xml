@@ -20,6 +20,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".views.NotificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.SplashScreenActivity"
             android:exported="true"
             android:theme="@style/Theme.SplashScreen">
@@ -45,7 +48,7 @@
             android:name=".views.ChatActivity"
             android:exported="false" />
         <activity
-            android:name="com.waly.chat.MainActivity"
+            android:name=".MainActivity"
             android:exported="false" />
 
         <meta-data

@@ -13,8 +13,10 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -33,6 +35,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.waly.chat.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +77,7 @@ class ChatRoomActivity : AppCompatActivity() {
             startActivity(intent)
         }
         motionLayout.findViewById<Button>(R.id.button_search).setOnClickListener {
-            setSearch()
+            openSearchFromMenu()
         }
 
         onBackPressedDispatcher.addCallback {
@@ -165,6 +168,7 @@ class ChatRoomActivity : AppCompatActivity() {
     private fun inflateSeachList() {
         val scrollContainer = binding.motionLayoutContainer
         val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+        val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
         onBackPressedDispatcher.addCallback {
             startActivity(Intent(this@ChatRoomActivity, ChatRoomActivity::class.java))
         }
@@ -172,8 +176,78 @@ class ChatRoomActivity : AppCompatActivity() {
             startActivity(Intent(this, ChatRoomActivity::class.java))
         }
 
+        val service = NetworkUtils.createServiceUser()
+        val token = session.accessToken
+        val myNickname = session.userLogged
+
+        service.getUsers(token!!)
+            .enqueue(object : Callback<List<User>> {
+                override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                    if(response.isSuccessful) {
+                        val users = response.body()
+                        users?.forEach { user ->
+                            if(user.nickname.equals(myNickname)) return@forEach
+                            val userCard = layoutInflater.inflate(R.layout.card_chat_item_search, scrollContainer, false)
+                            val userName = userCard.findViewById<TextView>(R.id.userName)
+                            val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
+                            val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
+                            val imgLayout = layoutInflater.inflate(R.layout.home_image, userImage, false)
+                            val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
+
+                            userName.text = user.username
+                            userNickname.text = user.nickname
+                            Glide
+                                .with(applicationContext)
+                                .load(user.imgUrl)
+                                .centerCrop()
+                                .into(imgLayout.findViewById(R.id.statusImage))
+
+                            btnConnect.setOnClickListener {
+                                btnConnect.setImageResource(R.drawable.icon_more_black)
+
+                                requestConnection(user.id, token)
+                            }
+
+                            if(user.isConnected) {
+                                btnConnect.setImageResource(R.drawable.icon_chat)
+                                btnConnect.setOnClickListener {
+                                    val intent = Intent(this@ChatRoomActivity, ChatActivity::class.java)
+                                    intent.putExtra("teamId", user.connectionId)
+                                    startActivity(intent)
+                                }
+                            }
+
+                            userImage.addView(imgLayout)
+
+                            searchList.addView(userCard)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                    Log.e(TAG, "Error: ${t.message}")
+                }
+            });
         scrollContainer.removeAllViews()
         scrollContainer.addView(scrollSearch)
+    }
+
+    private fun requestConnection(userId: String, token: String) {
+        val service = NetworkUtils.createServiceUser()
+        service.requestConnection(token, userId)
+            .enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    if(response.isSuccessful) {
+                        Toast.makeText(applicationContext, "Connection request sent", Toast.LENGTH_SHORT).show()
+                        Log.i(TAG, "Connection request sent")
+                    }
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e(TAG, "Error: ${t.message}")
+                }
+            })
+
     }
 
 //    private fun setFilter() {

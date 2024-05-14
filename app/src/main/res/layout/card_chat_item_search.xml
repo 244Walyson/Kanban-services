@@ -14,7 +14,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <include layout="@layout/home_image"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/card_chat_item"
@@ -38,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
                     <TextView
-                        android:id="@+id/text_group_name"
+                        android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Equipe furacão"
@@ -52,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/text_latest_message"
+                    android:id="@+id/userNickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="nickname"

@@ -195,6 +195,10 @@ class ChatActivity : AppCompatActivity() {
         }
         binding.chatToolbar.removeAllViews()
         toolbar.addView(headerChat)
+        Log.i("SHOW MESSAGE", "MESSAGE: ${team.messages}")
+        Log.i("SHOW MESSAGE", "MESSAGE: ${team.roomName}")
+        Log.i("SHOW MESSAGE", "MESSAGE: ${team.description}")
+        Log.i("SHOW MESSAGE", "MESSAGE: ${team.imgUrl}")
         showMessage(team.messages)
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
