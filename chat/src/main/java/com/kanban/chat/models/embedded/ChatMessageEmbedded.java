@@ -4,18 +4,19 @@ import com.kanban.chat.models.entities.ChatMessageEntity;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
+import java.util.Date;
 
 public class ChatMessageEmbedded {
 
     private String id;
     private UserEmbedded sender;
     private String content;
-    private Instant sendAt;
+    private Date sendAt;
 
     public ChatMessageEmbedded() {
     }
 
-    public ChatMessageEmbedded(String id, UserEmbedded sender, String content, Instant sendAt) {
+    public ChatMessageEmbedded(String id, UserEmbedded sender, String content, Date sendAt) {
         this.id = id;
         this.sender = sender;
         this.content = content;
@@ -52,11 +53,11 @@ public class ChatMessageEmbedded {
         this.content = content;
     }
 
-    public Instant getSendAt() {
+    public Date getSendAt() {
         return sendAt;
     }
 
-    public void setSendAt(Instant sendAt) {
+    public void setSendAt(Date sendAt) {
         this.sendAt = sendAt;
     }
 }

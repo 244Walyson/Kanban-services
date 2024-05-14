@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -128,8 +129,25 @@ public class UserService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<UserMinDTO> findAll(String query) {
+        User me = authenticade();
         List<User> users = repository.findByQuery(query);
-        return users.stream().map(UserMinDTO::new).toList();
+        List<UserMinDTO> dtos = new ArrayList<>();
+
+        users.forEach(user -> {
+            UserConnection userConn = userConnectionRepository.findById(new UserConnectionPK(me, user)).orElse(null);
+            if(userConn == null){
+                userConn = userConnectionRepository.findById(new UserConnectionPK(user, me)).orElse(null);
+            }
+            UserMinDTO dto = new UserMinDTO(user);
+            dto.setConnected(false);
+            if(userConn != null){
+                dto.setConnected(userConn.isStatus());
+                dto.setConnectionId("U" + userConn.getId().getUser1().getId() + userConn.getId().getUser2().getId());
+            }
+            dtos.add(dto);
+        });
+
+        return dtos;
     }
 
     @Transactional

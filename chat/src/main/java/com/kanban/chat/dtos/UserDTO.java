@@ -22,7 +22,7 @@ public class UserDTO {
     public UserDTO(UserEntity userEntity) {
         this.id = userEntity.getId();
         this.name = userEntity.getName();
-        this.nickname = userEntity.getNickName();
+        this.nickname = userEntity.getNickname();
         this.email = userEntity.getEmail();
         this.imgUrl = userEntity.getImgUrl();
     }

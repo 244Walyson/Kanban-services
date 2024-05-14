@@ -81,7 +81,7 @@ public class TeamConsumer {
                     .builder()
                     .id(String.valueOf(userDTO.getId()))
                     .name(userDTO.getName())
-                    .nickName(userDTO.getNickname())
+                    .nickname(userDTO.getNickname())
                     .email(userDTO.getEmail())
                     .imgUrl(userDTO.getImgUrl())
                     .build();
@@ -132,7 +132,7 @@ public class TeamConsumer {
                     .builder()
                     .id(String.valueOf(userDTO.getId()))
                     .name(userDTO.getName())
-                    .nickName(userDTO.getNickname())
+                    .nickname(userDTO.getNickname())
                     .email(userDTO.getEmail())
                     .imgUrl(userDTO.getImgUrl())
                     .build();

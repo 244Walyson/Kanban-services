@@ -33,7 +33,7 @@ public class Controllers {
 
   @GetMapping("/{id}")
   public ChatDTO ok(@PathVariable String id) {
-    return chatRoomService.getChatRoom(id);
+    return chatRoomService.getChatRoom(id, "user");
   }
 
   @PostMapping("/chat/{id}")

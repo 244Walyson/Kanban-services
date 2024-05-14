@@ -64,6 +64,10 @@ public class ChatDTO {
         return messages;
     }
 
+    public void setMessages(List<MessageDTO> messages) {
+        this.messages = messages;
+    }
+
     public void addMember(MessageDTO messageDTO) {
         this.messages.add(messageDTO);
     }

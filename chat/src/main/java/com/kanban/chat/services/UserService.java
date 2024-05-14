@@ -24,7 +24,7 @@ public class UserService {
 
     @Transactional
     public UserEntity getLoggedUser(String nickname){
-        return repository.findByNickName(nickname);
+        return repository.findByNickname(nickname);
     }
 
 
@@ -32,7 +32,7 @@ public class UserService {
     public void saveFcmToken(SaveTokenDTO token) {
         log.info("Saving Token received: " + token.getToken());
         UserEntity user = getLoggedUser(customUserUtil.getLoggedUsername());
-        log.info("User: saving token " + user.getNickName());
+        log.info("User: saving token " + user.getNickname());
         user.setFcmToken(token.getToken());
         repository.save(user);
         log.info("Token saved");

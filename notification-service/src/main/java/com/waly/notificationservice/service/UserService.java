@@ -3,6 +3,7 @@ package com.waly.notificationservice.service;
 import com.waly.notificationservice.dtos.UserDTO;
 import com.waly.notificationservice.entities.User;
 import com.waly.notificationservice.repositories.UserRepository;
+import com.waly.notificationservice.utils.CustonUserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private CustonUserUtil custonUserUtil;
 
 
     public UserDTO insert(UserDTO dto) {
@@ -37,4 +40,5 @@ public class UserService {
         user = repository.save(user);
         return new UserDTO(user);
     }
+
 }

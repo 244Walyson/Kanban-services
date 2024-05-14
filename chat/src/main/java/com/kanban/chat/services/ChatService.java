@@ -45,8 +45,8 @@ public class ChatService {
         ChatRoomEntity chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new UsernameNotFoundException("Chat room not found"));
         List<UserEmbedded> members = chatRoom.getMembers();
         members.forEach(member -> {
-            messagingTemplate.convertAndSendToUser( member.getNickName(), "/queue/chats", Arrays.asList(new ChatRoomDTO(chatRoom)));
-            log.info("Message sent to: " + member.getNickName());
+            messagingTemplate.convertAndSendToUser( member.getNickname(), "/queue/chats", Arrays.asList(new ChatRoomDTO(chatRoom)));
+            log.info("Message sent to: " + member.getNickname());
         });
     }
 

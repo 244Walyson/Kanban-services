@@ -2,12 +2,14 @@ package com.kanban.chat.configs;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
 import com.kanban.chat.models.entities.*;
 import com.kanban.chat.repositories.ChatRepository;
 import com.kanban.chat.repositories.ChatRoomRepository;
+import com.kanban.chat.repositories.ChatUserRepository;
 import com.kanban.chat.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,8 @@ public class TestConfig {
   private UserRepository userRepository;
   @Autowired
   private ChatRoomRepository chatRoomRepository;
+  @Autowired
+  private ChatUserRepository chatUserRepository;
 
   @PostConstruct
   public void init() {
@@ -36,24 +40,27 @@ public class TestConfig {
     UserEntity user1 = new UserEntity("4", "Maria Brown", "maria2543", "maria@gmail.com", "https://images.unsplash.com/photo-1714060334882-41e92bd8f73b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8", null);
     UserEntity user2 = new UserEntity("2", "Alex Green", "alex321", "alex@gmail.com", "https://images.unsplash.com/photo-1714060334882-41e92bd8f73b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8", null);
 
-    ChatMessageEntity message1 = new ChatMessageEntity(null, new UserEmbedded(user1), "Hello", Instant.now(), MessageStatus.READ);
-    ChatMessageEntity message2 = new ChatMessageEntity(null, new UserEmbedded(user2), "Hi",  Instant.now(), MessageStatus.DELIVERED);
+    ChatMessageEntity message1 = new ChatMessageEntity(null, new UserEmbedded(user1), "Hello", new Date(), MessageStatus.READ);
+    ChatMessageEntity message2 = new ChatMessageEntity(null, new UserEmbedded(user2), "Hi",  new Date(), MessageStatus.DELIVERED);
 
-    ChatRoomEntity chatRoom = new ChatRoomEntity("1", "team1", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
+    ChatRoomEntity chatRoom = new ChatRoomEntity("R1", "team1", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
     chatRoom.addMember(new UserEmbedded(user1));
     chatRoom.addMember(new UserEmbedded(user2));
     chatRoom.addMessage(new ChatMessageEmbedded(message1));
     chatRoom.addMessage(new ChatMessageEmbedded(message2));
-    ChatRoomEntity chatRoom2 = new ChatRoomEntity("2", "team2", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
+    ChatRoomEntity chatRoom2 = new ChatRoomEntity("R2", "team2", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
     chatRoom2.addMember(new UserEmbedded(user1));
     chatRoom2.addMember(new UserEmbedded(user2));
-    ChatRoomEntity chatRoom3 = new ChatRoomEntity("3", "team2", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
+    ChatRoomEntity chatRoom3 = new ChatRoomEntity("R3", "team2", "https://img.freepik.com/fotos-gratis/respingo-colorido-abstrato-3d-background-generativo-ai-background_60438-2509.jpg?w=1380&t=st=1713036036~exp=1713036636~hmac=0d9befe3da8d349d81208c42dc7194bec616b25a09d18896efab4022f17bd2e9", "chat2");
     chatRoom3.addMember(new UserEmbedded(user1));
     chatRoom3.addMember(new UserEmbedded(user2));
+
+    ChatUserRoomEntity chatUserRoom = new ChatUserRoomEntity("U1", new UserEmbedded(user1), new UserEmbedded(user2), new Date(), null);
 
     user1.addChatRoomEntity(chatRoom);
     user2.addChatRoomEntity(chatRoom);
 
+    chatUserRepository.save(chatUserRoom);
     chatRoomRepository.saveAll(Arrays.asList(chatRoom, chatRoom3, chatRoom2));
     chatRepository.saveAll(Arrays.asList(message1, message2));
     userRepository.saveAll(Arrays.asList(user1, user2));

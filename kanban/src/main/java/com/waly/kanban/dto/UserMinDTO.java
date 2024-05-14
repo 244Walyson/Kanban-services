@@ -20,6 +20,8 @@ public class UserMinDTO {
     private String email;
     private String nickname;
     private String imgUrl;
+    private boolean connected;
+    private String connectionId;
 
     public UserMinDTO(User user) {
         this.id = user.getId();

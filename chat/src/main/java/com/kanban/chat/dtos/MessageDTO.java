@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class MessageDTO {
     private String id;
     private UserEmbedded sender;
     private String content;
-    private Instant sendAt;
+    private Date sendAt;
 
     public MessageDTO(ChatMessageEntity message) {
         this.id = message.getId();

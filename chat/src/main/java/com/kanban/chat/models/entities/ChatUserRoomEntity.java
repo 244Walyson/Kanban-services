@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,13 +22,17 @@ public class ChatUserRoomEntity {
     private String id;
     private UserEmbedded user1;
     private UserEmbedded user2;
+    private Date lastActivity;
+    private String latestMessage;
     private List<ChatMessageEmbedded> messages = new ArrayList<>();
 
 
-    public ChatUserRoomEntity(String id, UserEmbedded user1, UserEmbedded user2) {
+    public ChatUserRoomEntity(String id, UserEmbedded user1, UserEmbedded user2, Date lastActivity, String latestMessage) {
         this.id = id;
         this.user1 = user1;
         this.user2 = user2;
+        this.lastActivity = lastActivity;
+        this.latestMessage = latestMessage;
     }
 
 
@@ -62,5 +67,21 @@ public class ChatUserRoomEntity {
 
     public void setUser2(UserEmbedded user2) {
         this.user2 = user2;
+    }
+
+    public Date getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(Date lastActivity) {
+        this.lastActivity = lastActivity;
+    }
+
+    public String getLatestMessage() {
+        return latestMessage;
+    }
+
+    public void setLatestMessage(String latestMessage) {
+        this.latestMessage = latestMessage;
     }
 }

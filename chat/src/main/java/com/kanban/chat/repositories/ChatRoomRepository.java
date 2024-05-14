@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface ChatRoomRepository extends MongoRepository<ChatRoomEntity, String> {
 
-    @Query(value = "{ '_id' : ?0, 'members.nickName' : ?1 }", exists = true)
+    @Query(value = "{ '_id' : ?0, 'members.nickname' : ?1 }", exists = true)
     boolean checkIfUserIsMember(String chatRoomId, String nickName);
 
-    List<ChatRoomEntity> findAllByMembersNickName(String nickName);
+    List<ChatRoomEntity> findAllByMembersNickname(String nickName);
 }

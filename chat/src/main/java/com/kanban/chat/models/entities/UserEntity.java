@@ -16,7 +16,7 @@ public class UserEntity {
 
   private String id;
   private String name;
-  private String nickName;
+  private String nickname;
   private String imgUrl;
   private String email;
   private String fcmToken;
@@ -26,10 +26,10 @@ public class UserEntity {
   public UserEntity() {
   }
 
-    public UserEntity(String id, String name, String nickName, String email, String imgUrl, String fcmToken) {
+    public UserEntity(String id, String name, String nickname, String email, String imgUrl, String fcmToken) {
         this.id = id;
         this.name = name;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.email = email;
         this.imgUrl = imgUrl;
         this.fcmToken = fcmToken;
@@ -38,7 +38,7 @@ public class UserEntity {
     public UserEntity(UserDTO userDTO) {
         this.id = userDTO.getId().toString();
         this.name = userDTO.getName();
-        this.nickName = userDTO.getNickname();
+        this.nickname = userDTO.getNickname();
         this.email = userDTO.getEmail();
         this.imgUrl = userDTO.getImgUrl();
     }
@@ -59,12 +59,12 @@ public class UserEntity {
     this.name = name;
   }
 
-  public String getNickName() {
-    return nickName;
+  public String getNickname() {
+    return nickname;
   }
 
-  public void setNickName(String nickName) {
-    this.nickName = nickName;
+  public void setNickname(String nickName) {
+    this.nickname = nickname;
   }
 
   public String getEmail() {

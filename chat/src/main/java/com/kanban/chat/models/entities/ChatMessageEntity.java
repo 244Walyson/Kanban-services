@@ -1,6 +1,7 @@
 package com.kanban.chat.models.entities;
 
 import java.time.Instant;
+import java.util.Date;
 
 import com.kanban.chat.models.embedded.UserEmbedded;
 import org.springframework.data.annotation.Id;
@@ -13,13 +14,13 @@ public class ChatMessageEntity {
     private String id;
     private UserEmbedded sender;
     private String content;
-    private Instant instant;
+    private Date instant;
     private MessageStatus status;
 
     public ChatMessageEntity() {
     }
 
-    public ChatMessageEntity(String id, UserEmbedded sender, String content, Instant instant, MessageStatus status) {
+    public ChatMessageEntity(String id, UserEmbedded sender, String content, Date instant, MessageStatus status) {
         this.id = id;
         this.sender = sender;
         this.content = content;
@@ -59,11 +60,11 @@ public class ChatMessageEntity {
         this.status = status;
     }
 
-    public Instant getInstant() {
+    public Date getInstant() {
         return instant;
     }
 
-    public void setInstant(Instant instant) {
+    public void setInstant(Date instant) {
         this.instant = instant;
     }
 }

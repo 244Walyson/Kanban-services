@@ -18,6 +18,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -61,6 +64,8 @@ public class UserConnectionConsumer {
                     .id("U".concat(chatUserDTO.getId()))
                     .user1(new UserEmbedded(user1))
                     .user2(new UserEmbedded(user2))
+                    .lastActivity(new Date())
+                    .messages(new ArrayList<>())
                     .build();
 
             chatUserRepository.save(chatUser);
@@ -86,13 +91,13 @@ public class UserConnectionConsumer {
     private UserEntity saveUser(UserDTO userDTO) {
         if(userRepository.existsById(userDTO.getId().toString())) {
             log.info("User already exists in the database");
-            return null;
+            return userRepository.findById(userDTO.getId().toString()).get();
         }
         var user = new UserEntity()
                 .builder()
                 .id(String.valueOf(userDTO.getId()))
                 .name(userDTO.getName())
-                .nickName(userDTO.getNickname())
+                .nickname(userDTO.getNickname())
                 .email(userDTO.getEmail())
                 .imgUrl(userDTO.getImgUrl())
                 .build();

@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<UserEntity, String> {
 
 
-    UserEntity findByNickName(String nickname);
+    UserEntity findByNickname(String nickname);
 
     List<UserEntity> findByChatRoomEntityId(String id);
 

@@ -1,9 +1,11 @@
 package com.kanban.chat.dtos;
 
 import com.kanban.chat.models.entities.ChatRoomEntity;
+import com.kanban.chat.models.entities.ChatUserRoomEntity;
 import lombok.Data;
 import org.springframework.data.mongodb.core.aggregation.DateOperators;
 
+import java.time.Instant;
 import java.util.Date;
 
 public class ChatRoomDTO {
@@ -12,13 +14,13 @@ public class ChatRoomDTO {
     private String roomName;
     private String imgUrl;
     private String latestMessage;
-    private String lastActivity;
+    private Date lastActivity;
 
 
     public ChatRoomDTO() {
     }
 
-    public ChatRoomDTO(String id, String roomName, String imgUrl, String latestMessage, String lastActivity) {
+    public ChatRoomDTO(String id, String roomName, String imgUrl, String latestMessage, Date lastActivity) {
         this.id = id;
         this.roomName = roomName;
         this.imgUrl = imgUrl;
@@ -32,8 +34,13 @@ public class ChatRoomDTO {
         this.imgUrl = chatRoomEntity.getImgUrl();
         if(chatRoomEntity.getMessages().size() > 0){
             this.latestMessage = chatRoomEntity.getMessages().get(chatRoomEntity.getMessages().size() - 1).getContent();
+            this.lastActivity = chatRoomEntity.getMessages().get(chatRoomEntity.getMessages().size() - 1).getSendAt();
+            return;
         }
+        this.latestMessage = "";
+        this.lastActivity = new Date().from(Instant.EPOCH);
     }
+
 
     public String getId() {
         return id;
@@ -67,11 +74,11 @@ public class ChatRoomDTO {
         this.latestMessage = latestMessage;
     }
 
-    public String getLastActivity() {
+    public Date getLastActivity() {
         return lastActivity;
     }
 
-    public void setLastActivity(String lastActivity) {
+    public void setLastActivity(Date lastActivity) {
         this.lastActivity = lastActivity;
     }
 }

@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserMinDTO>> findByEmail(@RequestParam String query){
+    public ResponseEntity<List<UserMinDTO>> findByAll(@RequestParam(defaultValue = "") String query){
         return ResponseEntity.ok(service.findAll(query));
     }
 

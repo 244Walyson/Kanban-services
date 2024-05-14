@@ -69,8 +69,9 @@ public class WebsocketController {
     @SubscribeMapping("/{roomId}/queue/messages")
     public ChatDTO sendOneTimeMessage(@DestinationVariable String roomId, @Header("simpSessionAttributes") Map<String, List<String>> sessionAttributes) {
         String nickName = String.valueOf(sessionAttributes.get("nickName"));
+        if(roomId.contains("U")) return chatRoomService.getChatRoom(roomId, nickName);
         if(authService.isMemberOfChat(nickName, roomId)){
-            return chatRoomService.getChatRoom(roomId);
+            return chatRoomService.getChatRoom(roomId, nickName);
         }
         log.info("user is not member of chat room");
         return null;

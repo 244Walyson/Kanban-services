@@ -1,5 +1,7 @@
 package com.kanban.chat.dtos;
 
+import java.util.Date;
+
 public class NotificationDTO {
 
     private String id;
@@ -7,8 +9,10 @@ public class NotificationDTO {
     private UserDTO receiver;
     private String title;
     private String message;
+    private Date createdAt;
 
     public NotificationDTO() {
+        this.createdAt = new Date();
     }
 
     public NotificationDTO(String id, UserDTO sender, UserDTO receiver, String title, String message) {
@@ -17,6 +21,7 @@ public class NotificationDTO {
         this.receiver = receiver;
         this.title = title;
         this.message = message;
+        this.createdAt = new Date();
     }
 
     public String getId() {
@@ -57,5 +62,13 @@ public class NotificationDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
