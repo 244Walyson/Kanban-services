@@ -38,6 +38,7 @@ public class UserService implements UserDetailsService {
     private UserConnectionRepository userConnectionRepository;
     @Autowired
     private KafkaProducer kafkaProducer;
+    private final String APPROVED = "APPROVED";
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -178,9 +179,11 @@ public class UserService implements UserDetailsService {
         UserConnection userConn = userConnectionRepository.findById(new UserConnectionPK(friend, user)).orElseThrow(() -> {
             throw new NotFoundException("Connection not found");
         });
+        if(userConn.isStatus()) return null;
         userConn.setStatus(true);
         userConn = userConnectionRepository.save(userConn);
         UserConnectionDTO userConnDTO = new UserConnectionDTO(userConn);
+
 
         try {
             String jsonUserConn = new ObjectMapper().writeValueAsString(userConnDTO);

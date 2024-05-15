@@ -22,12 +22,13 @@ public class UserNotification {
     private User receiver;
     private String message;
     private Date createdAt;
+    private Boolean accepted = false;
     private Status status;
 
     public UserNotification() {
     }
 
-    public UserNotification(Long id, String title, User sender, User receiver, String message, Date createdAt, Status status) {
+    public UserNotification(Long id, String title, User sender, User receiver, String message, Boolean accepted, Date createdAt, Status status) {
         this.id = id;
         this.title = title;
         this.sender = sender;
@@ -35,6 +36,7 @@ public class UserNotification {
         this.message = message;
         this.createdAt = createdAt;
         this.status = status;
+        this.accepted = accepted;
     }
 
     public Long getId() {
@@ -91,5 +93,13 @@ public class UserNotification {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Boolean getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(Boolean accepted) {
+        this.accepted = accepted;
     }
 }

@@ -63,6 +63,12 @@ public class NotificationConsumer {
             UserNotification notification = objectMapper.convertValue(jsonNode, UserNotification.class);
 
             buildConnectionNotification(notification);
+            UserNotification userNotification = chatUserRepository.findByReceiverAndSenderNickname(notification.getReceiver().getNickname(), notification.getSender().getNickname()).orElse(null);
+            if (userNotification == null) {
+                throw new RuntimeException("User notification not found");
+            }
+            userNotification.setAccepted(true);
+            chatUserRepository.save(userNotification);
             sendPushNotification(notification);
 
         } catch (Exception e) {
@@ -94,7 +100,7 @@ public class NotificationConsumer {
             notification.setStatus(Status.FAILED);
         }
 
-
+        notification.setAccepted(false);
         notification = chatUserRepository.save(notification);
 
         log.info(new ObjectMapper().writeValueAsString(notification));

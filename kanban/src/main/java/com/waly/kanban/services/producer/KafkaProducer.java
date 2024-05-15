@@ -20,6 +20,7 @@ public class KafkaProducer {
     @Value("${spring.kafka.user.notification.topic}")
     private String userNotificationTopic;
 
+
     public void sendEvent(String payload) {
         try {
             log.info("Sending event topic {} with data {} ", orchestratorTopic, payload);
@@ -46,5 +47,7 @@ public class KafkaProducer {
             log.error("Error sending event topic {} with data {} ", userNotificationTopic, payload);
         }
     }
+
+
 
 }
