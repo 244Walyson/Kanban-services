@@ -30,6 +30,16 @@ class NotificationActivity : AppCompatActivity() {
         session = SessionManager(this)
 
         listNotifications()
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.notificationList.removeAllViews()
+            listNotifications()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
+        binding.backButton.setOnClickListener {
+            finish()
+        }
     }
 
     private fun listNotifications() {
