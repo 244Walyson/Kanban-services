@@ -28,6 +28,7 @@ import com.waly.chat.models.TeamMin
 import com.waly.chat.models.User
 import com.waly.chat.views.ChatActivity
 import com.waly.chat.views.ChatRoomActivity
+import com.waly.chat.views.NotificationActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -58,6 +59,9 @@ class MainActivity : AppCompatActivity() {
         motionLayout = findViewById(R.id.motion_layout_main_id)
         layoutContainer = findViewById(R.id.main_layout)
 
+        motionLayout.findViewById<ImageView>(R.id.notificationIcon).setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+        }
 
         val buttonHome = motionLayout.findViewById<Button>(R.id.button_home)
         val buttonProfile = motionLayout.findViewById<Button>(R.id.button_profile)

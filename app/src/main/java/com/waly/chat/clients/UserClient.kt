@@ -17,4 +17,7 @@ interface UserClient {
     @POST("/users/connect/{id}")
     fun requestConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<User>
 
+    @POST("/users/approve/{id}")
+    fun acceptConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<Void>
+
 }
