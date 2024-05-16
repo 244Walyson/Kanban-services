@@ -3,6 +3,7 @@ package com.kanban.chat.configs;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
@@ -34,6 +35,7 @@ public class TestConfig {
     userRepository.deleteAll();
     chatRepository.deleteAll();
     chatRoomRepository.deleteAll();
+    chatUserRepository.deleteAll();
 
 
 
@@ -55,12 +57,12 @@ public class TestConfig {
     chatRoom3.addMember(new UserEmbedded(user1));
     chatRoom3.addMember(new UserEmbedded(user2));
 
-    ChatUserRoomEntity chatUserRoom = new ChatUserRoomEntity("U1", new UserEmbedded(user1), new UserEmbedded(user2), new Date(), null);
+    ChatUserRoomEntity  chatUserRoomEntity = new ChatUserRoomEntity("U42", new UserEmbedded(user1), new UserEmbedded(user2), new Date(), "", List.of());
 
     user1.addChatRoomEntity(chatRoom);
     user2.addChatRoomEntity(chatRoom);
 
-    chatUserRepository.save(chatUserRoom);
+    chatUserRepository.save(chatUserRoomEntity);
     chatRoomRepository.saveAll(Arrays.asList(chatRoom, chatRoom3, chatRoom2));
     chatRepository.saveAll(Arrays.asList(message1, message2));
     userRepository.saveAll(Arrays.asList(user1, user2));

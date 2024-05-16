@@ -122,14 +122,15 @@ public class ChatRoomService {
     @Transactional
     public ChatDTO getChatRoom(String roomId, String nickname) {
         if (roomId.contains("U")) {
+            log.info("RoomId: " + roomId);
             ChatUserRoomEntity chatUserRoom = chatUserRepository.findById(roomId).get();
             ChatDTO chatRoom = new ChatDTO();
             chatRoom.setId(chatUserRoom.getId());
+            chatRoom.setMessages(chatUserRoom.getMessages().stream().map(MessageDTO::new).toList());
             if (nickname.equals(chatUserRoom.getUser1().getNickname())) {
                 chatRoom.setRoomName(chatUserRoom.getUser2().getName());
                 chatRoom.setImgUrl(chatUserRoom.getUser2().getImgUrl());
                 chatRoom.setDescription(chatUserRoom.getUser2().getNickname());
-                chatRoom.setMessages(chatUserRoom.getMessages().stream().map(MessageDTO::new).toList());
                 if (chatRoom.getMessages() == null) chatRoom.setMessages(new ArrayList<>());
                 try{
                     log.info("Messages: " + new ObjectMapper().writeValueAsString(chatRoom));
@@ -143,6 +144,7 @@ public class ChatRoomService {
             chatRoom.setImgUrl(chatUserRoom.getUser1().getImgUrl());
             if (chatRoom.getMessages() == null) chatRoom.setMessages(new ArrayList<>());
                 try{
+                    log.info("Aquiiiiiiiii");
                     log.info("Messages: " + new ObjectMapper().writeValueAsString(chatRoom));
                 }catch (Exception e) {
                     log.error("Error converting messages to JSON");
@@ -177,6 +179,7 @@ public class ChatRoomService {
             chatRoomDTO.setImgUrl(chatUserRoomEntity.getUser1().getImgUrl());
             chatRoomDTOS.add(chatRoomDTO);
         }
+        chatRoomDTOS.sort(Comparator.comparing(ChatRoomDTO::getLastActivity).reversed());
         chatRoomDTOS.forEach(c ->
         {
             try {
@@ -185,7 +188,6 @@ public class ChatRoomService {
                 throw new RuntimeException(e);
             }
         });
-        chatRoomDTOS.sort(Comparator.comparing(ChatRoomDTO::getLastActivity));
         return chatRoomDTOS;
     }
 

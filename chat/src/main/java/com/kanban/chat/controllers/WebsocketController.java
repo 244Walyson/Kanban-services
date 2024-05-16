@@ -63,7 +63,7 @@ public class WebsocketController {
         }
         ChatMessageEntity msgEntity = chatRoomService.saveMessage(chatMessage, roomId, nickName);
         messagingTemplate.convertAndSendToUser(roomId, "/queue/messages", msgEntity);
-        chatService.sendToChatMembers(roomId);
+        chatService.sendToChatMembers(roomId, nickName);
     }
 
     @SubscribeMapping("/{roomId}/queue/messages")
