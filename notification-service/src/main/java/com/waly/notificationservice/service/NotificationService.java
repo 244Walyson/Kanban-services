@@ -58,6 +58,6 @@ public class NotificationService {
     @Transactional
     public List<NotificationDTO> findMyNotifications() {
         List<UserNotification> notifications = userNotificationRepository.findByReceiverUsername(custonUserUtil.getLoggedUsername());
-        return notifications.stream().map(NotificationDTO::new).toList();
+        return notifications.stream().filter(notification -> notification.getTitle().contains("Novo pedido de conexão") || notification.getTitle().contains("Chat criado")).map(NotificationDTO::new).toList();
     }
 }
