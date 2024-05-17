@@ -5,6 +5,8 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -30,6 +32,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.waly.chat.models.TeamFullResponse
+import com.waly.chat.models.TeamMin
 import com.waly.chat.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,12 +46,19 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+val PEOPLE_ACTIVE = "peopleActive"
+val TEAMS_ACTIVE = "teamActive"
+val CONNECTED_ACTIVE = "connectedActive"
+
 class ChatRoomActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatRoomBinding
     private lateinit var session: SessionManager
     private lateinit var motionLayout: MotionLayout
     private lateinit var allChat: MutableList<Team>
+    private lateinit var searchActive: String
+    private lateinit var userSearch: MutableList<User>
+    private lateinit var teamSearch: MutableList<TeamMin>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +67,10 @@ class ChatRoomActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         allChat = mutableListOf()
+        userSearch = mutableListOf()
+        teamSearch = mutableListOf()
+        allChat = mutableListOf()
+        searchActive = PEOPLE_ACTIVE
 
         session = SessionManager(applicationContext)
 
@@ -90,7 +104,7 @@ class ChatRoomActivity : AppCompatActivity() {
         }
 
         setSearch()
-        //setFilter()
+        setFilter()
 
         binding.userName.setOnClickListener {
             //startActivity(Intent(this, ProfileActivity::class.java))
@@ -147,7 +161,28 @@ class ChatRoomActivity : AppCompatActivity() {
         searchBar.addView(edtView)
         edtText.requestFocus()
 
-        inflateSeachList()
+        inflateSearchList()
+        edtText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // Não precisamos fazer nada aqui
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Não precisamos fazer nada aqui
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Atualizar a query sempre que o texto for alterado
+                val query = s.toString()
+
+                when (searchActive) {
+                    PEOPLE_ACTIVE -> listPeoples(searchBar, binding.motionLayoutContainer, searchBar, query)
+                    TEAMS_ACTIVE -> listTeams(searchBar, binding.motionLayoutContainer, searchBar, query)
+                    CONNECTED_ACTIVE -> listConnected(query)
+                }
+            }
+        })
+
         search.setOnClickListener {
             if (name.text.isBlank() && edtText.text.isBlank()) {
                 name.text = "Chat"
@@ -188,12 +223,12 @@ class ChatRoomActivity : AppCompatActivity() {
             edtText.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
-            inflateSeachList()
+            inflateSearchList()
         }
 
     }
 
-    private fun inflateSeachList() {
+    private fun inflateSearchList() {
         val scrollContainer = binding.motionLayoutContainer
         val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
         val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
@@ -202,55 +237,63 @@ class ChatRoomActivity : AppCompatActivity() {
         val connected = scrollSearch.findViewById<TextView>(R.id.txtConnected)
         val swipeRefresh = scrollSearch.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
-        listPeoples(searchList, scrollContainer, scrollSearch)
+        listPeoples(searchList, scrollContainer, scrollSearch, null)
+        searchActive = PEOPLE_ACTIVE
         swipeRefresh.setOnRefreshListener {
+            searchActive = PEOPLE_ACTIVE
             scrollContainer.removeAllViews()
             searchList.removeAllViews()
-            listPeoples(searchList, scrollContainer, scrollSearch)
+            listPeoples(searchList, scrollContainer, scrollSearch, null)
             swipeRefresh.isRefreshing = false
         }
 
 
         peoples.setOnClickListener {
+            searchActive = PEOPLE_ACTIVE
             scrollContainer.removeAllViews()
             searchList.removeAllViews()
             peoples.setTextColor(resources.getColor(R.color.white))
             teams.setTextColor(resources.getColor(R.color.gray_tertiary))
             connected.setTextColor(resources.getColor(R.color.gray_tertiary))
-            listPeoples(searchList, scrollContainer, scrollSearch)
+            listPeoples(searchList, scrollContainer, scrollSearch, null)
             swipeRefresh.setOnRefreshListener {
+                searchActive = PEOPLE_ACTIVE
                 searchList.removeAllViews()
-                listPeoples(searchList, scrollContainer, scrollSearch)
+                listPeoples(searchList, scrollContainer, scrollSearch, null)
                 swipeRefresh.isRefreshing = false
             }
         }
 
         teams.setOnClickListener {
+            searchActive = TEAMS_ACTIVE
             scrollContainer.removeAllViews()
             searchList.removeAllViews()
             peoples.setTextColor(resources.getColor(R.color.gray_tertiary))
             teams.setTextColor(resources.getColor(R.color.white))
             connected.setTextColor(resources.getColor(R.color.gray_tertiary))
-            listTeams(searchList, scrollContainer, scrollSearch)
+            listTeams(searchList, scrollContainer, scrollSearch, null)
             swipeRefresh.setOnRefreshListener {
+                searchActive = TEAMS_ACTIVE
                 searchList.removeAllViews()
-                listTeams(searchList, scrollContainer, scrollSearch)
+                listTeams(searchList, scrollContainer, scrollSearch, null)
                 swipeRefresh.isRefreshing = false
             }
         }
 
         connected.setOnClickListener {
+            searchActive = CONNECTED_ACTIVE
             scrollContainer.removeAllViews()
             searchList.removeAllViews()
             peoples.setTextColor(resources.getColor(R.color.gray_tertiary))
             teams.setTextColor(resources.getColor(R.color.gray_tertiary))
             connected.setTextColor(resources.getColor(R.color.white))
-            listConnected(searchList, scrollContainer, scrollSearch)
+            listConnected(null)
             swipeRefresh.setOnRefreshListener {
+                searchActive = CONNECTED_ACTIVE
                 if(allChat.isEmpty()) websocketConnect(true)
                 searchList.removeAllViews()
                 scrollContainer.removeAllViews()
-                listConnected(searchList, scrollContainer, scrollSearch)
+                listConnected(null)
                 swipeRefresh.isRefreshing = false
             }
         }
@@ -269,141 +312,34 @@ class ChatRoomActivity : AppCompatActivity() {
     private fun listPeoples(
         searchList: LinearLayout,
         scrollContainer: LinearLayout,
-        scrollSearch: View
+        scrollSearch: View,
+        query: String?
     ) {
         val service = NetworkUtils.createServiceUser()
         val token = session.accessToken
         val myNickname = session.userLogged
 
-        service.getUsers(token!!)
-            .enqueue(object : Callback<List<User>> {
-                override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-                    if (response.isSuccessful) {
-                        val users = response.body()
-                        users?.forEach { user ->
-                            if (user.nickname.equals(myNickname)) return@forEach
-                            val userCard = layoutInflater.inflate(
-                                R.layout.card_chat_item_search,
-                                scrollContainer,
-                                false
-                            )
-                            val userName = userCard.findViewById<TextView>(R.id.userName)
-                            val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
-                            val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
-                            val imgLayout =
-                                layoutInflater.inflate(R.layout.home_image, userImage, false)
-                            val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
-
-                            userName.text = user.username
-                            userNickname.text = user.nickname
-                            Glide
-                                .with(applicationContext)
-                                .load(user.imgUrl)
-                                .centerCrop()
-                                .into(imgLayout.findViewById(R.id.statusImage))
-
-                            btnConnect.setOnClickListener {
-                                btnConnect.setImageResource(R.drawable.icon_more_black)
-
-                                requestConnection(user.id, token)
-                            }
-
-                            if (user.isConnected) {
-                                btnConnect.setImageResource(R.drawable.icon_chat)
-                                btnConnect.setOnClickListener {
-                                    val intent =
-                                        Intent(this@ChatRoomActivity, ChatActivity::class.java)
-                                    intent.putExtra("teamId", user.connectionId)
-                                    startActivity(intent)
-                                }
-                            }
-
-                            userImage.addView(imgLayout)
-
-                            searchList.addView(userCard)
+        if(query == null){
+            service.getUsers(token!!)
+                .enqueue(object : Callback<List<User>> {
+                    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                        if (response.isSuccessful) {
+                            val users = response.body()
+                            userSearch = users as MutableList<User>
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                    Log.e(TAG, "Error: ${t.message}")
-                }
-            });
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(scrollSearch)
-    }
-
-    private fun listTeams(
-        searchList: LinearLayout,
-        scrollContainer: LinearLayout,
-        scrollSearch: View
-    ) {
-        val token = session.accessToken
-        val service = NetworkUtils.createServiceTeamFull()
-        service.getTeams(token!!)
-            .enqueue(object : Callback<TeamFullResponse> {
-                override fun onResponse(
-                    call: Call<TeamFullResponse>,
-                    response: Response<TeamFullResponse>
-                ) {
-                    Log.i("Teams", "${response.code()} ${response.body()} ${response.message()}")
-                    if (response.isSuccessful) {
-                        Log.i("Teams", response.body().toString())
-                        val teams = response.body()?.content
-                        teams?.forEach { team ->
-                            val userCard = layoutInflater.inflate(
-                                R.layout.card_chat_item_search,
-                                scrollContainer,
-                                false
-                            )
-                            val userName = userCard.findViewById<TextView>(R.id.userName)
-                            val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
-                            val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
-                            val imgLayout =
-                                layoutInflater.inflate(R.layout.home_image, userImage, false)
-                            val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
-
-                            userName.text = team.roomName
-                            userNickname.text = team.description
-                            Glide
-                                .with(applicationContext)
-                                .load(team.imgUrl)
-                                .centerCrop()
-                                .into(imgLayout.findViewById(R.id.statusImage))
-
-
-                            btnConnect.setImageResource(R.drawable.icon_more_black)
-                            btnConnect.setOnClickListener {
-                                val intent = Intent(this@ChatRoomActivity, ChatActivity::class.java)
-                                intent.putExtra("teamId", team.id)
-                                startActivity(intent)
-                            }
-                            userImage.addView(imgLayout)
-
-                            searchList.addView(userCard)
-                        }
+                    override fun onFailure(call: Call<List<User>>, t: Throwable) {
+                        Log.e(TAG, "Error: ${t.message}")
                     }
-                }
-
-                override fun onFailure(call: Call<TeamFullResponse>, t: Throwable) {
-                    Log.e("Teams", "Failed to fetch teams")
-                    Log.e("Teams", t.message!!)
-                    Log.e("Teams", t.cause.toString())
-                    t.printStackTrace()
-                }
-            })
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(scrollSearch)
-    }
-
-
-    private fun listConnected(
-        searchList: LinearLayout,
-        scrollContainer: LinearLayout,
-        scrollSearch: View
-    ) {
-        allChat.forEach { user ->
-            Log.i("Connected", user.id)
+                });
+        }
+        val filterList = userSearch
+        if(query != null) {
+            filterList.filter { it.nickname.uppercase().contains(query.uppercase()) }
+        }
+        filterList.forEach { user ->
+            if (user.nickname.equals(myNickname)) return@forEach
             val userCard = layoutInflater.inflate(
                 R.layout.card_chat_item_search,
                 scrollContainer,
@@ -414,6 +350,130 @@ class ChatRoomActivity : AppCompatActivity() {
             val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
             val imgLayout =
                 layoutInflater.inflate(R.layout.home_image, userImage, false)
+            val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
+
+            userName.text = user.username
+            userNickname.text = user.nickname
+            Glide
+                .with(applicationContext)
+                .load(user.imgUrl)
+                .centerCrop()
+                .into(imgLayout.findViewById(R.id.statusImage))
+
+            btnConnect.setOnClickListener {
+                btnConnect.setImageResource(R.drawable.icon_more_black)
+
+                requestConnection(user.id, token!!)
+            }
+
+            if (user.isConnected) {
+                btnConnect.setImageResource(R.drawable.icon_chat)
+                btnConnect.setOnClickListener {
+                    val intent =
+                        Intent(this@ChatRoomActivity, ChatActivity::class.java)
+                    intent.putExtra("teamId", user.connectionId)
+                    startActivity(intent)
+                }
+            }
+
+            userImage.addView(imgLayout)
+
+            searchList.addView(userCard)
+        }
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(scrollSearch)
+    }
+
+    private fun listTeams(
+        searchList: LinearLayout,
+        scrollContainer: LinearLayout,
+        scrollSearch: View,
+        query: String?
+    ) {
+        val token = session.accessToken
+        val service = NetworkUtils.createServiceTeamFull()
+
+        if(query == null){
+            service.getTeams(token!!)
+                .enqueue(object : Callback<TeamFullResponse> {
+                    override fun onResponse(
+                        call: Call<TeamFullResponse>,
+                        response: Response<TeamFullResponse>
+                    ) {
+                        Log.i("Teams", "${response.code()} ${response.body()} ${response.message()}")
+                        if (response.isSuccessful) {
+                            Log.i("Teams", response.body().toString())
+                            val teams = response.body()?.content
+                            teamSearch = teams as MutableList<TeamMin>
+                        }
+                    }
+
+                    override fun onFailure(call: Call<TeamFullResponse>, t: Throwable) {
+                        Log.e("Teams", "Failed to fetch teams")
+                        Log.e("Teams", t.message!!)
+                        Log.e("Teams", t.cause.toString())
+                        t.printStackTrace()
+                    }
+                })
+        }
+
+        val filterTeams = teamSearch
+        if (query != null) filterTeams.filter { it.roomName.uppercase().contains(query.uppercase()) }
+        filterTeams.forEach { team ->
+            val userCard = layoutInflater.inflate(
+                R.layout.card_chat_item_search,
+                scrollContainer,
+                false
+            )
+            val userName = userCard.findViewById<TextView>(R.id.userName)
+            val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
+            val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
+            val imgLayout =
+                layoutInflater.inflate(R.layout.home_image, userImage, false)
+            val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
+
+            userName.text = team.roomName
+            userNickname.text = team.description
+            Glide
+                .with(applicationContext)
+                .load(team.imgUrl)
+                .centerCrop()
+                .into(imgLayout.findViewById(R.id.statusImage))
+
+
+            btnConnect.setImageResource(R.drawable.icon_more_black)
+            btnConnect.setOnClickListener {
+                val intent = Intent(this@ChatRoomActivity, ChatActivity::class.java)
+                intent.putExtra("teamId", team.id)
+                startActivity(intent)
+            }
+            userImage.addView(imgLayout)
+
+            searchList.addView(userCard)
+        }
+        scrollContainer.removeAllViews()
+        scrollContainer.addView(scrollSearch)
+    }
+
+
+    private fun listConnected(query: String?) {
+        if(query != null) {
+            showConnected(allChat.filter { it.roomName.uppercase().contains(query.uppercase()) })
+            return;
+        }
+        showConnected(allChat)
+    }
+
+    private fun showConnected(allChatFilter: List<Team> ) {
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+        val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
+        allChatFilter.forEach {user ->
+            val userCard = layoutInflater.inflate(R.layout.card_chat_item_search, scrollContainer, false)
+            val userName = userCard.findViewById<TextView>(R.id.userName)
+            val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
+            val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
+            val imgLayout = layoutInflater.inflate(R.layout.home_image, userImage, false)
             val btnConnect = userCard.findViewById<ImageView>(R.id.connectButton)
 
             userName.text = user.roomName
@@ -434,7 +494,6 @@ class ChatRoomActivity : AppCompatActivity() {
             userImage.addView(imgLayout)
             searchList.addView(userCard)
         }
-
         scrollContainer.removeAllViews()
         scrollContainer.addView(scrollSearch)
     }
@@ -461,70 +520,43 @@ class ChatRoomActivity : AppCompatActivity() {
 
     }
 
-//    private fun setFilter() {
-//        val all = binding.txtAll
-//        val teams = binding.txtTeams
-//        val direct = binding.txtDirect
-//
-//        all.setOnClickListener {
-//            all.setTextColor(resources.getColor(R.color.white))
-//            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            listAll()
-//        }
-//        teams.setOnClickListener {
-//            all.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            teams.setTextColor(resources.getColor(R.color.white))
-//            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            filterTeams()
-//        }
-//        direct.setOnClickListener {
-//            all.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
-//            direct.setTextColor(resources.getColor(R.color.white))
-//            filterDirect()
-//        }
-//    }
+    private fun setFilter() {
+        val all = motionLayout.findViewById<TextView>(R.id.txtAll)
+        val teams = motionLayout.findViewById<TextView>(R.id.txtTeams)
+        val direct = motionLayout.findViewById<TextView>(R.id.txtDirect)
+
+        all.setOnClickListener {
+            all.setTextColor(resources.getColor(R.color.white))
+            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
+            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+            listAll()
+        }
+        teams.setOnClickListener {
+            all.setTextColor(resources.getColor(R.color.gray_tertiary))
+            teams.setTextColor(resources.getColor(R.color.white))
+            direct.setTextColor(resources.getColor(R.color.gray_tertiary))
+            filterTeams()
+        }
+        direct.setOnClickListener {
+            all.setTextColor(resources.getColor(R.color.gray_tertiary))
+            teams.setTextColor(resources.getColor(R.color.gray_tertiary))
+            direct.setTextColor(resources.getColor(R.color.white))
+            filterDirect()
+        }
+    }
 
     private fun listAll() {
-        val scrollContainer = binding.motionLayoutContainer
-        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
-
-        scrollView.removeAllViews()
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(motionLayout)
+        showChatRooms(allChat)
     }
 
     private fun filterTeams() {
-        val scrollContainer = binding.motionLayoutContainer
-        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
-
-        scrollView.removeAllViews()
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(motionLayout)
+        val filterList = allChat.filter { it.id.contains("R") }
+        showChatRooms(filterList.toMutableList())
     }
 
     private fun filterDirect() {
-        val scrollContainer = binding.motionLayoutContainer
-        val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
-
-        scrollView.removeAllViews()
-        scrollContainer.removeAllViews()
-        scrollContainer.addView(motionLayout)
-    }
-
-
-    private fun startMoreFragment(teamId: String) {
-        binding.chatFrameLayout.visibility = View.VISIBLE
-
-        val fragment = MoreFragment.newInstance(teamId)
-
-        val fragmentManager = supportFragmentManager
-
-        val transaction = fragmentManager.beginTransaction()
-
-        transaction.replace(R.id.chatFrameLayout, fragment)
-        transaction.commit()
+        val filterList = allChat.filter { it.id.contains("U") }
+       showChatRooms(filterList.toMutableList())
     }
 
 
@@ -563,7 +595,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
             val image = cardImage.findViewById<ShapeableImageView>(R.id.statusImage)
             image.setOnClickListener {
-                startMoreFragment(team.id)
+                //startMoreFragment(team.id)
             }
 
             Glide
