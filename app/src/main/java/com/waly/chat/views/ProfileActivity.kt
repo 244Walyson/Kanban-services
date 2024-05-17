@@ -1,37 +1,45 @@
-package com.waly.chat.fragments
+package com.waly.chat.views
 
 import SessionManager
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.waly.chat.R
-import com.waly.chat.databinding.FragmentProfileBinding
+import com.waly.chat.databinding.ActivityProfileBinding
 import com.waly.chat.models.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+class ProfileActivity : AppCompatActivity() {
 
-class ProfileFragment : Fragment() {
-
-    private lateinit var binding: FragmentProfileBinding
+    private lateinit var binding: ActivityProfileBinding
     private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        requireActivity().onBackPressedDispatcher.addCallback {
-            returnToActivity()
+        session = SessionManager(this)
+
+        binding.logoutButton.setOnClickListener {
+            session.clearSession()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
-        binding = FragmentProfileBinding.inflate(layoutInflater)
+        binding.backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        fetchUserData()
     }
 
     private fun fetchUserData() {
@@ -78,37 +86,5 @@ class ProfileFragment : Fragment() {
         userInfo.addView(userImage)
 
         Log.i("PROFILE FRAG", "User details: ${user.username}")
-    }
-    private fun returnToActivity() {
-        requireActivity().findViewById<FrameLayout>(R.id.chatFrameLayout).visibility = View.GONE
-        val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        fragmentTransaction.remove(this@ProfileFragment)
-        fragmentTransaction.commit()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
-
-        session = SessionManager(requireContext())
-        fetchUserData()
-
-        val backButton = binding.backButton
-        backButton.setOnClickListener {
-            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(requireContext(), androidx.appcompat.R.anim.abc_slide_in_top)
-            returnToActivity()
-        }
-
-        return binding.root
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            ProfileFragment().apply {
-
-            }
     }
 }

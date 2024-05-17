@@ -29,6 +29,7 @@ import com.waly.chat.models.User
 import com.waly.chat.views.ChatActivity
 import com.waly.chat.views.ChatRoomActivity
 import com.waly.chat.views.NotificationActivity
+import com.waly.chat.views.ProfileActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -66,20 +67,27 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationActivity::class.java))
         }
 
-        val buttonHome = motionLayout.findViewById<Button>(R.id.button_home)
+        val buttonNotification = motionLayout.findViewById<Button>(R.id.button_home)
         val buttonProfile = motionLayout.findViewById<Button>(R.id.button_profile)
         val buttonChat = motionLayout.findViewById<Button>(R.id.button_chat)
         val buttonSearch = motionLayout.findViewById<Button>(R.id.button_search)
 
 
         buttonProfile.setOnClickListener {
-            startActivity(Intent(this, ChatRoomActivity::class.java))
+            startActivity(Intent(applicationContext, ProfileActivity::class.java))
+            finish()
         }
         buttonChat.setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java))
+            finish()
         }
         buttonSearch.setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java).putExtra("search", "true"))
+            finish()
+        }
+        buttonNotification.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+            finish()
         }
 
         fetchTeamData()
@@ -115,6 +123,10 @@ class MainActivity : AppCompatActivity() {
                         val imgLayout = motionLayout.findViewById<LinearLayout>(R.id.userImageLayout)
                         val imgInf = layoutInflater.inflate(R.layout.home_image, imgLayout, false)
                         val img = imgInf.findViewById<ImageView>(R.id.statusImage)
+                        img.setOnClickListener {
+                            startActivity(Intent(applicationContext, ProfileActivity::class.java))
+                        }
+
                         Glide
                             .with(applicationContext)
                             .load(user?.imgUrl)

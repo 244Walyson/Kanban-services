@@ -236,20 +236,20 @@
         android:id="@+id/background"
         android:layout_width="500dp"
         android:layout_height="500dp"
-        android:background="#0178d9"
+        android:background="@drawable/menu_gradient"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton"
         app:layout_constraintEnd_toEndOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="@+id/imageButton"
         app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:roundPercent="1" />
+        app:roundPercent="1"/>
 
     <Button
         android:id="@+id/button_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#0000"
-        android:drawableTop="@drawable/icon_home_white"
-        android:text="Inicio"
+        android:drawableTop="@drawable/icon_notification"
+        android:text="Notificações"
         android:textAllCaps="false"
         app:layout_constraintCircle="@id/background"
         app:layout_constraintCircleAngle="270"

@@ -24,7 +24,6 @@ import com.waly.chat.R
 import com.waly.chat.configs.WebSocketConfig
 import com.waly.chat.databinding.ActivityChatRoomBinding
 import com.waly.chat.fragments.MoreFragment
-import com.waly.chat.fragments.ProfileFragment
 import com.waly.chat.models.Team
 import com.waly.chat.notification.MessageNotification
 import com.google.android.material.imageview.ShapeableImageView
@@ -65,12 +64,12 @@ class ChatRoomActivity : AppCompatActivity() {
         motionLayout = findViewById(R.id.motion_layout_id)
 
         motionLayout.findViewById<Button>(R.id.button_home).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
         }
 
         motionLayout.findViewById<Button>(R.id.button_profile).setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
         motionLayout.findViewById<Button>(R.id.button_search).setOnClickListener {
@@ -79,6 +78,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback {
             startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java))
+            finish()
         }
 
 
@@ -86,13 +86,14 @@ class ChatRoomActivity : AppCompatActivity() {
 
         binding.backButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         setSearch()
         //setFilter()
 
         binding.userName.setOnClickListener {
-            startProfileFragment();
+            //startActivity(Intent(this, ProfileActivity::class.java))
         }
 
         if (intent.getStringExtra("search").equals("true")){
@@ -261,6 +262,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
         binding.backButton.setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java))
+            finish()
         }
     }
 
@@ -511,19 +513,6 @@ class ChatRoomActivity : AppCompatActivity() {
         scrollContainer.addView(motionLayout)
     }
 
-
-    private fun startProfileFragment() {
-        binding.chatFrameLayout.visibility = View.VISIBLE
-
-        val fragment = ProfileFragment.newInstance()
-
-        val fragmentManager = supportFragmentManager
-
-        val transaction = fragmentManager.beginTransaction()
-
-        transaction.replace(R.id.chatFrameLayout, fragment)
-        transaction.commit()
-    }
 
     private fun startMoreFragment(teamId: String) {
         binding.chatFrameLayout.visibility = View.VISIBLE
