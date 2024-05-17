@@ -49,11 +49,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var session: SessionManager
     private lateinit var motionLayout: MotionLayout
     private lateinit var layoutContainer: LinearLayout
+    private lateinit var allChat: MutableList<Team>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        allChat = mutableListOf()
 
         session = SessionManager(applicationContext)
         motionLayout = findViewById(R.id.motion_layout_main_id)
@@ -241,11 +244,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 val subs: Flow<String> = session.subscribeText("/user/${nickname}/queue/chats")
 
-                var teamList: MutableList<Team> = mutableListOf()
                 subs.collectLatest {
                     Log.i("STOMP", "Received message: $it")
-                    teamList = jsonStringToTeamList(it)
-                    showChatRooms(teamList)
+                     allChat.addAll(jsonStringToTeamList(it))
+                    removeDuplicates(allChat.last().id)
+                    showChatRooms(allChat)
                 }
 
 
@@ -265,16 +268,13 @@ class MainActivity : AppCompatActivity() {
         return teams.toMutableList()
     }
 
-    fun removeDuplicates(teams: HashMap<Int, Team>, teamId: String, key: Int): HashMap<Int, Team> {
-        var keyToRemove = -1
-        teams.forEach {
-            if (it.value.id == teamId && it.key != key) {
-                keyToRemove = it.key
-            }
+    fun removeDuplicates(chatId: String) {
+        val chatToRemove = allChat.filter { it.id == chatId }
+
+        if (chatToRemove.size > 1) {
+            val lastChat = chatToRemove.last()
+            allChat.remove(lastChat)
         }
-        if (keyToRemove != -1)
-            teams.remove(keyToRemove)
-        return teams
     }
 
     fun showChatRooms(teams: MutableList<Team>) {

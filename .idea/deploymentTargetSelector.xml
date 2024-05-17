@@ -4,14 +4,27 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-13T03:34:45.263545640Z">
+        <DropdownSelection timestamp="2024-05-17T04:15:38.845781994Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/waly/.android/avd/Pixel_8_API_30.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/waly/.android/avd/Copy_of_Pixel_8_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>
-        <DialogSelection />
+        <DialogSelection>
+          <targets>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="LocalEmulator" identifier="path=/home/waly/.android/avd/Copy_of_Pixel_8_API_30.avd" />
+              </handle>
+            </Target>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="LocalEmulator" identifier="path=/home/waly/.android/avd/Pixel_8_API_30.avd" />
+              </handle>
+            </Target>
+          </targets>
+        </DialogSelection>
       </SelectionState>
     </selectionStates>
   </component>
