@@ -25,7 +25,6 @@ import com.waly.chat.MainActivity
 import com.waly.chat.R
 import com.waly.chat.configs.WebSocketConfig
 import com.waly.chat.databinding.ActivityChatRoomBinding
-import com.waly.chat.fragments.MoreFragment
 import com.waly.chat.models.Team
 import com.waly.chat.notification.MessageNotification
 import com.google.android.material.imageview.ShapeableImageView
@@ -80,23 +79,23 @@ class ChatRoomActivity : AppCompatActivity() {
         motionLayout.findViewById<Button>(R.id.button_home).setOnClickListener {
             val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         motionLayout.findViewById<Button>(R.id.button_profile).setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+            finish()
         }
         motionLayout.findViewById<Button>(R.id.button_search).setOnClickListener {
             openSearchFromMenu()
+            finish()
         }
 
         onBackPressedDispatcher.addCallback {
             startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java))
             finish()
         }
-
-
-        MessageNotification(this).createNotificationChannel()
 
         binding.backButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
@@ -110,14 +109,14 @@ class ChatRoomActivity : AppCompatActivity() {
             //startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        if (intent.getStringExtra("search").equals("true")){
+        if (intent.getStringExtra("search").equals("true")) {
             websocketConnect(true)
             openSearchFromMenu()
         } else websocketConnect(false)
 
     }
 
-    fun websocketConnect(fromSearch: Boolean) {
+    private fun websocketConnect(fromSearch: Boolean) {
         allChat.clear()
         val nickname = session.userLogged
         val webSocketConfig = WebSocketConfig(applicationContext)
@@ -131,7 +130,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 subs.collectLatest {
                     Log.i("STOMP", "Received message: $it")
                     allChat.addAll(0, jsonStringToTeamList(it))
-                    if(!fromSearch) {
+                    if (!fromSearch) {
                         showChatRooms(allChat)
                         removeDuplicates(allChat.first().id)
                     }
@@ -161,7 +160,13 @@ class ChatRoomActivity : AppCompatActivity() {
         searchBar.addView(edtView)
         edtText.requestFocus()
 
-        inflateSearchList()
+        val scrollContainer = binding.motionLayoutContainer
+        val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+
+        inflateSearchList(scrollSearch, scrollContainer)
+
+        inflateSearchList(scrollSearch, scrollContainer)
+
         edtText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // Não precisamos fazer nada aqui
@@ -176,9 +181,9 @@ class ChatRoomActivity : AppCompatActivity() {
                 val query = s.toString()
 
                 when (searchActive) {
-                    PEOPLE_ACTIVE -> listPeoples(searchBar, binding.motionLayoutContainer, searchBar, query)
-                    TEAMS_ACTIVE -> listTeams(searchBar, binding.motionLayoutContainer, searchBar, query)
-                    CONNECTED_ACTIVE -> listConnected(query)
+                    PEOPLE_ACTIVE -> listPeoples(query, scrollSearch, scrollContainer)
+                    TEAMS_ACTIVE -> listTeams(query, scrollSearch, scrollContainer)
+                    CONNECTED_ACTIVE -> listConnected(query, scrollSearch, scrollContainer)
                 }
             }
         })
@@ -223,77 +228,86 @@ class ChatRoomActivity : AppCompatActivity() {
             edtText.requestFocus()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(edtText, InputMethodManager.SHOW_IMPLICIT)
-            inflateSearchList()
+
+            val scrollContainer = binding.motionLayoutContainer
+            val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+
+            inflateSearchList(scrollSearch, scrollContainer)
+            edtText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    // Não precisamos fazer nada aqui
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Não precisamos fazer nada aqui
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Atualizar a query sempre que o texto for alterado
+                    val query = s.toString()
+
+                    when (searchActive) {
+                        PEOPLE_ACTIVE -> listPeoples(query, scrollSearch, scrollContainer)
+                        TEAMS_ACTIVE -> listTeams(query, scrollSearch, scrollContainer)
+                        CONNECTED_ACTIVE -> listConnected(query, scrollSearch, scrollContainer)
+                    }
+                }
+            })
         }
 
     }
 
-    private fun inflateSearchList() {
-        val scrollContainer = binding.motionLayoutContainer
-        val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
-        val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
+    private fun inflateSearchList(scrollSearch: View, scrollContainer: LinearLayout) {
+        listPeoples(null, scrollSearch, scrollContainer)
+        searchActive = PEOPLE_ACTIVE
+
+        addFunctionsToSearchListButtons(scrollSearch, scrollContainer)
+
+    }
+
+    private fun addFunctionsToSearchListButtons(scrollSearch: View, scrollContainer: LinearLayout) {
+
         val peoples = scrollSearch.findViewById<TextView>(R.id.txtPeople)
         val teams = scrollSearch.findViewById<TextView>(R.id.txtTeams)
         val connected = scrollSearch.findViewById<TextView>(R.id.txtConnected)
         val swipeRefresh = scrollSearch.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
 
-        listPeoples(searchList, scrollContainer, scrollSearch, null)
-        searchActive = PEOPLE_ACTIVE
-        swipeRefresh.setOnRefreshListener {
-            searchActive = PEOPLE_ACTIVE
-            scrollContainer.removeAllViews()
-            searchList.removeAllViews()
-            listPeoples(searchList, scrollContainer, scrollSearch, null)
-            swipeRefresh.isRefreshing = false
-        }
-
-
         peoples.setOnClickListener {
             searchActive = PEOPLE_ACTIVE
-            scrollContainer.removeAllViews()
-            searchList.removeAllViews()
             peoples.setTextColor(resources.getColor(R.color.white))
             teams.setTextColor(resources.getColor(R.color.gray_tertiary))
             connected.setTextColor(resources.getColor(R.color.gray_tertiary))
-            listPeoples(searchList, scrollContainer, scrollSearch, null)
+            listPeoples(null, scrollSearch, scrollContainer)
             swipeRefresh.setOnRefreshListener {
                 searchActive = PEOPLE_ACTIVE
-                searchList.removeAllViews()
-                listPeoples(searchList, scrollContainer, scrollSearch, null)
+                listPeoples(null, scrollSearch, scrollContainer)
                 swipeRefresh.isRefreshing = false
             }
         }
 
         teams.setOnClickListener {
             searchActive = TEAMS_ACTIVE
-            scrollContainer.removeAllViews()
-            searchList.removeAllViews()
-            peoples.setTextColor(resources.getColor(R.color.gray_tertiary))
+           peoples.setTextColor(resources.getColor(R.color.gray_tertiary))
             teams.setTextColor(resources.getColor(R.color.white))
             connected.setTextColor(resources.getColor(R.color.gray_tertiary))
-            listTeams(searchList, scrollContainer, scrollSearch, null)
+            listTeams(null, scrollSearch, scrollContainer)
             swipeRefresh.setOnRefreshListener {
                 searchActive = TEAMS_ACTIVE
-                searchList.removeAllViews()
-                listTeams(searchList, scrollContainer, scrollSearch, null)
+                listTeams(null, scrollSearch, scrollContainer)
                 swipeRefresh.isRefreshing = false
             }
         }
 
         connected.setOnClickListener {
             searchActive = CONNECTED_ACTIVE
-            scrollContainer.removeAllViews()
-            searchList.removeAllViews()
             peoples.setTextColor(resources.getColor(R.color.gray_tertiary))
             teams.setTextColor(resources.getColor(R.color.gray_tertiary))
             connected.setTextColor(resources.getColor(R.color.white))
-            listConnected(null)
+            listConnected(null, scrollSearch, scrollContainer)
             swipeRefresh.setOnRefreshListener {
                 searchActive = CONNECTED_ACTIVE
-                if(allChat.isEmpty()) websocketConnect(true)
-                searchList.removeAllViews()
-                scrollContainer.removeAllViews()
-                listConnected(null)
+                if (allChat.isEmpty()) websocketConnect(true)
+                listConnected(null, scrollSearch, scrollContainer)
                 swipeRefresh.isRefreshing = false
             }
         }
@@ -309,23 +323,21 @@ class ChatRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun listPeoples(
-        searchList: LinearLayout,
-        scrollContainer: LinearLayout,
-        scrollSearch: View,
-        query: String?
-    ) {
+    private fun listPeoples(query: String?, scrollSearch: View, scrollContainer: LinearLayout) {
+        Log.i(TAG, "Listing users")
         val service = NetworkUtils.createServiceUser()
-        val token = session.accessToken
-        val myNickname = session.userLogged
-
-        if(query == null){
+        if(userSearch.isEmpty()){
+            val token = session.accessToken
             service.getUsers(token!!)
                 .enqueue(object : Callback<List<User>> {
-                    override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+                    override fun onResponse(
+                        call: Call<List<User>>,
+                        response: Response<List<User>>
+                    ) {
                         if (response.isSuccessful) {
                             val users = response.body()
                             userSearch = users as MutableList<User>
+                            showUsers(userSearch, scrollSearch, scrollContainer)
                         }
                     }
 
@@ -334,11 +346,21 @@ class ChatRoomActivity : AppCompatActivity() {
                     }
                 });
         }
-        val filterList = userSearch
         if(query != null) {
-            filterList.filter { it.nickname.uppercase().contains(query.uppercase()) }
+            showUsers(userSearch.filter { it.nickname.uppercase().contains(query.uppercase()) || it.username.uppercase().contains(query.uppercase())}, scrollSearch, scrollContainer)
+            return
         }
-        filterList.forEach { user ->
+        showUsers(userSearch, scrollSearch, scrollContainer)
+    }
+
+
+    private fun showUsers(users: List<User>, scrollSearch: View, scrollContainer: LinearLayout) {
+        val token = session.accessToken
+        val myNickname = session.userLogged
+        val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
+        searchList.removeAllViews()
+
+        users.forEach { user ->
             if (user.nickname.equals(myNickname)) return@forEach
             val userCard = layoutInflater.inflate(
                 R.layout.card_chat_item_search,
@@ -377,34 +399,27 @@ class ChatRoomActivity : AppCompatActivity() {
             }
 
             userImage.addView(imgLayout)
-
             searchList.addView(userCard)
         }
         scrollContainer.removeAllViews()
         scrollContainer.addView(scrollSearch)
     }
 
-    private fun listTeams(
-        searchList: LinearLayout,
-        scrollContainer: LinearLayout,
-        scrollSearch: View,
-        query: String?
-    ) {
+    private fun listTeams(query: String?, scrollSearch: View, scrollContainer: LinearLayout) {
         val token = session.accessToken
         val service = NetworkUtils.createServiceTeamFull()
 
-        if(query == null){
+        if (teamSearch.isEmpty()) {
             service.getTeams(token!!)
                 .enqueue(object : Callback<TeamFullResponse> {
                     override fun onResponse(
                         call: Call<TeamFullResponse>,
                         response: Response<TeamFullResponse>
                     ) {
-                        Log.i("Teams", "${response.code()} ${response.body()} ${response.message()}")
                         if (response.isSuccessful) {
-                            Log.i("Teams", response.body().toString())
                             val teams = response.body()?.content
                             teamSearch = teams as MutableList<TeamMin>
+                            showTeams(teamSearch, scrollSearch, scrollContainer)
                         }
                     }
 
@@ -416,15 +431,20 @@ class ChatRoomActivity : AppCompatActivity() {
                     }
                 })
         }
+        if (query != null) {
+            showTeams(teamSearch.filter { it.roomName.uppercase().contains(query.uppercase()) || it.description.uppercase().contains(query.uppercase())}, scrollSearch, scrollContainer)
+            return
+        }
+        showTeams(teamSearch, scrollSearch, scrollContainer)
+    }
 
-        val filterTeams = teamSearch
-        if (query != null) filterTeams.filter { it.roomName.uppercase().contains(query.uppercase()) }
-        filterTeams.forEach { team ->
-            val userCard = layoutInflater.inflate(
-                R.layout.card_chat_item_search,
-                scrollContainer,
-                false
-            )
+    private fun showTeams(teams: List<TeamMin>, scrollSearch: View, scrollContainer: LinearLayout) {
+        val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
+        searchList.removeAllViews()
+
+
+        teams.forEach { team ->
+            val userCard = layoutInflater.inflate(R.layout.card_chat_item_search, scrollContainer, false)
             val userName = userCard.findViewById<TextView>(R.id.userName)
             val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
             val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
@@ -448,28 +468,28 @@ class ChatRoomActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             userImage.addView(imgLayout)
-
             searchList.addView(userCard)
         }
         scrollContainer.removeAllViews()
         scrollContainer.addView(scrollSearch)
     }
 
-
-    private fun listConnected(query: String?) {
-        if(query != null) {
-            showConnected(allChat.filter { it.roomName.uppercase().contains(query.uppercase()) })
+    private fun listConnected(query: String?, scrollSearch: View, scrollContainer: LinearLayout) {
+        if (query != null) {
+            showConnected(allChat.filter { it.roomName.uppercase().contains(query.uppercase()) }, scrollSearch, scrollContainer)
             return;
         }
-        showConnected(allChat)
+        showConnected(allChat, scrollSearch, scrollContainer)
     }
 
-    private fun showConnected(allChatFilter: List<Team> ) {
-        val scrollContainer = binding.motionLayoutContainer
-        val scrollSearch = layoutInflater.inflate(R.layout.search_list, scrollContainer, false)
+    private fun showConnected(allChatFilter: List<Team>, scrollSearch: View, scrollContainer: LinearLayout) {
         val searchList = scrollSearch.findViewById<LinearLayout>(R.id.searchList)
-        allChatFilter.forEach {user ->
-            val userCard = layoutInflater.inflate(R.layout.card_chat_item_search, scrollContainer, false)
+        searchList.removeAllViews()
+
+
+        allChatFilter.forEach { user ->
+            val userCard =
+                layoutInflater.inflate(R.layout.card_chat_item_search, scrollContainer, false)
             val userName = userCard.findViewById<TextView>(R.id.userName)
             val userImage = userCard.findViewById<LinearLayout>(R.id.cardImage)
             val userNickname = userCard.findViewById<TextView>(R.id.userNickname)
@@ -556,7 +576,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private fun filterDirect() {
         val filterList = allChat.filter { it.id.contains("U") }
-       showChatRooms(filterList.toMutableList())
+        showChatRooms(filterList.toMutableList())
     }
 
 

@@ -47,12 +47,12 @@
             android:paddingHorizontal="50dp">
 
             <EditText
-                android:id="@+id/newEmail"
+                android:id="@+id/input1"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#E8FFFFFF"
-                android:hint="Email"
+                android:hint="Nome"
+                android:layout_marginVertical="5dp"
                 android:textColor="@color/black"
                 android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_medium"
@@ -60,34 +60,17 @@
                 android:inputType="textEmailAddress"/>
 
             <EditText
-                android:id="@+id/newPassword"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:inputType="textPassword"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/input_message_shape"
-                android:backgroundTint="#E8FFFFFF"
-                android:hint="Password"
-                android:textColor="@color/black"
-                android:maxLines="1"
-                android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_medium"
-                android:textColorHint="@color/gray_tertiary" />
-
-            <EditText
-                android:id="@+id/newNickname"
+                android:id="@+id/input2"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/input_message_shape"
-                android:backgroundTint="#E8FFFFFF"
-                android:hint="Nickname"
-                android:layout_marginTop="10dp"
-                android:paddingHorizontal="10dp"
-                android:maxLines="1"
+                android:hint="Nick"
+                android:layout_marginVertical="5dp"
                 android:textColor="@color/black"
+                android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/gray_tertiary"
-                android:inputType="text"/>
+                android:inputType="textEmailAddress"/>
 
 
            <LinearLayout
@@ -95,8 +78,8 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_marginTop="20dp"
+               android:paddingHorizontal="5dp"
                android:orientation="vertical">
-
            </LinearLayout>
 
             <LinearLayout
@@ -152,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="130dp"
+                android:layout_marginTop="160dp"
                 android:padding="15dp"
                 android:textColor="@color/white"
                 android:text="Ja tem uma conta? Faça login"

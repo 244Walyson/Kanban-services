@@ -26,6 +26,7 @@ import com.waly.chat.models.Team
 import com.waly.chat.models.TeamFullResponse
 import com.waly.chat.models.TeamMin
 import com.waly.chat.models.User
+import com.waly.chat.notification.MessageNotification
 import com.waly.chat.views.ChatActivity
 import com.waly.chat.views.ChatRoomActivity
 import com.waly.chat.views.NotificationActivity
@@ -89,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, NotificationActivity::class.java))
             finish()
         }
+
 
         fetchTeamData()
         websocketConnect()

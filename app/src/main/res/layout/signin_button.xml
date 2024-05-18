@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:text="Sign In"
+    android:textAllCaps="true"
     android:backgroundTint="@color/white"
     android:textColor="@color/black"
     android:fontFamily="@font/gordita_black"

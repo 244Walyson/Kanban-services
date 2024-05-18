@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.ChatUi" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:theme">@null</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/cardview_dark_background</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
@@ -11,5 +12,6 @@
         <item name="itemIconTint">@color/icon_colors</item>
         <item name="labelVisibilityMode">unlabeled</item>
     </style>
+
 
 </resources>

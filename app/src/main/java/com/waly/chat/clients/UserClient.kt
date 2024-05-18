@@ -1,6 +1,8 @@
 
+import com.waly.chat.models.CreateUser
 import com.waly.chat.models.User
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -13,6 +15,9 @@ interface UserClient {
 
     @GET("/users")
     fun getUsers(@Header("Authorization") authorization: String): Call<List<User>>
+
+    @POST("users")
+    fun createUser(@Body user: CreateUser): Call<User>
 
     @POST("/users/connect/{id}")
     fun requestConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<User>

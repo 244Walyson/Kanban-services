@@ -38,7 +38,6 @@ class LoginActivity : AppCompatActivity() {
 
         binding.txtSignUp.setOnClickListener {
             startActivity(Intent(this, NewUserActivity::class.java))
-            finish()
         }
 
         binding.GithubLogin.setOnClickListener {
@@ -54,6 +53,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         session = SessionManager(applicationContext)
+
+        if(intent.getStringExtra("email") != null && intent.getStringExtra("password") != null ){
+            binding.edtEmail.setText(intent.getStringExtra("email"))
+            binding.edtPassword.setText(intent.getStringExtra("password"))
+        }
 
         setButton()
 

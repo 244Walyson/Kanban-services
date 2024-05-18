@@ -1,0 +1,13 @@
+<EditText
+    android:id="@+id/newEmail"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@drawable/input_message_shape"
+    android:backgroundTint="#E8FFFFFF"
+    android:hint="Email"
+    android:textColor="@color/black"
+    android:paddingHorizontal="10dp"
+    android:fontFamily="@font/gordita_medium"
+    android:textColorHint="@color/gray_tertiary"
+    android:inputType="textEmailAddress"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

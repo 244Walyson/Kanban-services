@@ -9,13 +9,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.waly.chat.MainActivity
+import com.waly.chat.databinding.ActivitySplashScreenBinding
+import com.waly.chat.notification.MessageNotification
 import java.util.Date
 
 
 class SplashScreenActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        MessageNotification(this).createNotificationChannel()
 
         redirectBasedOnTokenValidity()
     }
