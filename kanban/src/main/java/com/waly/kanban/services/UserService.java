@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private KafkaProducer kafkaProducer;
     private final String APPROVED = "APPROVED";
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -93,7 +99,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(dto.getEmail());
         user.setImgUrl(dto.getImgUrl());
         user.setBio(dto.getBio());
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         user = repository.save(user);
         userOutboxRepository.save(new UserOutbox(user));

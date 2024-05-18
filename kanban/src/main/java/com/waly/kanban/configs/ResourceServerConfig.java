@@ -73,6 +73,7 @@ public class ResourceServerConfig {
 
 		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/.well-known/jwks.json").permitAll());
+		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/users").permitAll());
 		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 		http.oauth2Login(oauth2 -> oauth2
