@@ -31,6 +31,7 @@ import com.waly.chat.views.ChatActivity
 import com.waly.chat.views.ChatRoomActivity
 import com.waly.chat.views.NotificationActivity
 import com.waly.chat.views.ProfileActivity
+import com.waly.chat.views.TeamActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -76,19 +77,19 @@ class MainActivity : AppCompatActivity() {
 
         buttonProfile.setOnClickListener {
             startActivity(Intent(applicationContext, ProfileActivity::class.java))
-            finish()
+            //finish()
         }
         buttonChat.setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java))
-            finish()
+            //finish()
         }
         buttonSearch.setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java).putExtra("search", "true"))
-            finish()
+            //finish()
         }
         buttonNotification.setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
-            finish()
+            //finish()
         }
 
 
@@ -223,6 +224,18 @@ class MainActivity : AppCompatActivity() {
             teamName.text = team.roomName
             val teamDesc = groupItem.findViewById<TextView>(R.id.mainTeamDesc)
             teamDesc.text = team.description
+            val githubIcon = groupItem.findViewById<ImageView>(R.id.iconGithubHexagon)
+            githubIcon.setOnClickListener {
+                Log.i("TEAM", "TEAM ${team.roomName}")
+            }
+
+            gradientImage.setOnClickListener {
+                val intent = Intent(this, TeamActivity::class.java)
+                intent.putExtra("teamId", team.id)
+                startActivity(intent)
+            }
+
+
             list.addView(groupItem)
         }
         layoutContainer.removeAllViews()

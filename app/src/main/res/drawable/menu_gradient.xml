@@ -1,9 +1,11 @@
-<!-- res/drawable/linear_gradient.xml -->
+<!-- res/drawable/radial_gradient.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:angle="135"
-        android:startColor="#b0dfe5"
-        android:centerColor="@color/blue"
-        android:endColor="#0080ff"
-        android:type="linear" />
+        android:type="radial"
+        android:centerX="50%"
+        android:centerY="50%"
+        android:startColor="#FF007F"
+        android:endColor="#400020"
+        android:gradientRadius="70%"
+    />
 </shape>

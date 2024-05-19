@@ -1,5 +1,5 @@
-<LinearLayout android:layout_height="73dp"
-    android:layout_width="73dp"
+<LinearLayout android:layout_height="80dp"
+    android:layout_width="80dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/image_shape"
     android:gravity="center"

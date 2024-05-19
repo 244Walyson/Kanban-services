@@ -1,60 +1,61 @@
-package com.waly.chat.fragments
+package com.waly.chat.views
 
 import SessionManager
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.waly.chat.R
-import com.waly.chat.databinding.FragmentMoreBinding
+import com.waly.chat.databinding.ActivityTeamBinding
 import com.waly.chat.models.FullTeam
-import com.waly.chat.views.ChatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-private const val TEAM_ID = "param1"
+class TeamActivity : AppCompatActivity() {
 
-
-class MoreFragment : Fragment() {
-
-    private var teamId: String? = null
-    private lateinit var binding: FragmentMoreBinding
+    private lateinit var binding: ActivityTeamBinding
     private lateinit var session: SessionManager
     private lateinit var fullTeam: FullTeam
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentMoreBinding.inflate(layoutInflater)
-        session = SessionManager(requireContext())
-        arguments?.let {
-            teamId = it.getString(TEAM_ID)
+        binding = ActivityTeamBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        session = SessionManager(this)
+        fullTeam = FullTeam()
+
+        fetchTeamDetails(intent.getStringExtra("teamId"))
+
+        val teamMembers = binding.teamMembers
+        val teamBoards = binding.teamBoards
+        teamMembers.setOnClickListener {
+            teamMembers.setTextColor(getColor(R.color.white))
+            teamBoards.setTextColor(getColor(R.color.gray_tertiary))
+            listMembers()
+        }
+        teamBoards.setOnClickListener {
+            teamMembers.setTextColor(getColor(R.color.gray_tertiary))
+            teamBoards.setTextColor(getColor(R.color.white))
+            listBoards()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback {
-            returnToActivity()
+
+        binding.moreBackButton.setOnClickListener {
+            finish()
         }
+
     }
 
-    private fun returnToActivity() {
-        if (isAdded) {
-            val intent = Intent(requireContext(), ChatActivity::class.java)
-            intent.putExtra("teamId", teamId)
-            startActivity(intent)
-            return
-        }
-    }
-
-    private fun fetchTeamDetails() {
+    private fun fetchTeamDetails(teamId: String?) {
         val service = NetworkUtils.createServiceTeam()
         val token = session.accessToken
 
@@ -94,7 +95,7 @@ class MoreFragment : Fragment() {
 
         val teamImage = binding.teamImage
         Glide
-            .with(requireContext())
+            .with(this)
             .load(team.imgUrl)
             .placeholder(R.drawable.color5)
             .centerCrop()
@@ -121,7 +122,7 @@ class MoreFragment : Fragment() {
             Log.i("MORE FRAG", "Member details: ${member.imgUrl}")
 
             Glide
-                .with(requireContext())
+                .with(this)
                 .load(member.imgUrl)
                 .placeholder(R.drawable.color5)
                 .centerCrop()
@@ -141,7 +142,7 @@ class MoreFragment : Fragment() {
         boards.forEachIndexed { index, board ->
 
             if (linearLayout == null) {
-                linearLayout = LinearLayout(requireContext())
+                linearLayout = LinearLayout(this)
                 linearLayout!!.layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -167,48 +168,5 @@ class MoreFragment : Fragment() {
             }
             i++
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMoreBinding.inflate(inflater, container, false)
-
-        fetchTeamDetails()
-        val teamMembers = binding.teamMembers
-        val teamBoards = binding.teamBoards
-
-        teamMembers.setOnClickListener {
-            teamBoards.setTextColor(resources.getColor(R.color.gray_tertiary))
-            teamMembers.setTextColor(resources.getColor(R.color.white))
-            listMembers()
-        }
-        teamBoards.setOnClickListener {
-            teamMembers.setTextColor(resources.getColor(R.color.gray_tertiary))
-            teamBoards.setTextColor(resources.getColor(R.color.white))
-            listBoards()
-        }
-
-        val backButton = binding.moreBackButton
-        backButton.setOnClickListener {
-            backButton.animation = android.view.animation.AnimationUtils.loadAnimation(
-                requireContext(),
-                androidx.appcompat.R.anim.abc_slide_in_top
-            )
-            returnToActivity()
-        }
-
-        return binding.root
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(teamId: String) =
-            MoreFragment().apply {
-                arguments = Bundle().apply {
-                    putString(TEAM_ID, teamId)
-                }
-            }
     }
 }

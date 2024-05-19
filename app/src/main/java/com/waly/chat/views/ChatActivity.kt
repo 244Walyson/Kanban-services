@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide
 import com.waly.chat.R
 import com.waly.chat.configs.WebSocketConfig
 import com.waly.chat.databinding.ActivityChatBinding
-import com.waly.chat.fragments.MoreFragment
 import com.waly.chat.models.Message
 import com.waly.chat.models.MessageSent
 import com.waly.chat.models.TeamFull
@@ -179,19 +178,26 @@ class ChatActivity : AppCompatActivity() {
             .into(roomImage)
 
         roomImage.setOnClickListener {
-            startFragment(team.id)
+            val intent = Intent(this, TeamActivity::class.java)
+            intent.putExtra("teamId", team.id)
+            startActivity(intent)
         }
 
         headerChat.findViewById<ImageView>(R.id.people_icon).setOnClickListener {
-            startFragment(team.id)
+            val intent = Intent(this, TeamActivity::class.java)
+            intent.putExtra("teamId", team.id)
+            startActivity(intent)
         }
 
         roomTitle.setOnClickListener {
-            startFragment(team.id)
+            val intent = Intent(this, TeamActivity::class.java)
+            intent.putExtra("teamId", team.id)
+            startActivity(intent)
         }
 
         headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java))
+            finish()
         }
         binding.chatToolbar.removeAllViews()
         toolbar.addView(headerChat)
@@ -203,19 +209,6 @@ class ChatActivity : AppCompatActivity() {
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
         }
-    }
-
-    private fun startFragment(teamId: String) {
-        binding.chatFrameLayout.visibility = View.VISIBLE
-
-        val fragment = MoreFragment.newInstance(teamId)
-
-        val fragmentManager = supportFragmentManager
-
-        val transaction = fragmentManager.beginTransaction()
-
-        transaction.replace(R.id.chatFrameLayout, fragment)
-        transaction.commit()
     }
 
     fun showMessage(message: List<Message>) {
