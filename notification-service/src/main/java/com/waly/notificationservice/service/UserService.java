@@ -1,5 +1,6 @@
 package com.waly.notificationservice.service;
 
+import com.waly.notificationservice.dtos.FcmTokenDTO;
 import com.waly.notificationservice.dtos.UserDTO;
 import com.waly.notificationservice.entities.User;
 import com.waly.notificationservice.repositories.UserRepository;
@@ -18,7 +19,7 @@ public class UserService {
     @Autowired
     private CustonUserUtil custonUserUtil;
 
-
+    @Transactional
     public UserDTO insert(UserDTO dto) {
         User user = new User();
         user.setName(dto.getName());
@@ -41,4 +42,11 @@ public class UserService {
         return new UserDTO(user);
     }
 
+    public Void saveFcmToken(FcmTokenDTO token){
+        String email = custonUserUtil.getLoggedUsername();
+        User user = repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setToken(token.getToken());
+        repository.save(user);
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.waly.notificationservice.controllers;
 
+import com.waly.notificationservice.dtos.FcmTokenDTO;
 import com.waly.notificationservice.dtos.UserDTO;
 import com.waly.notificationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
         return ResponseEntity.ok().body(userService.update(id, dto));
+    }
+
+    @PostMapping("/fcm-token")
+    public ResponseEntity<Void> saveFcmToken(@RequestBody FcmTokenDTO token) {
+        return ResponseEntity.ok().body(userService.saveFcmToken(token));
     }
 }
