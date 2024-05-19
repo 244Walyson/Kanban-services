@@ -47,6 +47,11 @@ public class UserController {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
+    @PutMapping("/update-image")
+    public ResponseEntity<UserLoggedDTO> updateImage(@Valid @RequestBody UriDTO dto){
+        return ResponseEntity.ok(service.updateImage(dto));
+    }
+
     @GetMapping("/token")
     public ResponseEntity<AccessToken> getToken(Authentication authentication){
         return ResponseEntity.ok(tokenGenerator.getToken(authentication));

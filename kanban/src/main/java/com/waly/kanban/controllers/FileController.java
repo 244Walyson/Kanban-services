@@ -1,8 +1,7 @@
 package com.waly.kanban.controllers;
 
-import com.waly.kanban.dto.FileResponseDTO;
+import com.waly.kanban.dto.UriDTO;
 import com.waly.kanban.services.FileService;
-import com.waly.kanban.services.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,7 @@ public class FileController {
     private FileService service;
 
     @PostMapping("/image")
-    public ResponseEntity<FileResponseDTO> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<UriDTO> uploadImage(@RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(service.uploadFile(file));
     }
 

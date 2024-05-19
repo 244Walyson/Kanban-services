@@ -204,4 +204,11 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public UserLoggedDTO updateImage(UriDTO dto) {
+        User user = authenticade();
+        user.setImgUrl(dto.getUri());
+        user = repository.save(user);
+        userOutboxRepository.save(new UserOutbox(user));
+        return new UserLoggedDTO(user);
+    }
 }

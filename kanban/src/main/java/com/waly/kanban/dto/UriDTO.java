@@ -1,16 +1,14 @@
 package com.waly.kanban.dto;
 
-import org.springframework.web.multipart.MultipartFile;
 
-
-public class FileResponseDTO {
+public class UriDTO {
 
     private String uri;
 
-    public FileResponseDTO(String uri) {
+    public UriDTO(String uri) {
         this.uri = uri;
     }
-    public FileResponseDTO() {
+    public UriDTO() {
     }
 
     public String getUri() {
