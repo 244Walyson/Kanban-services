@@ -75,5 +75,9 @@ class NetworkUtils {
         fun createServiceNotification(): NotificationClient {
             return getRetrofitInstanceNotification().create(NotificationClient::class.java)
         }
+
+        fun createServiceFile(): FileClient {
+            return getRetrofitInstance().create(FileClient::class.java)
+        }
     }
 }

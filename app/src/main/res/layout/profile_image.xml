@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="horizontal">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/userImage"
@@ -10,14 +11,18 @@
         android:layout_height="120dp"
         android:adjustViewBounds="true"
         android:background="@color/black_tertiary"
-        app:shapeAppearanceOverlay="@style/Circle"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/Circle" />
+
     <ImageView
         android:id="@+id/editImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="-40dp"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_edit"
         app:tint="@color/white"
-        android:layout_marginLeft="-40dp"
-        android:layout_gravity="bottom"/>
+        android:translationZ="10dp"/>
 </LinearLayout>

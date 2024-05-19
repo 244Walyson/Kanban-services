@@ -1,11 +1,13 @@
 
 import com.waly.chat.models.CreateUser
+import com.waly.chat.models.UriDTO
 import com.waly.chat.models.User
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface UserClient {
@@ -16,8 +18,10 @@ interface UserClient {
     @GET("/users")
     fun getUsers(@Header("Authorization") authorization: String): Call<List<User>>
 
-    @POST("users")
+    @POST("/users")
     fun createUser(@Body user: CreateUser): Call<User>
+    @PUT("/users/update-image")
+    fun updateUserImage(@Header("Authorization") authorization: String, @Body uri: UriDTO): Call<User>
 
     @POST("/users/connect/{id}")
     fun requestConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<User>
