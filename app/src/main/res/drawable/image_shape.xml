@@ -14,12 +14,14 @@
                 android:width="3dp"
                 android:color="@android:color/transparent" />
             <gradient
-                android:startColor="#fff"
-                android:endColor="#14B5CC"
+                android:startColor="#E47C64"
+                android:centerColor="#C27A99"
+                android:endColor="#7F76BC"
                 android:type="linear"
                 android:angle="45"/>
         </shape>
     </item>
+
 
     <!-- Objeto no meio -->
     <item

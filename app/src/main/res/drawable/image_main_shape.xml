@@ -6,7 +6,6 @@
         </shape>
     </item>
 
-    <!-- Gradiente nas bordas -->
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="50dp" />
@@ -14,19 +13,22 @@
                 android:width="3dp"
                 android:color="@android:color/transparent" />
             <gradient
-                android:startColor="#60efff"
-                android:endColor="#0061ff"
+                android:startColor="#FF0090"
+                android:endColor="#FF7F50"
                 android:type="linear"
                 android:angle="45"/>
         </shape>
     </item>
 
+
+
+
     <!-- Objeto no meio -->
     <item
+        android:bottom="5dp"
         android:left="5dp"
-        android:top="5dp"
         android:right="5dp"
-        android:bottom="5dp">
+        android:top="5dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/black" />
             <corners android:radius="45dp" />

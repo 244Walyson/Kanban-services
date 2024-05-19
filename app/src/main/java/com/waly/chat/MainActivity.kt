@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity() {
             saveFcmToken(token!!)
             Log.e("myToken", "" + token)
         })
+
     }
 
     private fun showHeader() {
@@ -151,16 +152,16 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
-    private fun saveFcmToken(token: String) {
+    private fun saveFcmToken(fcmToken: String) {
         val session = SessionManager(applicationContext)
 
         if (!session.tokenSaved) {
-            val tokenToSave: FcmToken = FcmToken(token)
-            val service = NetworkUtils.createServiceSaveToken()
+            val tokenToSave: FcmToken = FcmToken(fcmToken)
+            val service = NetworkUtils.createServiceNotification()
 
-            Log.i("SAVING TOKEN", "Saving token $token")
+            Log.i("SAVING TOKEN", "Saving token $fcmToken")
 
-            service.saveToken(tokenToSave, session.accessToken!!)
+            service.saveFcmToken(session.accessToken!!, tokenToSave)
                 .enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
