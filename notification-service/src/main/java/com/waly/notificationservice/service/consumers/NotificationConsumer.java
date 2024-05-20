@@ -108,7 +108,8 @@ public class NotificationConsumer {
         if (notification.getStatus() == Status.FAILED) {
             return;
         }
-
+        notification.setSender(sender);
+        notification.setReceiver(receiver);
         notificationService.sendPushNotification(notification);
     }
 

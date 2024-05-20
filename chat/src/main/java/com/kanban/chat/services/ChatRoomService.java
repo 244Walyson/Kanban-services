@@ -164,8 +164,8 @@ public class ChatRoomService {
     public List<ChatRoomDTO> findAllByUserNick(String nickname) {
         List<ChatRoomDTO> chatRoomDTOS = new ArrayList<>(chatRoomRepository.findAllByMembersNickname(nickname).stream().map(ChatRoomDTO::new).toList());
         List<ChatUserRoomEntity> chatUserRoomEntities = chatUserRepository.findAllByNickname(nickname);
-        ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
         for (ChatUserRoomEntity chatUserRoomEntity : chatUserRoomEntities) {
+            ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
             chatRoomDTO.setId(chatUserRoomEntity.getId());
             chatRoomDTO.setLatestMessage(chatUserRoomEntity.getLatestMessage());
             chatRoomDTO.setLastActivity(chatUserRoomEntity.getLastActivity());

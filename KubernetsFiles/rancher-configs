@@ -10,20 +10,37 @@ docker run -d --restart=unless-stopped \
   -v /opt/rancher/var/lib:/var/lib/rancher \
   rancher/rancher:latest
 
-rancher password => pMkFCQAZ0JXRtriZ   username -> admin
+rancher password => 9i3XjCZtVQXNj7cg   username -> admin
 
 
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token 4x264m4rx4g6ml7xv7xthl6kp8jg88qwqzzf687gz6762rfglk44zl --ca-checksum 133ce5d7d91193e5b70cee0d3576d808dd566bb6a8be32b20766dd4c48ac1597 --etcd --controlplane --worker --node-name node-1
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token 4x264m4rx4g6ml7xv7xthl6kp8jg88qwqzzf687gz6762rfglk44zl --ca-checksum 133ce5d7d91193e5b70cee0d3576d808dd566bb6a8be32b20766dd4c48ac1597 --etcd --controlplane --worker --node-name node-2
+curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token 4x264m4rx4g6ml7xv7xthl6kp8jg88qwqzzf687gz6762rfglk44zl --ca-checksum 133ce5d7d91193e5b70cee0d3576d808dd566bb6a8be32b20766dd4c48ac1597 --etcd --controlplane --worker --node-name node-3
 
-curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-1
-curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-2
-curl --insecure -fL https://rancher.waly.dev.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.waly.dev.br --label 'cattle.io/os=linux' --token k8tghbmwqtqgpsblszbkv7bwmx67z9b44cz72sljc66qlr68xglkzf --ca-checksum 04c297615044fe7516cb81d6d891031aa6c67ee22bf5f08cc2901d5c0ae94d30 --etcd --controlplane --worker --node-name node-3
 
+--longhorn
+sudo apt update
+sudo apt-get install open-iscsi
+sudo apt-get install nfs-common
+
+--kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+chmod +x kubectl
+mkdir -p ~/.local/bin
+mv ./kubectl ~/.local/bin/kubectl
+kubectl version --client
+
+--alias kubectl
+echo 'alias k="kubectl"' >> ~/.bashrc
+source ~/.bashrc 
 
 
 sudo certbot certonly --manual -d 'waly.dev.br' -d '*.waly.dev.br' -d '*.rancher.waly.dev.br' --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
 
 /etc/letsencrypt/live/waly.dev.br/fullchain.pem
 /etc/letsencrypt/live/waly.dev.br/privkey.pem
+
 
 -----BEGIN CERTIFICATE-----
 MIIFCTCCA/GgAwIBAgISBMS/mcfI2qWXFMZFWBY1boyiMA0GCSqGSIb3DQEBCwUA

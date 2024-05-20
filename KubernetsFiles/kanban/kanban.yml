@@ -22,8 +22,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: kanban
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
@@ -40,7 +40,7 @@ metadata:
   name: kanban
   namespace: kanban
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: kanban
@@ -54,8 +54,8 @@ spec:
         image: walymb/kanbanapp:latest
         resources:
           limits:
-            memory: "400Mi"
-            cpu: "600m"
+            memory: "600Mi"
+            cpu: "700m"
         env:
         - name: CORS_ORIGINS
           value: "*"
@@ -117,8 +117,23 @@ spec:
             secretKeyRef:
               name: kanban-secret
               key: DB_PASSWORD
+        - name: AWS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: AWS_KEY
+        - name: AWS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: AWS_SECRET
+        - name: DSCATALOG_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: DSCATALOG_BUCKET_NAME
         ports:
-        - containerPort: 9090
+        - containerPort: 8080
         volumeMounts:
         - name: keys-volume
           mountPath: /app/keys
@@ -139,7 +154,7 @@ spec:
     app: kanban
   ports:
   - port: 9090
-    targetPort: 9090
+    targetPort: 8080
 
 ---
 

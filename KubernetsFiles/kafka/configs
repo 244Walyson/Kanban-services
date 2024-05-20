@@ -4,7 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=waly
+User=root
+Group=root
 ExecStart=/home/waly/kafka/bin/zookeeper-server-start.sh /home/waly/kafka/config/zookeeper.properties
 ExecStop=/home/waly/kafka/bin/zookeeper-server-stop.sh
 Restart=on-abort
@@ -20,7 +21,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=waly
+User=root
+Group=root
 ExecStart=/home/waly/kafka/bin/kafka-server-start.sh /home/waly/kafka/config/server.properties
 ExecStop=/home/waly/kafka/bin/kafka-server-stop.sh
 Restart=on-abort

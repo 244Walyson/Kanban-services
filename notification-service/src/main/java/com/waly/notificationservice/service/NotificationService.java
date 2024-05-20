@@ -27,6 +27,7 @@ public class NotificationService {
 
     public void sendPushNotification(UserNotification notification) {
         String fcmToken = notification.getReceiver().getToken();
+        log.info("Sending notification to: {}", fcmToken);
         if (fcmToken == null || fcmToken.isEmpty()) return;
 
         try {

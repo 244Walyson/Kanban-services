@@ -2,15 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: kanban-hpa
-  namespace: kanban
+  name: notification-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: chat
+    name: kanban
   minReplicas: 1
-  maxReplicas: 1
+  maxReplicas: 4
   metrics:
   - type: Resource
     resource:
@@ -19,31 +18,30 @@ spec:
         type: Utilization
         averageUtilization: 50
 
-
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat
+  name: notification
   namespace: kanban
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chat
+      app: notification
   template:
     metadata:
       labels:
-        app: chat
+        app: notification
     spec:
-      containers:
-      - name: chat
-        image: walymb/chat:latest
+      containers: 
+      - name: notification
+        image: walymb/notification:latest
         resources:
           limits:
-            memory: "800Mi"
-            cpu: "900m"
+            memory: "300Mi"
+            cpu: "500m"
         env:
         - name: JWK_SET_URI
           value: http://kanban-service:9090/.well-known/jwks.json
@@ -51,16 +49,40 @@ spec:
           value: "*"
         - name: FIREBASE_CONFIG_FILE
           value: "/app/keys/firebase.json"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: notification-secret
+              key: DB_HOST
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "notification"
         - name: KAFKA_BOOTSTRAP_SERVERS
           valueFrom:
             secretKeyRef:
-              name: chat-secret
+              name: notification-secret
               key: KAFKA_BOOTSTRAP_SERVERS
-        - name: MONGO_DB_URI
+        - name: CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: chat-secret
-              key: MONGO_DB_URI
+              name: notification-secret
+              key: CLIENT_ID
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: notification-secret
+              key: CLIENT_SECRET
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: notification-secret
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: notification-secret
+              key: DB_PASSWORD
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -76,13 +98,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: chat-service
+  name: notification-service
   namespace: kanban
 spec:
   selector:
-    app: chat
+    app: notification
   ports:
-  - port: 9091
+  - port: 9092
     targetPort: 8080
 
 ---
@@ -90,27 +112,21 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: chat-ingress
+  name: notification-ingress
   namespace: kanban
   labels:
-    name: chat-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"  
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"  
-    nginx.ingress.kubernetes.io/websocket-timeout: "3600"
-    service.beta.kubernetes.io/do-loadbalancer-sticky-sessions-type: "cookies"
+    name: notification-ingress
 spec:
   rules:
-  - host: chat.rancher.waly.dev.br
+  - host: notification.rancher.waly.dev.br
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: chat-service
+            name: notification-service
             port: 
-              number: 9091
+              number: 9092
 
 
