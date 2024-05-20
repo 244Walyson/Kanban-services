@@ -7,6 +7,7 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.waly.chat.MainActivity
 import com.waly.chat.databinding.ActivityWebAuthBinding
 import com.waly.chat.services.SaveUserData
 import com.waly.chat.utils.Environments
@@ -55,7 +56,7 @@ class WebAuthActivity : AppCompatActivity() {
                              val jsonObject = JSONObject(stringBody.substring(stringBody.indexOf("{"), stringBody.lastIndexOf("}") + 1));
                             saveToken(jsonObject.getString("access_token"), jsonObject.getLong("expires_in"))
                             SaveUserData(applicationContext).saveLogedUser()
-                            startActivity(Intent(this@WebAuthActivity, ChatRoomActivity::class.java))
+                            startActivity(Intent(this@WebAuthActivity, MainActivity::class.java))
                             finish()
                         } catch (e: Exception) {
                             Log.e("JSON", "Erro ao converter o corpo em JSON: ${e.message} cause ${e.cause} message ${e.localizedMessage}")

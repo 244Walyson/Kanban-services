@@ -289,13 +289,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun jsonStringToTeamList(jsonString: String): MutableList<Team> {
-        val gson = Gson()
-        val listType = object : TypeToken<List<Team>>() {}.type
-        var teams: List<Team> = gson.fromJson(jsonString, listType)
-        return teams.toMutableList()
-    }
-
     fun removeDuplicates(chatId: String) {
         val chatToRemove = allChat.filter { it.id == chatId }
 
@@ -304,6 +297,15 @@ class MainActivity : AppCompatActivity() {
             allChat.remove(lastChat)
         }
     }
+
+
+    fun jsonStringToTeamList(jsonString: String): MutableList<Team> {
+        val gson = Gson()
+        val listType = object : TypeToken<List<Team>>() {}.type
+        var teams: List<Team> = gson.fromJson(jsonString, listType)
+        return teams.toMutableList()
+    }
+
 
     fun showChatRooms(teams: MutableList<Team>) {
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChatMain)

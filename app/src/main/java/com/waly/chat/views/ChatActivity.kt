@@ -81,7 +81,7 @@ class ChatActivity : AppCompatActivity() {
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             startActivity(Intent(this@ChatActivity, ChatRoomActivity::class.java))
-            Log.d(TAG, "onBackPressedCallback: handleOnBackPressed")
+            finish()
         }
     }
 

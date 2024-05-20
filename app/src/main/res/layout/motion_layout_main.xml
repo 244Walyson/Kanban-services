@@ -74,7 +74,6 @@
                                    android:clickable="true"
                                    android:focusable="true"
                                    android:fontFamily="@font/gordita_black"
-                                   android:text="Walyson"
                                    android:textColor="@color/white"
                                    android:textSize="30dp" />
                            </LinearLayout>

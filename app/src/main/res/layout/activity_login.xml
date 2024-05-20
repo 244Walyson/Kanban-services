@@ -55,7 +55,6 @@
                 android:background="@drawable/input_message_shape"
                 android:maxLines="1"
                 android:hint="Email"
-                android:text="maria@gmail.com"
                 android:paddingHorizontal="10dp"
                 android:fontFamily="@font/gordita_medium"
                 android:textColor="@color/black"
@@ -66,14 +65,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:inputType="textPassword"
-                android:text="123456"
                 android:maxLines="1"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
                 android:hint="Password"
                 android:textColor="@color/black"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_regular"
+                android:fontFamily="@font/gordita_medium"
                 android:textColorHint="@color/black_secondary" />
 
             <TextView

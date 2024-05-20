@@ -2,10 +2,10 @@ package com.waly.chat.utils
 
 class Environments {
     companion object {
-        const val BASE_CHAT_URL = "http://10.0.2.2:8090" //"https://chat.rancher.waly.dev.br" //
-        const val BASE_CHAT_WEBSOCKET_URL = "ws://10.0.2.2:8090" //"ws://chat.rancher.waly.dev.br" //
-        const val BASE_KANBAN_URL = "http://10.0.2.2:9090" //"https://kanban.rancher.waly.dev.br" //
-        const val BASE_NOTIFICATION_URL = "http://10.0.2.2:9091"
+        const val BASE_CHAT_URL = "https://chat.rancher.waly.dev.br" //"http://10.0.2.2:8090" //
+        const val BASE_CHAT_WEBSOCKET_URL = "ws://chat.rancher.waly.dev.br" //"ws://10.0.2.2:8090" //
+        const val BASE_KANBAN_URL = "https://kanban.rancher.waly.dev.br" //"http://10.0.2.2:9090" //
+        const val BASE_NOTIFICATION_URL = "https://notification.rancher.waly.dev.br" //"http://10.0.2.2:9091"
         const val GITHUB_PARAM = "/oauth2/authorization/github"
         const val GOOGLE_PARAM = "/oauth2/authorization/google"
         const val CLIENT_ID = "myclientid"

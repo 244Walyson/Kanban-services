@@ -93,12 +93,16 @@ class ChatRoomActivity : AppCompatActivity() {
         }
 
         onBackPressedDispatcher.addCallback {
-            startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java))
+            startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            })
             finish()
         }
 
         binding.backButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this@ChatRoomActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            })
             finish()
         }
 
@@ -131,8 +135,8 @@ class ChatRoomActivity : AppCompatActivity() {
                     Log.i("STOMP", "Received message: $it")
                     allChat.addAll(0, jsonStringToTeamList(it))
                     if (!fromSearch) {
-                        showChatRooms(allChat)
                         removeDuplicates(allChat.first().id)
+                        showChatRooms(allChat)
                     }
                 }
 

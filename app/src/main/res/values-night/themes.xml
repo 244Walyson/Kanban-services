@@ -4,7 +4,7 @@
         <item name="android:theme">@null</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/cardview_dark_background</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <style name="CustomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
