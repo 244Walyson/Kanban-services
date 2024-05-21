@@ -116,6 +116,7 @@ public class TeamService {
         Team team = repository.getReferenceById(id);
         copyDtoToEntity(dto, team);
         team = repository.save(team);
+        teamOutboxRepository.save(new TeamOutbox(team));
         return new TeamDTO(team);
 
     }
@@ -124,5 +125,6 @@ public class TeamService {
         team.setDescription(dto.getDescription());
         team.setName(dto.getName());
         team.setOccupationArea(dto.getOccupationArea());
+        team.setGithubLink(dto.getGithubLink());
     }
 }

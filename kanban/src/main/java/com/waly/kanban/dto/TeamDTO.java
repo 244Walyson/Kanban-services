@@ -27,6 +27,7 @@ public class TeamDTO {
     private List<UserMinDTO> collaborators = new ArrayList<>();
     private List<BoardMinDTO> boards = new ArrayList<>();
     private String imgUrl;
+    private String githubLink;
 
     public TeamDTO(Team team) {
         this.id = team.getId();
@@ -38,6 +39,7 @@ public class TeamDTO {
         this.totalCollaborators = team.getTotalCollaborators();
         this.totalBoards = team.getTotalBoards();
         this.imgUrl = team.getImgUrl();
+        this.githubLink = team.getGithubLink();
     }
 
 }

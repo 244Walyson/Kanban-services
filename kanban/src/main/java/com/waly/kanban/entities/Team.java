@@ -24,18 +24,20 @@ public class Team {
     private Integer totalCollaborators;
     private Integer totalBoards;
     private String imgUrl;
+    private String githubLink;
 
     public Team() {
         this.totalBoards = 0;
         this.totalCollaborators = 1;
     }
 
-    public Team(Long id, String name, String occupationArea, String description, String imgUrl) {
+    public Team(Long id, String name, String occupationArea, String description, String imgUrl, String githubLink) {
         this.id = id;
         this.name = name;
         this.occupationArea = occupationArea;
         this.description = description;
         this.imgUrl = imgUrl;
+        this.githubLink = githubLink;
     }
 
     public Long getId() {
@@ -108,5 +110,13 @@ public class Team {
 
     public void addUserTeam(UserTeam userTeam){
         this.collaborators.add(userTeam);
+    }
+
+    public String getGithubLink() {
+        return githubLink;
+    }
+
+    public void setGithubLink(String githubLink) {
+        this.githubLink = githubLink;
     }
 }
