@@ -41,8 +41,13 @@ public class TeamConsumer {
             TeamDTO teamDTO = objectMapper.convertValue(payloadNode, TeamDTO.class);
             teamDTO.setImgUrl(payloadNode.get("img_url").asText());
 
-            if(chatRoomRepository.existsById(teamDTO.getId())) {
+            if(chatRoomRepository.existsById("R".concat(teamDTO.getId()))) {
                 log.info("Team already exists in the database");
+                var chatRoom = chatRoomRepository.findById("R".concat(teamDTO.getId())).get();
+                chatRoom.setRoomName(teamDTO.getName());
+                chatRoom.setImgUrl(teamDTO.getImgUrl());
+                chatRoom.setDescription(teamDTO.getDescription());
+                chatRoomRepository.save(chatRoom);
                 return;
             }
 
@@ -89,16 +94,16 @@ public class TeamConsumer {
 
             user = userRepository.save(user);
 
-            if(chatRoomRepository.checkIfUserIsMember(userDTO.getTeamId().toString(), userDTO.getNickname())) {
+            if(chatRoomRepository.checkIfUserIsMember("R".concat(userDTO.getTeamId().toString()), userDTO.getNickname())) {
                 log.info("User already exists in the team");
                 return;
             }
-            if(!chatRoomRepository.existsById(userDTO.getTeamId().toString())) {
+            if(!chatRoomRepository.existsById("R".concat(userDTO.getTeamId().toString()))) {
                 log.info("Team does not exist in the database");
                 return;
             }
 
-            var chatRoom = chatRoomRepository.findById(userDTO.getTeamId().toString()).get();
+            var chatRoom = chatRoomRepository.findById("R".concat(userDTO.getTeamId().toString())).get();
             chatRoom.addMember(new UserEmbedded(user));
             chatRoomRepository.save(chatRoom);
 
@@ -119,11 +124,11 @@ public class TeamConsumer {
             log.info(userDTO.toString());
 
             log.info("team id " + userDTO.getTeamId());
-            if(!chatRoomRepository.existsById(String.valueOf(userDTO.getTeamId()))) {
+            if(!chatRoomRepository.existsById("R".concat(String.valueOf(userDTO.getTeamId())))) {
                 log.info("Team does not exist in the database");
                 return;
             }
-            if(chatRoomRepository.checkIfUserIsMember(userDTO.getTeamId().toString(), userDTO.getNickname())) {
+            if(chatRoomRepository.checkIfUserIsMember("R".concat(userDTO.getTeamId().toString()), userDTO.getNickname())) {
                 log.info("User already exists in the team");
                 return;
             }
@@ -139,7 +144,7 @@ public class TeamConsumer {
 
 
             user = userRepository.save(user);
-            var chatRoom = chatRoomRepository.findById(userDTO.getTeamId().toString()).get();
+            var chatRoom = chatRoomRepository.findById("R".concat(userDTO.getTeamId().toString())).get();
             chatRoom.addMember(new UserEmbedded(user));
             chatRoomRepository.save(chatRoom);
 

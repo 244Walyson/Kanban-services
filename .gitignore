@@ -1,0 +1,4 @@
+.vscode/
+.idea/
+
+KubernetsFiles/kanban/secrets-kanban.yml
