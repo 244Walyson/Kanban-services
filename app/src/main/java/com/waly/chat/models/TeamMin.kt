@@ -16,14 +16,17 @@ class TeamMin {
     var latestMessage: String = ""
     @SerializedName("description")
     var description: String = ""
+    @SerializedName("githubLink")
+    var githubLink: String = ""
 
-    constructor(id: String, roomName: String, imgUrl: String, latestMessage: String, description: String, membersCount: Int) {
+    constructor(id: String, roomName: String, imgUrl: String, latestMessage: String, description: String, membersCount: Int, githubLink: String) {
         this.id = id
         this.roomName = roomName
         this.imgUrl = imgUrl
         this.latestMessage = latestMessage
         this.membersCount = membersCount
         this.description = description
+        this.githubLink = githubLink
     }
 
     constructor()

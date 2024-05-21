@@ -12,6 +12,8 @@ class Team {
     var imgUrl: String = ""
     @SerializedName("latestMessage")
     var latestMessage: String = ""
+    @SerializedName("lastActivity")
+    var lastActivity: String = ""
 
     constructor(id: String, roomName: String, imgUrl: String, latestMessage: String) {
         this.id = id

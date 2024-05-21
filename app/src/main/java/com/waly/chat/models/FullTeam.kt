@@ -22,6 +22,8 @@ class FullTeam {
     var totalBoards: Int? = null
     @SerializedName("boards")
     var boards: List<Board>? = null
+    @SerializedName("githubLink")
+    var githubLink: String? = null
 
     constructor(
         id: String?,
@@ -32,7 +34,8 @@ class FullTeam {
         imgUrl: String?,
         members: List<User>?,
         totalBoards: Int?,
-        boards: List<Board>?
+        boards: List<Board>?,
+        githubLink: String?
     ) {
         this.id = id
         this.name = name
@@ -43,6 +46,7 @@ class FullTeam {
         this.members = members
         this.totalBoards = totalBoards
         this.boards = boards
+        this.githubLink = githubLink
     }
 
     constructor()

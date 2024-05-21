@@ -4,7 +4,10 @@ import SessionManager
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -17,7 +20,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.res.colorResource
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -44,6 +49,13 @@ import org.hildan.krossbow.stomp.subscribeText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 val PEOPLE_ACTIVE = "peopleActive"
 val TEAMS_ACTIVE = "teamActive"
@@ -136,7 +148,14 @@ class ChatRoomActivity : AppCompatActivity() {
                     allChat.addAll(0, jsonStringToTeamList(it))
                     if (!fromSearch) {
                         removeDuplicates(allChat.first().id)
-                        showChatRooms(allChat)
+                        val handler = Handler(Looper.getMainLooper())
+                        val runnable = object : Runnable {
+                            override fun run() {
+                                showChatRooms(allChat)
+                                handler.postDelayed(this, 30000)
+                            }
+                        }
+                        handler.post(runnable)
                     }
                 }
 
@@ -617,6 +636,15 @@ class ChatRoomActivity : AppCompatActivity() {
             val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
             latestMsg.text = team.latestMessage
 
+            val latestActivity = roomCard.findViewById<TextView>(R.id.text_last_activity)
+            var latestText = getTimeAgo(parseDateToMillis(team.lastActivity))
+            if (latestText.contains("agora")) latestActivity.setTextColor(getColor(R.color.blue))
+            else latestActivity.setTextColor(resources.getColor(R.color.gray_tertiary))
+            latestActivity.text = latestText
+
+            val unreadMessages = roomCard.findViewById<TextView>(R.id.text_unread_messages)
+            unreadMessages.visibility = View.GONE
+
             val image = cardImage.findViewById<ShapeableImageView>(R.id.statusImage)
             image.setOnClickListener {
                 //startMoreFragment(team.id)
@@ -645,4 +673,47 @@ class ChatRoomActivity : AppCompatActivity() {
         scrollContainer.addView(motionLayout)
     }
 
+    fun parseDateToMillis(dateString: String): Long {
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val dateTime = OffsetDateTime.parse(dateString, formatter)
+        return dateTime.toInstant().toEpochMilli()
+    }
+
+    fun getTimeAgo(lastActivityMillis: Long): String {
+        val currentTimeMillis = System.currentTimeMillis()
+        val diffMillis = currentTimeMillis - lastActivityMillis
+
+        val lastActivityDateTime = LocalDateTime.ofInstant(
+            java.time.Instant.ofEpochMilli(lastActivityMillis),
+            ZoneId.systemDefault()
+        )
+        val currentDate = LocalDate.now()
+        val lastActivityDate = lastActivityDateTime.toLocalDate()
+
+        val diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diffMillis)
+        val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diffMillis)
+        val diffHours = TimeUnit.MILLISECONDS.toHours(diffMillis)
+        val diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis)
+
+        return when {
+            diffSeconds < 30 -> "agora"
+            diffSeconds < 60 -> "há alguns segundos"
+            diffMinutes < 2 -> "há 1 minuto"
+            diffMinutes < 60 -> "há $diffMinutes minutos"
+            diffHours < 24 && lastActivityDate.isEqual(currentDate) -> {
+                val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                "Hoje às ${lastActivityDateTime.format(timeFormatter)}"
+            }
+            diffHours < 24 -> {
+                val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                "Ontem às ${lastActivityDateTime.format(timeFormatter)}"
+            }
+            diffDays < 2 -> "$diffDays dia atrás"
+            diffDays in 2..6 -> "$diffDays dias atrás"
+            else -> {
+                val diffWeeks = diffDays / 7
+                "$diffWeeks semanas atrás"
+            }
+        }
+}
 }

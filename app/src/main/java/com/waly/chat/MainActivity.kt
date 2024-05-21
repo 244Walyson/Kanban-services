@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -32,6 +33,7 @@ import com.waly.chat.views.ChatRoomActivity
 import com.waly.chat.views.NotificationActivity
 import com.waly.chat.views.ProfileActivity
 import com.waly.chat.views.TeamActivity
+import com.waly.chat.views.WebViewGithubActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -43,6 +45,12 @@ import org.hildan.krossbow.stomp.subscribeText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -227,6 +235,9 @@ class MainActivity : AppCompatActivity() {
             teamDesc.text = team.description
             val githubIcon = groupItem.findViewById<ImageView>(R.id.iconGithubHexagon)
             githubIcon.setOnClickListener {
+                val intent = Intent(this, WebViewGithubActivity::class.java)
+                intent.putExtra("url", team.githubLink)
+                startActivity(intent)
                 Log.i("TEAM", "TEAM ${team.roomName}")
             }
 
@@ -323,6 +334,15 @@ class MainActivity : AppCompatActivity() {
                 val teamName = roomCard.findViewById<TextView>(R.id.text_group_name)
                 teamName.text = team.roomName
 
+                val latestActivity = roomCard.findViewById<TextView>(R.id.text_last_activity)
+                var latestText = getTimeAgo(parseDateToMillis(team.lastActivity))
+                if (latestText.contains("agora")) latestActivity.setTextColor(getColor(R.color.blue))
+                else latestActivity.setTextColor(resources.getColor(R.color.gray_tertiary))
+                latestActivity.text = latestText
+
+                val unreadMessages = roomCard.findViewById<TextView>(R.id.text_unread_messages)
+                unreadMessages.visibility = View.GONE
+
                 val latestMsg = roomCard.findViewById<TextView>(R.id.text_latest_message)
                 latestMsg.text = team.latestMessage
 
@@ -357,5 +377,48 @@ class MainActivity : AppCompatActivity() {
         layoutContainer.addView(motionLayout)
     }
 
+    fun parseDateToMillis(dateString: String): Long {
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+        val dateTime = OffsetDateTime.parse(dateString, formatter)
+        return dateTime.toInstant().toEpochMilli()
+    }
+
+    fun getTimeAgo(lastActivityMillis: Long): String {
+        val currentTimeMillis = System.currentTimeMillis()
+        val diffMillis = currentTimeMillis - lastActivityMillis
+
+        val lastActivityDateTime = LocalDateTime.ofInstant(
+            java.time.Instant.ofEpochMilli(lastActivityMillis),
+            ZoneId.systemDefault()
+        )
+        val currentDate = LocalDate.now()
+        val lastActivityDate = lastActivityDateTime.toLocalDate()
+
+        val diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diffMillis)
+        val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diffMillis)
+        val diffHours = TimeUnit.MILLISECONDS.toHours(diffMillis)
+        val diffDays = TimeUnit.MILLISECONDS.toDays(diffMillis)
+
+        return when {
+            diffSeconds < 30 -> "agora"
+            diffSeconds < 60 -> "há alguns segundos"
+            diffMinutes < 2 -> "há 1 minuto"
+            diffMinutes < 60 -> "há $diffMinutes minutos"
+            diffHours < 24 && lastActivityDate.isEqual(currentDate) -> {
+                val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                "Hoje às ${lastActivityDateTime.format(timeFormatter)}"
+            }
+            diffHours < 24 -> {
+                val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                "Ontem às ${lastActivityDateTime.format(timeFormatter)}"
+            }
+            diffDays < 2 -> "$diffDays dia atrás"
+            diffDays in 2..6 -> "$diffDays dias atrás"
+            else -> {
+                val diffWeeks = diffDays / 7
+                "$diffWeeks semanas atrás"
+            }
+        }
+    }
 
 }
