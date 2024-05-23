@@ -33,7 +33,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="150dp"
         android:layout_height="100dp"
-        app:srcCompat="@drawable/the_w"
+        app:srcCompat="@drawable/the_waly"
         tools:layout_editor_absoluteX="133dp"
         tools:layout_editor_absoluteY="568dp"
         tools:ignore="MissingConstraints" />

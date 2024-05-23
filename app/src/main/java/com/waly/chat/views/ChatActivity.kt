@@ -1,14 +1,12 @@
 package com.waly.chat.views
 
 import SessionManager
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.FOCUS_DOWN
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
@@ -37,6 +35,7 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var scrollView: ScrollView
+    private lateinit var teamId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +57,7 @@ class ChatActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
+        teamId = intent.getStringExtra("teamId").toString()
 
         scrollView.viewTreeObserver.addOnGlobalLayoutListener {
             val isKeyboardOpen = isKeyboardOpen(scrollView)
@@ -90,18 +90,10 @@ class ChatActivity : AppCompatActivity() {
         val message = binding.edtMessage.text.toString()
         if (message.isEmpty()) return;
         binding.edtMessage.text.clear()
-
-        val teamId = intent.getStringExtra("teamId")
         val websocketConfig = WebSocketConfig(applicationContext)
-
         val textMsg: MessageSent = MessageSent(message)
-
         val myMsg = Message("0", Sender("1", "1", "1", "1"), message, "1")
-
         showMyMessage(myMsg)
-
-        Log.i("ChatActivity", "Message: ${textMsg.toString()}")
-
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val session: StompSession = withContext(Dispatchers.IO) {
@@ -118,7 +110,6 @@ class ChatActivity : AppCompatActivity() {
         val websocketConfig = WebSocketConfig(applicationContext)
         val session = SessionManager(applicationContext)
         val myNickname = session.userLogged
-
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val session: StompSession = withContext(Dispatchers.IO) {
@@ -126,14 +117,8 @@ class ChatActivity : AppCompatActivity() {
                 }
                 val teamId = intent.getStringExtra("teamId")
                 val subs: Flow<String> = session.subscribeText("/user/${teamId}/queue/messages")
-
-                Log.i("TEAM", "TEAM ID: $teamId")
-
                 buildChat(subs)
-
-
             } catch (e: Exception) {
-                Log.e("ERORRRR desconect ", "Error: $e")
                 Log.e("ChatActivity", "Error: $e")
             }
 
@@ -155,7 +140,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun showChatRoom(team: TeamFull) {
-        Log.i("TEAM", "TEAM: $team")
         val toolbar = binding.chatToolbar
         val newHeaderChat = layoutInflater.inflate(R.layout.header_chat, toolbar, false)
         toolbar.addView(newHeaderChat)
@@ -163,48 +147,41 @@ class ChatActivity : AppCompatActivity() {
         val roomTitle = headerChat.findViewById<TextView>(R.id.room_name)
         roomTitle.background = null
         roomTitle.text = team.roomName
-
         val roomDesc = headerChat.findViewById<TextView>(R.id.room_description)
         roomDesc.text = team.description
-
         val peopleCount = headerChat.findViewById<TextView>(R.id.people_count)
         peopleCount.text = team.membersCount.toString()
-
+        if (team.id.contains("R")) {
+            peopleCount.visibility = View.VISIBLE
+            headerChat.findViewById<ImageView>(R.id.people_icon).visibility = View.VISIBLE
+        }
         val roomImage = headerChat.findViewById<ImageView>(R.id.userImage)
         Glide
             .with(applicationContext)
             .load(team.imgUrl)
             .centerCrop()
             .into(roomImage)
-
         roomImage.setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
             intent.putExtra("teamId", team.id)
             startActivity(intent)
         }
-
         headerChat.findViewById<ImageView>(R.id.people_icon).setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
             intent.putExtra("teamId", team.id)
             startActivity(intent)
         }
-
         roomTitle.setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
             intent.putExtra("teamId", team.id)
             startActivity(intent)
         }
-
         headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {
             startActivity(Intent(this, ChatRoomActivity::class.java))
             finish()
         }
         binding.chatToolbar.removeAllViews()
         toolbar.addView(headerChat)
-        Log.i("SHOW MESSAGE", "MESSAGE: ${team.messages}")
-        Log.i("SHOW MESSAGE", "MESSAGE: ${team.roomName}")
-        Log.i("SHOW MESSAGE", "MESSAGE: ${team.description}")
-        Log.i("SHOW MESSAGE", "MESSAGE: ${team.imgUrl}")
         showMessage(team.messages)
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
@@ -213,8 +190,6 @@ class ChatActivity : AppCompatActivity() {
 
     fun showMessage(message: List<Message>) {
         val myNickname = SessionManager(applicationContext).userLogged
-
-        Log.i("MESSAGE", "MESSAGE: $message")
         message.forEach { msg ->
             if (msg.sender.nickName.equals(myNickname)){
                 showMyMessage(msg)
@@ -228,8 +203,6 @@ class ChatActivity : AppCompatActivity() {
     }
     fun showSimpMessage(message: List<Message>) {
         val myNickname = SessionManager(applicationContext).userLogged
-
-        Log.i("MESSAGE", "MESSAGE: $message")
         message.forEach { msg ->
             if (msg.sender.nickName.equals(myNickname)){
                 return@forEach
@@ -242,15 +215,11 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun showMyMessage(msg: Message) {
-        Log.i("MY MESSAGE", "MESSAGE: $msg")
         val chatContainer = binding.chatContainer
         val myMessage = layoutInflater.inflate(R.layout.chat_item_my, chatContainer, false)
-
         val txtMsg = myMessage.findViewById<TextView>(R.id.chat_my)
         txtMsg.text = msg.content
-
         myMessage.tag = msg.id
-
         chatContainer.addView(myMessage)
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
@@ -259,24 +228,26 @@ class ChatActivity : AppCompatActivity() {
 
 
     fun showOtherMessage(msg: Message) {
-        Log.i("OTHER MESSAGE", "MESSAGE: $msg")
         val chatContainer = binding.chatContainer
         val otherMessage = layoutInflater.inflate(R.layout.chat_item_other, chatContainer, false)
-
         val txtMsg = otherMessage.findViewById<TextView>(R.id.message_content)
         txtMsg.text = msg.content
-
         val senderName = otherMessage.findViewById<TextView>(R.id.sender_name)
         senderName.text = msg.sender.name
         senderName.setTextColor(getRandomColor())
-
         val senderImage = otherMessage.findViewById<ImageView>(R.id.senderImage)
-        Glide
-            .with(applicationContext)
-            .load(msg.sender.imgUrl)
-            .centerCrop()
-            .placeholder(R.drawable.color5)
-            .into(senderImage)
+        if(teamId.contains("U")) {
+            senderName.visibility = View.GONE
+            senderImage.visibility = View.GONE
+        }
+        else {
+            Glide
+                .with(applicationContext)
+                .load(msg.sender.imgUrl)
+                .centerCrop()
+                .placeholder(R.drawable.unknow_image)
+                .into(senderImage)
+        }
         chatContainer.addView(otherMessage)
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)

@@ -20,7 +20,6 @@
                 android:id="@+id/notificationImage"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:src="@drawable/image_test"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="7dp"
@@ -55,6 +54,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Novo pedido de conexão"
+                                android:maxLines="1"
                                 android:textSize="18sp"
                                 android:fontFamily="@font/gordita_medium"
                                 android:textColor="@color/white"/>

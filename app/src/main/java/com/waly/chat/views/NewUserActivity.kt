@@ -124,7 +124,6 @@ class NewUserActivity : AppCompatActivity() {
 
 
     private fun showError() {
-        Log.i("LOGIN", "Error AQIIIIIIIIIIIIIII ")
         val loginInput = binding.input1
         val passInput = binding.input2
         loginInput.setBackgroundResource(R.drawable.input_error_shape)
@@ -137,12 +136,6 @@ class NewUserActivity : AppCompatActivity() {
     }
 
     private fun createUser(user: CreateUser) {
-        Log.i("PROFILE FRAG", "Fetching user data")
-        Log.i("PROFILE FRAG", user.name!!)
-        Log.i("PROFILE FRAG", user.nickname!!)
-        Log.i("PROFILE FRAG", user.password!!)
-        Log.i("PROFILE FRAG", user.email!!)
-
         val service = NetworkUtils.createServiceUser()
         service.createUser(user).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -158,14 +151,13 @@ class NewUserActivity : AppCompatActivity() {
                 showError()
                 count = 0
                 setButton()
-                Log.i("PROFILE FRAG", "User data fetched"+ response)
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
                 showError()
                 count = 0
                 setButton()
-                Log.e("PROFILE FRAG", "Failed to fetch user data", t)
+                Log.e("PROFILE ACTIVITY", "Failed to fetch user data", t)
             }
         })
     }

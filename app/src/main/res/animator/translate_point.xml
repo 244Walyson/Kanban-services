@@ -1,13 +1,11 @@
-<objectAnimator
-android:startOffset="300"
-android:duration="300"
-xmlns:android="http://schemas.android.com/apk/res/android">
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="400"
+    android:startOffset="300">
 
-<propertyValuesHolder
-    android:propertyName="translateX"
-    android:valueType="floatType"
-    android:valueFrom="50"
-    android:valueTo="105"/>
-
+    <propertyValuesHolder
+        android:propertyName="translateX"
+        android:valueFrom="50"
+        android:valueTo="105"
+        android:valueType="floatType" />
 
 </objectAnimator>

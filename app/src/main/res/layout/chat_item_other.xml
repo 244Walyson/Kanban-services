@@ -10,7 +10,7 @@
         android:id="@+id/senderImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/color5"
+        android:background="@color/gray_tertiary"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/Circle"

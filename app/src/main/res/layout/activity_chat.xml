@@ -13,18 +13,12 @@
         android:orientation="vertical"
         android:background="@color/black_primary">
 
-        <FrameLayout
-            android:id="@+id/chatFrameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-        </FrameLayout>
-
         <LinearLayout
             android:id="@+id/chat_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <include layout="@layout/header_chat"/>
         </LinearLayout>
 
         <LinearLayout

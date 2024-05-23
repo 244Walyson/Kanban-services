@@ -20,7 +20,7 @@
                 android:id="@+id/memberImage"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:src="@drawable/image_test"
+                android:src="@drawable/unknow_image"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="7dp"
@@ -49,6 +49,7 @@
                             android:layout_height="wrap_content"
                             android:text="Fulano de tal"
                             android:textSize="18sp"
+                            android:maxLines="1"
                             android:fontFamily="@font/gordita_medium"
                             android:textColor="@color/white"/>
                     </LinearLayout>
@@ -57,6 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="\@fulano2435"
+                        android:maxLines="1"
                         android:textColor="@color/gray_quaternary"
                         android:textSize="15sp"
                         android:fontFamily="@font/gordita_medium" />
@@ -66,6 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
+                    android:maxLines="1"
                     android:layout_marginTop="-5dp"
                     android:text="Desenvolvedor Backend"
                     android:textColor="@color/gray_quaternary"/>

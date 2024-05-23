@@ -67,7 +67,6 @@ class ProfileActivity : AppCompatActivity() {
                             showUserDetails(user)
                         }
                     }
-                    Log.i("PROFILE FRAG", "User data fetched")
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
@@ -77,19 +76,15 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun showUserDetails(user: User) {
-
         val userName = binding.userName
         userName.text = user.username
-
         val nickname = binding.userNick
         nickname.text = user.nickname
-
         val userInfo = binding.userInfo
         val userImage = layoutInflater.inflate(R.layout.profile_image, userInfo, false)
         val imageView = userImage.findViewById<ImageView>(R.id.userImage)
         val edtImage = userImage.findViewById<ImageView>(R.id.editImage)
         edtImage.setOnClickListener {
-            Log.i("PROFILE FRAG", "Edit image clicked")
             selectImageFromGallery(it)
         }
 
@@ -101,8 +96,6 @@ class ProfileActivity : AppCompatActivity() {
 
         userInfo.removeAllViews()
         userInfo.addView(userImage)
-
-        Log.i("PROFILE FRAG", "User details: ${user.username}")
     }
 
 
@@ -115,10 +108,7 @@ class ProfileActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val selectedImageUri: Uri = data.data!!
-            Log.i("IMAGEEEEE", "Selected image: $selectedImageUri")
-
             val imageFile = saveImageLocally(selectedImageUri)
-
             uploadImage(imageFile)
         }
     }
@@ -136,23 +126,20 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun uploadImage(imageFile: File) {
-        Log.i("IMAGEEEEEEEE", "Saving image: $imageFile")
         val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val body = MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
-
         val service = NetworkUtils.createServiceFile()
         val token = session.accessToken
+
         service.uploadFile(token!!, body)
             .enqueue(object : Callback<UriDTO> {
                 override fun onResponse(call: Call<UriDTO>, response: Response<UriDTO>) {
                     if (response.isSuccessful) {
                         val uri = response.body()
                         if (uri != null) {
-                            Log.i("IMAGEEEEEEEE", "Image uploaded: ${uri.uri}")
                             updateUserImage(uri)
                         }
                     }
-                    Log.i("IMAGEEEEEEEE", "Image uploaded or not ${response}")
                 }
 
                 override fun onFailure(call: Call<UriDTO>, t: Throwable) {
@@ -174,7 +161,6 @@ class ProfileActivity : AppCompatActivity() {
                             showUserDetails(user)
                         }
                     }
-                    Log.i("PROFILE FRAG", "User image updated")
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {

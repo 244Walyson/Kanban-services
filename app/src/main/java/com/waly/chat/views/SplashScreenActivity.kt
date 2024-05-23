@@ -40,9 +40,6 @@ class SplashScreenActivity : AppCompatActivity() {
         val accessToken = session.accessToken
         val tokenExpiration = session.accessTokenExpiration?.toLongOrNull()
 
-        Log.i("TOKEN", "TOKEN: $accessToken")
-        Log.i("TOKEN", "TOKEN EXPIRATION: $tokenExpiration")
-
         if (accessToken == null || tokenExpiration == null) return false
 
         val expirationDate = Date(tokenExpiration)

@@ -59,18 +59,14 @@ class TeamActivity : AppCompatActivity() {
         val service = NetworkUtils.createServiceTeam()
         val token = session.accessToken
 
-        Log.i("MORE FRAG", "TOKEN $token")
-
         service.getTeam(teamId!!, token!!)
             .enqueue(object : Callback<FullTeam> {
                 override fun onResponse(call: Call<FullTeam>, response: Response<FullTeam>) {
                     if (response.isSuccessful) {
                         val team = response.body()
-                        Log.i("MORE FRAG", "Team details: ${team?.name}")
                         fullTeam = team!!
                         showTeamDetails(team)
                     }
-                    Log.i("MORE FRAG", "Team details: $response")
                 }
 
                 override fun onFailure(call: Call<FullTeam>, t: Throwable) {
@@ -80,27 +76,17 @@ class TeamActivity : AppCompatActivity() {
     }
 
     private fun showTeamDetails(team: FullTeam) {
-
-        Log.i("MORE FRAG", "Team details: ${team.name}")
-        Log.i("MORE FRAG", "Team details: ${team.imgUrl}")
-        Log.i("MORE FRAG", "Team details: ${team.description}")
-        Log.i("MORE FRAG", "Team details: ${team.occupationArea}")
-
         val name = binding.teamName
         name.text = team.name
-
-
         val description = binding.teamDescription
         description.text = team.description
-
         val teamImage = binding.teamImage
         Glide
             .with(this)
             .load(team.imgUrl)
-            .placeholder(R.drawable.color5)
+            .placeholder(R.drawable.unknow_image)
             .centerCrop()
             .into(teamImage)
-
 
         listMembers()
 
@@ -119,12 +105,10 @@ class TeamActivity : AppCompatActivity() {
             memberName.text = member.username
             memberUsername.text = member.nickname
 
-            Log.i("MORE FRAG", "Member details: ${member.imgUrl}")
-
             Glide
                 .with(this)
                 .load(member.imgUrl)
-                .placeholder(R.drawable.color5)
+                .placeholder(R.drawable.unknow_image)
                 .centerCrop()
                 .into(memberImage)
 
@@ -160,7 +144,6 @@ class TeamActivity : AppCompatActivity() {
             linearLayout!!.addView(boardView)
 
             if (i % 2 == 0 || i == boards.size) {
-                Log.i("AQUI", "AQUI $i size ${boards.size}")
                 listMembers.addView(linearLayout)
                 linearLayout = null
                 i++

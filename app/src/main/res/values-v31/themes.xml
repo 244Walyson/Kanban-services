@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.SplashScreen" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowSplashScreenBrandingImage">@drawable/the_waly_d</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/the_waly</item>
         <item name="android:windowSplashScreenBackground">@color/black_primary</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/animated_vector</item>
         <item name="android:windowSplashScreenAnimationDuration">5</item>

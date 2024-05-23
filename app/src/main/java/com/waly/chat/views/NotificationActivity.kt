@@ -46,28 +46,22 @@ class NotificationActivity : AppCompatActivity() {
         val service = NetworkUtils.createServiceNotification()
         val token = session.accessToken
 
-        Log.i("NotificationActivity", "Token: $token")
-
         service.getNotifications(token!!)
             .enqueue(object : Callback<List<Notification>> {
                 override fun onResponse(call: Call<List<Notification>>, response: Response<List<Notification>>) {
-                    Log.i("NotificationActivity", "Response: $response")
                     if (response.isSuccessful) {
                         val notifications = response.body()
-                        Log.i("NotificationActivity", "Notifications: $notifications")
                         showCard(notifications?: emptyList())
                     }
                 }
 
                 override fun onFailure(call: Call<List<Notification>>, t: Throwable) {
                     t.printStackTrace()
-                    Log.e("NotificationActivity", "Error: ${t.message}")
                 }
             })
     }
 
     private fun showCard(notifications: List<Notification>) {
-        Log.i("NOTIFICATION", "Notifications: $notifications")
         val notificationList = binding.notificationList
         notifications.forEach {notification ->
             val card = layoutInflater.inflate(R.layout.card_notification_item, notificationList, false)
@@ -83,7 +77,6 @@ class NotificationActivity : AppCompatActivity() {
             val notificationIcon = card.findViewById<ImageView>(R.id.notificationIcon)
             if(notification.title!!.contains("Novo pedido de"))  {
                 notificationIcon.setOnClickListener {
-                    Log.i("NotificationActivity", "Accept connection")
                     acceptConnection(notification.sender?.id.toString(), card, notificationList)
                 }
             } else notificationIcon.visibility = View.GONE
@@ -98,7 +91,6 @@ class NotificationActivity : AppCompatActivity() {
         service.acceptConnection(token!!, userId)
             .enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    Log.i("NotificationActivity", "Response: $response")
                     if (response.isSuccessful) {
                         card.findViewById<ImageView>(R.id.notificationIcon).visibility = View.GONE
                     }
@@ -106,7 +98,6 @@ class NotificationActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     t.printStackTrace()
-                    Log.e("NotificationActivity", "Error: ${t.message}")
                 }
             })
     }

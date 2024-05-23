@@ -4,7 +4,9 @@ import NetworkUtils
 import SessionManager
 import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,8 +14,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.imageview.ShapeableImageView
@@ -51,6 +56,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
+import android.Manifest
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 
 
 class MainActivity : AppCompatActivity() {
@@ -62,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layoutContainer: LinearLayout
     private lateinit var allChat: MutableList<Team>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,6 +81,8 @@ class MainActivity : AppCompatActivity() {
         session = SessionManager(applicationContext)
         motionLayout = findViewById(R.id.motion_layout_main_id)
         layoutContainer = findViewById(R.id.main_layout)
+
+
 
         motionLayout.findViewById<ImageView>(R.id.notificationIcon).setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
@@ -105,9 +116,7 @@ class MainActivity : AppCompatActivity() {
         websocketConnect()
         showHeader()
 
-        Log.i("FCM", "Fetching FCM registration token")
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            Log.i("FCM", "Fetching FCM registration token AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
             if (!task.isSuccessful) {
                 Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
@@ -115,12 +124,40 @@ class MainActivity : AppCompatActivity() {
             // Get new FCM registration token
             val token = task.result
             saveFcmToken(token!!)
-            Log.e("myToken", "" + token)
         })
 
     }
 
-    private fun showHeader() {
+
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+//                Log.e(TAG, "PERMISSION_GRANTED")
+                // FCM SDK (and your app) can post notifications.
+            } else {
+//                Log.e(TAG, "NO_PERMISSION")
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT)
+                .show()
+        } else {}
+    }
+
+
+
+            private fun showHeader() {
         val service = NetworkUtils.createServiceUser()
         val token = session.accessToken!!
         service.getUser(token)
@@ -152,9 +189,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e("USER", "Failed to fetch user")
-                    Log.e("USER", t.message!!)
-                    Log.e("USER", t.cause.toString())
                     t.printStackTrace()
                 }
             })
@@ -167,20 +201,13 @@ class MainActivity : AppCompatActivity() {
             val tokenToSave: FcmToken = FcmToken(fcmToken)
             val service = NetworkUtils.createServiceNotification()
 
-            Log.i("SAVING TOKEN", "Saving token $fcmToken")
-
             service.saveFcmToken(session.accessToken!!, tokenToSave)
                 .enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
                             session.tokenSaved = true
-                            Log.i("PUSHH PUSHH ROOM", "Token saved")
                             return
                         }
-                        Log.e(
-                            "PUSHH PUSHH ROOM",
-                            "Token not saved ${response.code()} ${response.message()}"
-                        )
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -211,21 +238,16 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TeamFullResponse>, t: Throwable) {
-                    Log.e("Teams", "Failed to fetch teams")
-                    Log.e("Teams", t.message!!)
-                    Log.e("Teams", t.cause.toString())
                     t.printStackTrace()
                 }
             })
     }
 
     private fun showTeams(teams: List<TeamMin>?) {
-        Log.i("Teams", "Show Teams")
         val list = motionLayout.findViewById<LinearLayout>(R.id.mainTeams)
 
         teams?.forEach { team ->
             val gradient = getGradientDrawable()
-            Log.i("TEAM", "TEAM ${team.roomName}")
             val groupItem = layoutInflater.inflate(R.layout.group_item, motionLayout, false)
             val gradientImage = groupItem.findViewById<ImageView>(R.id.gradientImage)
             gradientImage.background = gradient
@@ -238,7 +260,6 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, WebViewGithubActivity::class.java)
                 intent.putExtra("url", team.githubLink)
                 startActivity(intent)
-                Log.i("TEAM", "TEAM ${team.roomName}")
             }
 
             gradientImage.setOnClickListener {
@@ -284,16 +305,10 @@ class MainActivity : AppCompatActivity() {
                 val subs: Flow<String> = session.subscribeText("/user/${nickname}/queue/chats")
 
                 subs.collectLatest {
-                    Log.i("STOMP", "Received message: $it")
                      allChat.addAll(jsonStringToTeamList(it))
                     removeDuplicates(allChat.last().id)
                     showChatRooms(allChat)
                 }
-
-
-                Log.i("STOMP", "Connected to STOMP")
-
-
             } catch (e: Exception) {
                 Log.e("STOMP", "Error: " + e.message + e.stackTraceToString())
             }
@@ -320,8 +335,6 @@ class MainActivity : AppCompatActivity() {
 
     fun showChatRooms(teams: MutableList<Team>) {
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChatMain)
-
-        Log.i("SHOW CHAT ROOM", "Showing chat rooms ")
 
         var x = 0
         teams.forEach { team ->

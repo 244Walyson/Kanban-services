@@ -12,7 +12,7 @@
             android:id="@+id/statusImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/color11"
+            android:src="@drawable/unknow_image"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/Circle"/>

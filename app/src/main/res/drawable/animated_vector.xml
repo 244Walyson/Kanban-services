@@ -9,5 +9,4 @@
     <target
         android:animation="@animator/translate_w"
         android:name="w_group"/>
-
 </animated-vector>

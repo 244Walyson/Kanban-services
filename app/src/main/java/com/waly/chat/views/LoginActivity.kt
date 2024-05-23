@@ -85,14 +85,10 @@ class LoginActivity : AppCompatActivity() {
 
     fun login() {
         val service = NetworkUtils.createServiceLogin()
-
         val email = binding.edtEmail.text.toString()
         val password = binding.edtPassword.text.toString()
-
         val combineCredentials = "$CLIENT_ID:$CLIENT_SECRET"
-        val authorization =
-            "Basic " + Base64.encodeToString(combineCredentials.toByteArray(), Base64.NO_WRAP)
-
+        val authorization = "Basic " + Base64.encodeToString(combineCredentials.toByteArray(), Base64.NO_WRAP)
         service.login(authorization, email, password, GRANT_TYPE)
             .enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -105,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                         return
                     }
-                    Log.i("LOGIN", "Error AQIIIIIIIIIIIIIII ${response.message()}")
                     showError()
                     setButton()
                 }
@@ -123,7 +118,6 @@ class LoginActivity : AppCompatActivity() {
         val message = binding.txtErr
         message.text = "Error"
         message.setTextColor(Color.RED)
-
         val loginButton = layoutInflater.inflate(R.layout.login_button, null)
         val login = binding.loginLoading
         login.removeAllViews()
@@ -132,15 +126,12 @@ class LoginActivity : AppCompatActivity() {
             login()
         }
 
-
         Handler(Looper.getMainLooper()).postDelayed({
             message.text = "Login"
             message.setTextColor(Color.WHITE)
         }, 3000)
     }
     fun showError() {
-
-        Log.i("LOGIN", "Error AQIIIIIIIIIIIIIII ")
         val loginInput = binding.edtEmail
         val passInput = binding.edtPassword
         loginInput.setBackgroundResource(R.drawable.input_error_shape)

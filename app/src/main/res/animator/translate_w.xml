@@ -1,6 +1,6 @@
 <objectAnimator
     android:startOffset="300"
-    android:duration="300"
+    android:duration="400"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <propertyValuesHolder
