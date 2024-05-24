@@ -13,7 +13,7 @@ A API da Aplicação Kanban fornece endpoints para gerenciar diversos recursos d
 *Certifique de ter o docker e o docker compose instalado*
 
 ```shell
-git clone -b local git@github.com:244Walyson/Kanban.git
+git clone -b local git@github.com:244Walyson/Kanban-services.git
 cd Kanban-services
 docker-compose up --build -d
 ```
