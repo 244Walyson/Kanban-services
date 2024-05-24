@@ -9,13 +9,12 @@ A API da Aplicação Kanban fornece endpoints para gerenciar diversos recursos d
 ## Configuração
 ### Rodando localmente como Docker
 
-Faça o clone do projeto
+##### Faça o clone do projeto e rode o script do docker compose
+*Certifique de ter o docker e o docker compose instalado*
+
 ```shell
 git clone -b local git@github.com:244Walyson/Kanban.git
-cd Kanban
-```
-*certificque de ter o docker compose instalado*
-```shell
+cd Kanban-services
 docker-compose up --build -d
 ```
 Após o container kafka Connect subir instale o conector do mysql
@@ -32,11 +31,6 @@ se estiver rodando localmente:
 ```bash
 http://localhost:8080
 ```
-senão verifique se esta rodando em:
-```bash
-https://kanban.rancher.waly.dev.br
-```
-
 
 ## Endpoints Disponíveis
 
