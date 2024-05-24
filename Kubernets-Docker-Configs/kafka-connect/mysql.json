@@ -8,7 +8,7 @@
     "database.user": "root",
     "database.password": "123456",
     "database.server.name": "mysql",
-    "schema.history.internal.bootstrap.servers": "kafka:9092",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
     "schema.history.internal.kafka.topic": "history.teams",
     "database.server.id": "184054",
     "database.allowPublicKeyRetrieval": "true",
