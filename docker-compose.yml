@@ -3,7 +3,7 @@ services:
 
   kanban-db:
     container_name: kanban-db
-    image: mysql:latest
+    image: mysql:8.0.37-debian
     restart: always
     environment:
       MYSQL_DATABASE: kanban
@@ -12,10 +12,16 @@ services:
       MYSQL_PASSWORD: 123456
     ports:
       - "3307:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "350M"
+
     
   notification-db:
     container_name: notification-db
-    image: mysql:latest
+    image: mysql:8.0.37-debian
     restart: always
     environment:
       MYSQL_DATABASE: notification
@@ -24,6 +30,11 @@ services:
       MYSQL_PASSWORD: 123456
     ports:
       - "3308:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
 
     
   chat-db:
@@ -34,26 +45,33 @@ services:
       MONGO_INITDB_DATABASE: chat-db
     ports:
       - "27019:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
       
     
   kafka:
-    container_name: kafka-kanban
+    container_name: kafka
     image: 'bitnami/kafka:latest'
     environment:
-    - KAFKA_CFG_NODE_ID=0
-    - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-    - KAFKA_CFG_PROCESS_ROLES=controller,broker
-    - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-    - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-    - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-    - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     ports:
-    - 9094:9094
+      - 9094:9094
+
+
 
   kafka-connect:
     container_name: kafka-connect
     image: confluentinc/cp-kafka-connect:7.5.4
-    restart: always
+    restart: unless-stopped
     depends_on:
       - kafka
       - kanban-db
@@ -86,8 +104,8 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.2.0
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run
-    cpus: 2
-    mem_limit: 4g
+
+
   
   redpanda-console:
     container_name: redpanda-kanban
@@ -104,11 +122,19 @@ services:
           brokers: ["kafka:9092"]
     depends_on:
       - kafka
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
   
 
   kanban-app:
     container_name: kanban-app
     build: ./kanban-app
+    depends_on:
+      - kanban-db
+      - kafka
     ports:
       - "8080:8080"
     environment:
@@ -117,20 +143,36 @@ services:
      DB_HOST: kanban-db
      DB_PORT: 3306
      DB_Name: kanban
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
   
 
   chat-app:
     container_name: chat-app
     build: ./chat-service
+    depends_on:
+      - chat-db
+      - kafka
     ports:
       - "8081:8080"
     environment:
      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
      MONGO_DB_URI: mongodb://chat-db:27017/chat-db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
   
-  notification-app:
-    container_name: notification-app
+  notification-service:
+    container_name: notification-service
     build: ./notification-service
+    depends_on:
+      - notification-db
+      - kafka
     ports:
       - "8082:8080"
     environment:
@@ -138,3 +180,9 @@ services:
      DB_HOST: notification-db
      DB_PORT: 3306
      DB_Name: notification
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+    
