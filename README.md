@@ -6,6 +6,25 @@ Este repositório contém a definição OpenAPI para a API da Aplicação Kanban
 
 A API da Aplicação Kanban fornece endpoints para gerenciar diversos recursos dentro da aplicação, incluindo usuários, equipes, quadros e tarefas. Esta documentação descreve os principais endpoints, seus parâmetros de requisição e respostas esperadas.
 
+## Configuração
+### Rodando localmente como Docker
+
+Faça o clone do projeto
+```shell
+git clone -b local git@github.com:244Walyson/Kanban.git
+cd Kanban
+```
+*certificque de ter o docker compose instalado*
+```shell
+docker-compose up --build -d
+```
+Após o container kafka Connect subir instale o conector do mysql
+```shell
+cd Kubernets-Docker-Configs/kafka-connect
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @mysql.json
+cd .. && cd ..
+```
+
 ## URL Base
 
 A URL base para todas as requisições da API é: 
@@ -77,9 +96,4 @@ A API utiliza diversos modelos de dados para as requisições e respostas, inclu
 
 Para mais detalhes sobre todos os endpoints disponíveis, parâmetros, esquemas de requisição e resposta, consulte a [documentação Swagger](http://kanban.rancher.waly.dev.br/swagger-ui.html) da aplicação.
 
-## Configuração
-
--Docker
-```shell
-```
 
