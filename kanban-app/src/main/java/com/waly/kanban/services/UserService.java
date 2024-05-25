@@ -81,6 +81,12 @@ public class UserService implements UserDetailsService {
         return new UserLoggedDTO(user);
     }
 
+    @Transactional(readOnly = true)
+    public UserDTO findMe(){
+        User user = repository.findById(authenticade().getId()).get();
+        return new UserDTO(user);
+    }
+
     @Transactional
     public User findUserByEmail(String username) {
         return repository.findByEmail(username).get();

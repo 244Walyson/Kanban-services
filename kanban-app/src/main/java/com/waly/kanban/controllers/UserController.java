@@ -35,6 +35,12 @@ public class UserController {
         return ResponseEntity.ok(service.getMe());
     }
 
+    @GetMapping("/me/full")
+    public ResponseEntity<UserDTO> findMe(){
+        return ResponseEntity.ok(service.findMe());
+    }
+
+
     @PostMapping
     public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto){
         UserDTO userDTO = service.insert(dto);

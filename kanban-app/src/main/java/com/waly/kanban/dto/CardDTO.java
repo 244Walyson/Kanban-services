@@ -21,6 +21,7 @@ public class CardDTO {
     private String description;
     private Integer position;
     private boolean done;
+    private Integer priority;
     private List<UserMinDTO> collaborators = new ArrayList<>();
 
     public CardDTO(Card card) {

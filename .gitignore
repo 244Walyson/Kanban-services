@@ -1,4 +1,10 @@
 .vscode/
 .idea/
+.gitignore
+
+/Classpathprivate-key.pem
+/Classpathpublic-key.pem
+
+src/main/resources/import.sql
 
 KubernetsFiles/kanban/secrets-kanban.yml
