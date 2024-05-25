@@ -161,6 +161,7 @@ services:
     environment:
      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
      MONGO_DB_URI: mongodb://chat-db:27017/chat-db
+     JWK_SET_URI: http://kanban-app:8080
     deploy:
       resources:
         limits:
@@ -180,6 +181,7 @@ services:
      DB_HOST: notification-db
      DB_PORT: 3306
      DB_Name: notification
+     JWK_SET_URI: http://kanban-app:8080
     deploy:
       resources:
         limits:

@@ -19,8 +19,8 @@ public class UserDTO {
     private String email;
     private String imgUrl;
     private String bio;
-    private List<CardDTO> cards = new ArrayList<>();
-    private List<TeamDTO> teams = new ArrayList<>();
+    private List<CardMinDTO> cards = new ArrayList<>();
+    private List<TeamMinDTO> teams = new ArrayList<>();
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -29,7 +29,7 @@ public class UserDTO {
         this.email = user.getEmail();
         this.imgUrl = user.getImgUrl();
         this.bio = user.getBio();
-        this.cards = user.getCards().stream().map(x -> new CardDTO(x)).toList();
-        this.teams = user.getBoards().stream().map(x -> new TeamDTO(x)).toList();
+        this.cards = user.getCards().stream().map(CardMinDTO::new).toList();
+        this.teams = user.getBoards().stream().map(TeamMinDTO::new).toList();
     }
 }

@@ -23,9 +23,8 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -83,7 +82,10 @@ public class UserService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public UserDTO findMe(){
-        User user = repository.findById(authenticade().getId()).get();
+        User user = repository.findByIdWithCardsAndTeams(authenticade().getId()).get();
+        user.getCards().forEach(card ->{
+           log.info("Card: " + card.toString());
+        });
         return new UserDTO(user);
     }
 
