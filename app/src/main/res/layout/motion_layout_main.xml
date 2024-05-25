@@ -96,10 +96,11 @@
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content">
                        <LinearLayout
+                           android:id="@+id/mainStatus"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:paddingBottom="10dp">
-                           <include layout="@layout/status_image"/>
+                           <include android:id="@+id/firstStatus" layout="@layout/status_image"/>
                        </LinearLayout>
                    </HorizontalScrollView>
                </LinearLayout>

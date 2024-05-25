@@ -59,6 +59,7 @@ import java.util.concurrent.TimeUnit
 import android.Manifest
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.waly.chat.views.StatusActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -125,6 +126,12 @@ class MainActivity : AppCompatActivity() {
             val token = task.result
             saveFcmToken(token!!)
         })
+
+
+
+        motionLayout.findViewById<View>(R.id.firstStatus).setOnClickListener {
+            startActivity(Intent(this, StatusActivity::class.java))
+        }
 
     }
 

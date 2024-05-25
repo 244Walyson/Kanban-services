@@ -2,6 +2,7 @@
 import com.waly.chat.models.CreateUser
 import com.waly.chat.models.UriDTO
 import com.waly.chat.models.User
+import com.waly.chat.models.UserFull
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,6 +15,9 @@ interface UserClient {
 
     @GET("/users/me")
     fun getUser(@Header("Authorization") authorization: String): Call<User>
+
+    @GET("/users/me/full")
+    fun findMeFull(@Header("Authorization") authorization: String): Call<UserFull>
 
     @GET("/users")
     fun getUsers(@Header("Authorization") authorization: String): Call<List<User>>

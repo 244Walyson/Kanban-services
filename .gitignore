@@ -1,0 +1,33 @@
+# Ignore Gradle project-specific cache directory
+.gradle/
+
+# Ignore build directory
+build/
+
+# Ignore local configuration file (e.g., IDE settings)
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Ignore Eclipse project files
+*.classpath
+*.project
+*.settings/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore other common build-related directories
+out/
+bin/
+target/
+
+# Ignore logs
+*.log
+
+# Ignore other OS specific files
+Thumbs.db

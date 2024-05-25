@@ -70,17 +70,19 @@
                 android:paddingHorizontal="70dp"
                 android:layout_marginTop="20dp">
                 <TextView
+                    android:id="@+id/teams"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#Projetos"
+                    android:text="Equipes"
                     android:textColor="@color/white"
                     android:fontFamily="@font/gordita_medium"
                     android:textSize="20dp"
                     android:layout_weight="1"/>
                 <TextView
+                    android:id="@+id/cards"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#Equipes"
+                    android:text="Cards"
                     android:fontFamily="@font/gordita_medium"
                     android:textSize="20dp"
                     android:textColor="@color/gray_primary"/>
@@ -92,7 +94,17 @@
             android:layout_weight="1">
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+                <LinearLayout
+                    android:id="@+id/scrollLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="15dp"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+                </ScrollView>
         </LinearLayout>
     </LinearLayout>
 
