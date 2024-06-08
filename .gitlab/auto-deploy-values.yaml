@@ -38,7 +38,7 @@ persistence:
         path: "/app/keys"
         # subPath: "/fcm-key.json"
       claim:
-        accessMode: ReadWriteMany
+        accessMode: ReadWriteOnce
         size: 1Gi
         #storageClass: nfs-client
 
