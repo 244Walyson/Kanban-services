@@ -1,0 +1,78 @@
+include:
+  - template: Auto-DevOps.gitlab-ci.yml
+
+build:
+ before_script:
+  - echo $DOCKER_ACCESS_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_ACCESS_TOKEN
+ script:
+    - docker build -t walymb/chat-service:latest .
+    - docker push walymb/chat-service:latest
+
+
+variables:
+  CI_APPLICATION_REPOSITORY: walymb/chat-service
+  CI_APPLICATION_TAG: latest
+  KUBE_INGRESS_BASE_DOMAIN: api.waly.dev.br
+  KUBE_NAMESPACE: "chat"
+  KUBE_CONTEXT: $KUBE_CONTEXT:agent-k8s
+  AUTO_DEVOPS_DOMAIN: chat.api.waly.dev.br
+  AUTO_DEVOPS_COMMON_NAME: false
+  AUTO_DEVOPS_BUILD_IMAGE: walymb/chat-service:latest
+  GITLAB_ENVIRONMENT_NAME: production
+  GITLAB_ENVIRONMENT_URL: http://chat.api.waly.dev.br
+  PRODUCTION_REPLICAS: 1
+  TEST_DISABLED: "true"
+  PERFORMANCE_DISABLED: "true"
+  CODE_QUALITY_DISABLED: "true"
+  CONTAINER_SCANNING_DISABLED: "true"
+  DEPENDENCY_SCANNING_DISABLED: "true"
+  DAST_DISABLED: "true"
+  SAST_DISABLED: "true"
+  SECRET_DETECTION_DISABLED: "true"
+  LICENSE_MANAGEMENT_DISABLED: "true"
+  DOCKER_IMAGE_NAME: walymb/chat-service
+
+
+
+# stages:
+#   - build
+#   - deploy
+#   - apply
+#   - test
+
+# variables:
+#   DOCKER_IMAGE_NAME: $DOCKER_USERNAME/chat-service
+
+# build_chat_image:
+#   image: docker
+#   stage: build
+#   services:
+#     - docker:dind
+#   script:
+#     - echo $DOCKER_ACCESS_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
+#     - docker login -u $DOCKER_USERNAME -p $DOCKER_ACCESS_TOKEN
+#     - docker build -t $DOCKER_IMAGE_NAME:latest .
+#     - docker push $DOCKER_IMAGE_NAME:latest
+#     - echo "Image chat service pushed to Docker Hub"
+
+  
+# # deploy-test:
+# #   stage: deploy
+# #   image:
+# #     name: bitnami/kubectl:latest
+# #     entrypoint: ['']
+# #   script:
+# #     - kubectl config get-contexts
+# #     - kubectl config use-context $KUBE_CONTEXT:agent-k8s
+# #     - kubectl get pods
+# #     - kubectl get nodes
+# #     - echo "Deploying to Kubernetes"
+
+
+
+# # sast:
+# #   stage: test
+# # include:
+# # - template: Security/SAST.gitlab-ci.yml
+

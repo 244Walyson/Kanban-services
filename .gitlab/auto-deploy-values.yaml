@@ -1,0 +1,68 @@
+# .gitlab/auto-deploy-values.yaml
+image:
+  repository: walymb/chat-service:latest
+
+
+service:
+  enabled: true
+  annotations: { }
+  name: web
+  type: ClusterIP
+  url: http://chat.api.waly.dev.br/
+  additionalHosts:
+  commonName:
+  externalPort: 8080
+  internalPort: 8080
+
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"  
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"  
+    nginx.ingress.kubernetes.io/websocket-timeout: "3600"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: chat.api.waly.dev.br
+      paths:
+        - path: /
+          backend:
+            serviceName: web
+            servicePort: 8080
+
+  tls:
+    enabled: true
+    acme: true
+    secretName: production-auto-deploy-tls
+
+
+persistence:
+  enabled: true
+  volumes:
+    - name: kanban-data
+      mount:
+        path: "/app/keys"
+        # subPath: "/pvc-mount/config.txt"
+      claim:
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        #storageClass: nfs-client
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+
+livenessProbe:
+  httpGet:
+  path: /hello-world
+  port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 15
+readinessProbe:
+  httpGet:
+  path: /hello-world
+  port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
