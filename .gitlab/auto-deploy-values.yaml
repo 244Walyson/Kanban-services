@@ -1,0 +1,61 @@
+image:
+  repository: walymb/notifcation-service:latest
+
+
+service:
+  enabled: true
+  annotations: { }
+  name: web
+  type: ClusterIP
+  url: http://notification.api.waly.dev.br/
+  additionalHosts:
+  commonName:
+  externalPort: 8080
+  internalPort: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: notification.api.waly.dev.br
+      paths:
+        - path: /
+          backend:
+            serviceName: web
+            servicePort: 8080
+  tls:
+    enabled: true
+    acme: true
+    secretName: production-auto-deploy-tls
+
+persistence:
+  enabled: true
+  volumes:
+    - name: kanban-data
+      mount:
+        path: "/app/keys"
+        # subPath: "/fcm-key.json"
+      claim:
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        #storageClass: nfs-client
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+
+livenessProbe:
+  httpGet:
+  path: /hello-world
+  port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 15
+readinessProbe:
+  httpGet:
+  path: /hello-world
+  port: 8080
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
