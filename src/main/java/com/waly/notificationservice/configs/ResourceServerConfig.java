@@ -1,6 +1,9 @@
 package com.waly.notificationservice.configs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class ResourceServerConfig {
 
 	private static final Logger log = LoggerFactory.getLogger(ResourceServerConfig.class);
@@ -71,6 +75,7 @@ public class ResourceServerConfig {
 
 	@Bean
 	public JwtDecoder jwtDecoder() throws JsonProcessingException {
+		log.info("JWK URI: {}", BASE_JWK_SET_URL);
 		return NimbusJwtDecoder.withJwkSetUri(BASE_JWK_SET_URL).build();
 	}
 
