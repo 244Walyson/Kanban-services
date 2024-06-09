@@ -1,5 +1,7 @@
 image:
   repository: walymb/notifcation-service:latest
+  imagePullPolicy: Always
+
 
 
 service:
@@ -26,6 +28,7 @@ ingress:
             serviceName: web
             servicePort: 8080
   tls:
+
     enabled: true
     acme: true
     secretName: production-auto-deploy-tls

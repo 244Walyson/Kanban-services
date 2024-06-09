@@ -1,5 +1,6 @@
 include:
   - template: Auto-DevOps.gitlab-ci.yml
+  
 
 build:
  before_script:
@@ -21,6 +22,7 @@ variables:
   AUTO_DEVOPS_BUILD_IMAGE: walymb/notification-service:latest
   GITLAB_ENVIRONMENT_NAME: production
   GITLAB_ENVIRONMENT_URL: http://notication.api.waly.dev.br
+  AUTO_DEVOPS_ALWAYS_PULL_IMAGE: "true"
   PRODUCTION_REPLICAS: 1
   TEST_DISABLED: "true"
   PERFORMANCE_DISABLED: "true"
