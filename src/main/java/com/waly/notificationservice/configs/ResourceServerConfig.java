@@ -40,7 +40,6 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Slf4j
 public class ResourceServerConfig {
 
 	private static final Logger log = LoggerFactory.getLogger(ResourceServerConfig.class);
