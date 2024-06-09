@@ -40,9 +40,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Slf4j
 public class ResourceServerConfig {
 
-	private static final Logger log = LoggerFactory.getLogger(ResourceServerConfig.class);
 	@Value("${cors.origins}")
 	private String corsOrigins;
 	@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
