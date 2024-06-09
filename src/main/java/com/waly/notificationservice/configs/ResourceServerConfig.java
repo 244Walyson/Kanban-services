@@ -49,15 +49,15 @@ public class ResourceServerConfig {
 	private String BASE_JWK_SET_URL;
 
 
-	@Bean
-	@Profile("test")
-	@Order(1)
-	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
-
-		http.securityMatcher(PathRequest.toH2Console()).csrf(AbstractHttpConfigurer::disable)
-				.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
-		return http.build();
-	}
+//	@Bean
+//	@Profile("test")
+//	@Order(1)
+//	public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
+//
+//		http.securityMatcher(PathRequest.toH2Console()).csrf(AbstractHttpConfigurer::disable)
+//				.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+//		return http.build();
+//	}
 
 	@Bean
 	@Order(3)
