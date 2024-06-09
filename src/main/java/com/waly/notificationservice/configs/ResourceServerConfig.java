@@ -75,7 +75,7 @@ public class ResourceServerConfig {
 
 	@Bean
 	public JwtDecoder jwtDecoder() throws JsonProcessingException {
-		log.info("JWK URI: {}", BASE_JWK_SET_URL);
+		log.error("JWK URI: {}", BASE_JWK_SET_URL);
 		return NimbusJwtDecoder.withJwkSetUri(BASE_JWK_SET_URL).build();
 	}
 
