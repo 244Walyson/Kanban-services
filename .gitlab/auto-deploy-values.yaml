@@ -1,5 +1,5 @@
 image:
-  repository: walymb/notifcation-service:latest
+  repository: walymb/notifcation-service:1.0.0
   imagePullPolicy: Always
 
 
