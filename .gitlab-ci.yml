@@ -19,7 +19,7 @@ variables:
   KUBE_CONTEXT: $KUBE_CONTEXT:agent-k8s
   AUTO_DEVOPS_DOMAIN: notification.api.waly.dev.br
   AUTO_DEVOPS_COMMON_NAME: false
-  AUTO_DEVOPS_BUILD_IMAGE: walymb/notification-service:1.0.0
+  AUTO_DEVOPS_BUILD_IMAGE: walymb/notification-service:latest
   GITLAB_ENVIRONMENT_NAME: production
   GITLAB_ENVIRONMENT_URL: http://notication.api.waly.dev.br
   AUTO_DEVOPS_ALWAYS_PULL_IMAGE: "true"
