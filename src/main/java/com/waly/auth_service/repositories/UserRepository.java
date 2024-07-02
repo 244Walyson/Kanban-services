@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+    Optional<User> findByNickname(String nickname);
     Boolean existsByNickname(String nickname);
     Boolean existsByEmail(String email);
 
@@ -31,6 +32,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 WHERE tb_user.nickname = :username
             """)
     List<UserDetailsProjection> searchUserAndRolesByNickname(String username);
+
+    @Query(value = """
+            SELECT u FROM User u
+            WHERE UPPER(u.email) LIKE UPPER(CONCAT('%', :query, '%%'))
+            OR UPPER(u.nickname) LIKE UPPER(CONCAT('%', :query, '%%'))
+            OR UPPER(u.name) LIKE UPPER(CONCAT('%', :query, '%%'))
+            """)
+    List<User> findByQuery(String query);
 
 }
 

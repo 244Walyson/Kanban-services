@@ -8,3 +8,6 @@ INSERT INTO tb_role (authority) VALUES ('ROLE_MEMBER');
 INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 1);
 INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
+
+INSERT INTO tb_user_connection (status, user_id1, user_id2) VALUES (false , 1, 2);
+INSERT INTO tb_user_connection (status, user_id1, user_id2) VALUES (true , 2, 3);
