@@ -31,16 +31,17 @@ import java.util.UUID;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private CustomUserUtil customUserUtil;
-    @Autowired
-    private UserConnectionRepository userConnectionRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository repository;
+    private final CustomUserUtil customUserUtil;
+    private final UserConnectionRepository userConnectionRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    private final String NOTIFICATION_REQUEST_MESSAGE = "New connection request";
+  public UserService(UserRepository repository, CustomUserUtil customUserUtil, UserConnectionRepository userConnectionRepository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.customUserUtil = customUserUtil;
+        this.userConnectionRepository = userConnectionRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -161,7 +162,7 @@ public class UserService implements UserDetailsService {
             || userConnectionRepository.existsById(new UserConnectionPK(friend, user))) throw new ValidateException("Connection already exists");
         UserConnection userConn = new UserConnection(new UserConnectionPK(user, friend), false);
         userConnectionRepository.save(userConn);
-        NotificationDTO connectionNotificationDTO = new NotificationDTO(null, new UserDTO(user), new UserDTO(friend), NOTIFICATION_REQUEST_MESSAGE);
+      NotificationDTO connectionNotificationDTO = new NotificationDTO(null, new UserDTO(user), new UserDTO(friend), "New connection request");
         try {
             String jsonConnectionNotification = new ObjectMapper().writeValueAsString(connectionNotificationDTO);
             //kafkaProducer.sendUserNotification(jsonConnectionNotification);
