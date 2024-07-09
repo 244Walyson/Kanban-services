@@ -12,30 +12,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaProducer {
 
-    @Value("${spring.kafka.user.connection.topic}")
-    private String userConnectionTopic;
-    @Value("${spring.kafka.user.notification.topic}")
-    private String userNotificationTopic;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+  @Value("${spring.kafka.user.notification.topic}")
+  private String userNotificationTopic;
+  private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendUserConnection(String payload) {
-        try {
-            log.info("Sending event topic {} with data {} ", userConnectionTopic, payload);
-            kafkaTemplate.send(userConnectionTopic, payload);
-        }catch (Exception e) {
-            log.error("Error sending event topic {} with data {} ", userConnectionTopic, payload);
-        }
+  public void sendUserNotification(String payload) {
+    try {
+      log.info("Sending event topic {} with data {} ", userNotificationTopic, payload);
+      kafkaTemplate.send(userNotificationTopic, payload);
+    } catch (Exception e) {
+      log.error("Error sending event topic {} with data {} ", userNotificationTopic, payload);
     }
-
-    public void sendUserNotification(String payload) {
-        try {
-            log.info("Sending event topic {} with data {} ", userNotificationTopic, payload);
-            kafkaTemplate.send(userNotificationTopic, payload);
-        }catch (Exception e) {
-            log.error("Error sending event topic {} with data {} ", userNotificationTopic, payload);
-        }
-    }
-
+  }
 
 
 }

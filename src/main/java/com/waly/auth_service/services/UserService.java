@@ -162,22 +162,8 @@ public class UserService implements UserDetailsService {
       throw new ValidateException("Connection already exists");
     UserConnection userConn = new UserConnection(new UserConnectionPK(user, friend), false);
     userConnectionRepository.save(userConn);
-    sendConnectionNotification(user, friend);
+    sendUserNotification(user, friend, "Novo pedido de conexão!", "Você recebeu um novo pedido de conexão de ");
     return null;
-  }
-
-  private void sendConnectionNotification(User user, User friend) {
-    NotificationDTO notificationDTO = new NotificationDTO();
-    notificationDTO.setTitle("Novo pedido de conexão!");
-    notificationDTO.setSender(new UserDTO(user));
-    notificationDTO.setReceiver(new UserDTO(friend));
-    notificationDTO.setMessage("Você recebeu um novo pedido de conexão de " + user.getNickname());
-    try {
-      String jsonConnectionNotification = new ObjectMapper().writeValueAsString(notificationDTO);
-      kafkaProducer.sendUserNotification(jsonConnectionNotification);
-    } catch (JsonProcessingException e) {
-      log.error("Error serializing Object to JSON", e);
-    }
   }
 
   @Transactional
@@ -191,19 +177,19 @@ public class UserService implements UserDetailsService {
     if (userConn.isStatus()) return null;
     userConn.setStatus(true);
     userConnectionRepository.save(userConn);
-    sendConnectionApprovedNotification(user, friend);
+    sendUserNotification(user, friend, "Conexão aprovada!", "Novo chat criado com ");
     return null;
   }
 
-  private void sendConnectionApprovedNotification(User user, User friend) {
+  private void sendUserNotification(User user, User friend, String title, String message) {
     NotificationDTO notificationDTO = new NotificationDTO();
-    notificationDTO.setTitle("Chat criado!");
+    notificationDTO.setTitle(title);
     notificationDTO.setSender(new UserDTO(user));
     notificationDTO.setReceiver(new UserDTO(friend));
-    notificationDTO.setMessage("Um novo chat foi criado com " + user.getNickname());
+    notificationDTO.setMessage(message + user.getNickname());
     try {
       String jsonUserConn = new ObjectMapper().writeValueAsString(notificationDTO);
-      kafkaProducer.sendUserConnection(jsonUserConn);
+      kafkaProducer.sendUserNotification(jsonUserConn);
     } catch (JsonProcessingException e) {
       log.error("Error serializing Object to JSON", e);
     }
