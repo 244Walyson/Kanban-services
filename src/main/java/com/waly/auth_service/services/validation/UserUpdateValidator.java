@@ -8,6 +8,7 @@ import com.waly.auth_service.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid, UserUpdateDTO> {
 
-    private static final Logger log = LoggerFactory.getLogger(UserUpdateValidator.class);
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private HttpServletRequest request;
+    private final UserRepository userRepository;
+    private final HttpServletRequest request;
+
+    public UserUpdateValidator(UserRepository userRepository, HttpServletRequest request) {
+        this.userRepository = userRepository;
+        this.request = request;
+    }
 
     @Override
     public void initialize(UserUpdateValid ann) {
+        // method not implemented
     }
 
     @Override
@@ -52,7 +57,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
         }
         for (FieldMessage e : list) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(e.getMessage()).addPropertyNode(e.getFieldName())
+            context.buildConstraintViolationWithTemplate(e.message()).addPropertyNode(e.fieldName())
                     .addConstraintViolation();
         }
         return list.isEmpty();

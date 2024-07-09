@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CustomOAuth2User implements OAuth2User {
 
-    private OAuth2User oauth2User;
+    private final OAuth2User oauth2User;
 
     public CustomOAuth2User(OAuth2User oauth2User) {
         this.oauth2User = oauth2User;
@@ -30,6 +30,6 @@ public class CustomOAuth2User implements OAuth2User {
     }
 
     public String getEmail() {
-        return oauth2User.<String>getAttribute("email");
+        return oauth2User.getAttribute("email");
     }
 }

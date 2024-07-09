@@ -3,12 +3,7 @@ package com.waly.auth_service.configs;
 
 import com.waly.auth_service.services.CustomOAuth2UserService;
 import com.waly.auth_service.services.UserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -23,33 +18,33 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.io.IOException;
 import java.util.Arrays;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class ResourceServerConfig {
 
-	private static final Logger log = LoggerFactory.getLogger(ResourceServerConfig.class);
 	@Value("${cors.origins}")
 	private String corsOrigins;
 
-	@Autowired
-	private CustomOAuth2UserService oauthUserService;
-	@Autowired
-	private UserService userService;
+	private final CustomOAuth2UserService oauthUserService;
+	private final UserService userService;
+
+	public ResourceServerConfig(CustomOAuth2UserService oauthUserService, UserService userService) {
+		this.oauthUserService = oauthUserService;
+		this.userService = userService;
+	}
 
 	@Bean
 	@Profile("test")
@@ -72,20 +67,15 @@ public class ResourceServerConfig {
 		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 		http.oauth2Login(oauth2 -> oauth2
-				.userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService)).successHandler(new AuthenticationSuccessHandler() {
-						@Override
-						public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-								Authentication authentication) throws IOException, ServletException {
-							if(request.getRequestURI().contains("google")) {
-								DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-								log.info(authentication.getPrincipal().toString());
+				.userInfoEndpoint(userInfo -> userInfo.userService(oauthUserService)).successHandler((request, response, authentication) -> {
+          if(request.getRequestURI().contains("google")) {
+            DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+            log.info(authentication.getPrincipal().toString());
 
-								userService.saveOauthUser(oidcUser);
-							}
-
-							response.sendRedirect("/users/token");
-					}
-				}));
+            userService.saveOauthUser(oidcUser);
+          }
+          response.sendRedirect("/users/token");
+      }));
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 		return http.build();
 	}

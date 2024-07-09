@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomOAuth2UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -27,11 +30,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userEntity.setEmail(user.getAttribute("email"));
             userEntity.setName(user.getAttribute("name"));
             userEntity.setImgUrl(user.getAttribute("avatar_url"));
-            userEntity.setNickname(user.getAttribute("login"));
-
-            if(userEntity.getEmail() == null) userEntity.setEmail(user.getAttribute("login").toString().concat("@github.com"));
-
-            userEntity = userRepository.save(userEntity);
+            String login = user.getAttribute("login");
+            userEntity.setNickname(login);
+            if(userEntity.getUsername() == null) {
+                userEntity.setEmail(login.toString().concat("@github.com"));
+            }
+            userRepository.save(userEntity);
         }
         return new CustomOAuth2User(user);
     }

@@ -1,6 +1,11 @@
 package com.waly.auth_service.dtos;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UriDTO {
 
     private String uri;
@@ -10,10 +15,4 @@ public class UriDTO {
         this.uri = uri;
     }
 
-    public String getUri() {
-        return uri;
-    }
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
 }

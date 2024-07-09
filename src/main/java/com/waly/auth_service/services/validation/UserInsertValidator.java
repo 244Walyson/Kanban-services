@@ -6,7 +6,6 @@ import com.waly.auth_service.exceptions.FieldMessage;
 import com.waly.auth_service.repositories.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,15 @@ import java.util.List;
 
 public class UserInsertValidator implements ConstraintValidator<UserInsertValid, UserInsertDTO> {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserInsertValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public void initialize(UserInsertValid ann) {
+        // method not implemented
     }
 
     @Override
@@ -33,7 +37,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
         }
         for (FieldMessage e : list) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(e.getMessage()).addPropertyNode(e.getFieldName())
+            context.buildConstraintViolationWithTemplate(e.message()).addPropertyNode(e.fieldName())
                     .addConstraintViolation();
         }
         return list.isEmpty();

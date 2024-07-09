@@ -1,9 +1,13 @@
 package com.waly.auth_service.dtos;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @ToString
 public class NotificationDTO {
 
@@ -24,41 +28,4 @@ public class NotificationDTO {
         this.message = message;
         this.createdAt = new Date();
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UserDTO getSender() {
-        return sender;
-    }
-
-    public void setSender(UserDTO sender) {
-        this.sender = sender;
-    }
-
-    public UserDTO getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(UserDTO receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
 }

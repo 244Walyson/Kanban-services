@@ -1,13 +1,11 @@
 package com.waly.auth_service.controllers;
 
 
-import com.waly.auth_service.configs.AuthorizationServerConfig;
 import com.waly.auth_service.dtos.*;
 import com.waly.auth_service.services.TokenService;
 import com.waly.auth_service.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    //private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    @Autowired
-    private UserService service;
-    @Autowired
-    private TokenService tokenGenerator;
+    private final UserService service;
+    private final TokenService tokenGenerator;
 
+    public UserController(UserService service, TokenService tokenGenerator) {
+        this.service = service;
+        this.tokenGenerator = tokenGenerator;
+    }
 
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getMe(){
@@ -37,7 +36,7 @@ public class UserController {
     public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto){
         UserDTO userDTO = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userDTO.getId()).toUri();
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.created(uri).body(userDTO);
     }
 
     @PutMapping("/{id}")
