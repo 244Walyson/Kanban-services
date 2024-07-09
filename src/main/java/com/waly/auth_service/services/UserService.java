@@ -154,8 +154,9 @@ public class UserService implements UserDetailsService {
   @Transactional
   public Void connect(Long id) {
     User user = authenticated();
-    if (!repository.existsById(id)) throw new ResourceNotFoundException("User not found id:" + id);
+    if (!repository.existsById(id)) throw new ResourceNotFoundException("User not found id:" +   id);
     User friend = repository.getReferenceById(id);
+    if(friend.equals(user)) throw new ValidateException("Invalid Request");
     if (userConnectionRepository.existsById(new UserConnectionPK(user, friend))
             || userConnectionRepository.existsById(new UserConnectionPK(friend, user)))
       throw new ValidateException("Connection already exists");
