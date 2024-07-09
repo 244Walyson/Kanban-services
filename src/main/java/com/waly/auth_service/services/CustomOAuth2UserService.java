@@ -45,6 +45,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oidcUser.getName());
         user.setImgUrl(oidcUser.getPicture());
         user.setEmail(oidcUser.getEmail());
-        log.info("USER ATRIBUTES " + oidcUser.getAttributes().toString());
     }
 }
