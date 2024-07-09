@@ -14,6 +14,7 @@ public class NotificationDTO {
     private Long id;
     private UserDTO sender;
     private UserDTO receiver;
+    private String title;
     private String message;
     private Date createdAt;
 
@@ -21,10 +22,11 @@ public class NotificationDTO {
         this.createdAt = new Date();
     }
 
-    public NotificationDTO(Long id, UserDTO sender, UserDTO receiver, String message) {
+    public NotificationDTO(Long id, UserDTO sender, UserDTO receiver, String title, String message) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
+        this.title = title;
         this.message = message;
         this.createdAt = new Date();
     }
