@@ -3,7 +3,6 @@ package com.waly.notificationservice.entities;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -14,29 +13,21 @@ public class UserNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    private User sender;
-    @ManyToOne
-    @JoinColumn(name = "receiver_id")
-    private User receiver;
+    private Long senderId;
+    private Long receiverId;
     private String message;
     private Date createdAt;
-    private Boolean accepted = false;
-    private Status status;
 
     public UserNotification() {
     }
 
-    public UserNotification(Long id, String title, User sender, User receiver, String message, Boolean accepted, Date createdAt, Status status) {
+    public UserNotification(Long id, String title, Long senderId, Long receiverId, String message, Date createdAt) {
         this.id = id;
         this.title = title;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.message = message;
         this.createdAt = createdAt;
-        this.status = status;
-        this.accepted = accepted;
     }
 
     public Long getId() {
@@ -55,20 +46,20 @@ public class UserNotification {
         this.title = title;
     }
 
-    public User getSender() {
-        return sender;
+    public Long getSenderId() {
+        return senderId;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public Long getReceiverId() {
+        return receiverId;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getMessage() {
@@ -85,21 +76,5 @@ public class UserNotification {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public Boolean getAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(Boolean accepted) {
-        this.accepted = accepted;
     }
 }

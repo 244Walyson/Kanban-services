@@ -36,15 +36,10 @@ public class KafkaConfig {
     private String autoOffsetReset;
     @Value("${spring.kafka.user.notification.topic}")
     private String userNotificationTopic;
-    @Value("${spring.kafka.user.chat-created-notification.topic}")
-    private String chatCreatedNotificationTopic;
-    @Value("${spring.kafka.user.message-notification.topic}")
-    private String messageNotificationTopic;
     @Value("${spring.kafka.sasl.username}")
     private String saslUsername;
     @Value("${spring.kafka.sasl.password}")
     private String saslPassword;
-
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -95,13 +90,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic addUserNotification() {
+    public NewTopic userNotification() {
         return buildTopic(userNotificationTopic);
     }
-    @Bean
-    public NewTopic addChatCreatedNotification() { return buildTopic(chatCreatedNotificationTopic); }
-    @Bean
-    public NewTopic addMessageNotification() { return buildTopic(messageNotificationTopic); }
-
-
 }
