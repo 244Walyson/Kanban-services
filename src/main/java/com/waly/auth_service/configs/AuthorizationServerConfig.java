@@ -12,6 +12,7 @@ import com.waly.auth_service.configs.customgrant.CustomPasswordAuthenticationCon
 import com.waly.auth_service.configs.customgrant.CustomPasswordAuthenticationProvider;
 import com.waly.auth_service.configs.customgrant.CustomUserAuthorities;
 import com.waly.auth_service.dtos.AccessToken;
+import com.waly.auth_service.entities.User;
 import com.waly.auth_service.services.UserService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -167,13 +168,14 @@ public class AuthorizationServerConfig {
     return context -> {
       OAuth2ClientAuthenticationToken principal = context.getPrincipal();
       CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
-      String nickname = userService.findByEmail(user.getUsername()).getNickname();
+      User newUser = userService.findByEmail(user.getUsername());
       List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
       if (context.getTokenType().getValue().equals("access_token")) {
         // @formatter:off
 				context.getClaims()
 					.claim("authorities", authorities)
-					.claim("nick", nickname)
+					.claim("nick", newUser.getNickname())
+          .claim("userId", newUser.getId())
 					.claim("username", user.getUsername());
 				// @formatter:on
       }
@@ -205,6 +207,7 @@ public class AuthorizationServerConfig {
               .notBeforeTime(issTime)
               .expirationTime(expiration)
               .claim("nick", nickname)
+              .claim("userId", userService.findByEmail(newUsername).getId())
               .claim("username", newUsername)
               .claim("authorities", authorities)
               .build();

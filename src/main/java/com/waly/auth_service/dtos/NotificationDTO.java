@@ -17,17 +17,9 @@ public class NotificationDTO {
     private String title;
     private String message;
     private Date createdAt;
+    private String token;
 
     public NotificationDTO() {
-        this.createdAt = new Date();
-    }
-
-    public NotificationDTO(Long id, UserDTO sender, UserDTO receiver, String title, String message) {
-        this.id = id;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.title = title;
-        this.message = message;
         this.createdAt = new Date();
     }
 }

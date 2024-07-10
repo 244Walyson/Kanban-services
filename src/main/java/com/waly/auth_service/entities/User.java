@@ -26,11 +26,12 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(mappedBy = "users")
     private Set<Role> authorities = new HashSet<>();
+    private String fcmToken;
 
     public User() {
     }
 
-    public User(Long id, String name, String nickname, String email, String imgUrl, String bio, String password) {
+    public User(Long id, String name, String nickname, String email, String imgUrl, String bio, String password, String fcmToken) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
         this.imgUrl = imgUrl;
         this.bio = bio;
         this.password = password;
+        this.fcmToken = fcmToken;
     }
 
     public Long getId() {
@@ -98,6 +100,14 @@ public class User implements UserDetails {
 
     public void addRole(Role role) {
         this.authorities.add(role);
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     @Override
