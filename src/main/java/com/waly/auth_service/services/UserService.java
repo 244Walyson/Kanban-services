@@ -187,7 +187,6 @@ public class UserService implements UserDetailsService {
     notificationDTO.setSender(new UserDTO(user));
     notificationDTO.setReceiver(new UserDTO(friend));
     notificationDTO.setMessage(message + user.getNickname());
-    notificationDTO.setToken(friend.getFcmToken());
     try {
       String jsonUserConn = new ObjectMapper().writeValueAsString(notificationDTO);
       kafkaProducer.sendUserNotification(jsonUserConn);

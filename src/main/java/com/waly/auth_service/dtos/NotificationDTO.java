@@ -17,7 +17,6 @@ public class NotificationDTO {
     private String title;
     private String message;
     private Date createdAt;
-    private String token;
 
     public NotificationDTO() {
         this.createdAt = new Date();
