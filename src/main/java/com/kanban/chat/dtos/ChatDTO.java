@@ -21,14 +21,6 @@ public class ChatDTO {
     private String description;
     private List<MessageDTO> messages;
 
-    public ChatDTO(Chat entity) {
-        this.id = entity.getId();
-        this.roomName = entity.getRoomName();
-        this.imgUrl = entity.getImgUrl();
-        this.totalMembers = entity.getMembers().size();
-        this.description = entity.getDescription();
-    }
-
     public static ChatDTO of(Chat entity) {
         return ChatDTO.builder()
                 .id(entity.getId())

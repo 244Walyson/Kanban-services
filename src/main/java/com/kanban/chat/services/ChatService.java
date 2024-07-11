@@ -63,8 +63,13 @@ public class ChatService {
 
   @Transactional(readOnly = true)
   public ChatDTO findChatById(String roomId) {
-    return ChatDTO.of(chatRepository.findById(roomId)
-            .orElseThrow(() -> new ResourceNotFoundException("Chat room not found")));
+    Chat chat = chatRepository.findById(roomId)
+            .orElseThrow(() -> new ResourceNotFoundException("Chat room not found"));
+    List<MessageDTO> messagesDTO = messageRepository.findByChat(chat)
+            .stream().map(MessageDTO::of).toList();
+    ChatDTO chatDTO = ChatDTO.of(chat);
+    chatDTO.setMessages(messagesDTO);
+    return chatDTO;
   }
 
   @Transactional(readOnly = true)

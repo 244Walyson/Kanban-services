@@ -46,8 +46,8 @@ public class TestConfig {
             .latestMessage("Message 1")
             .latestActivity(new Date())
             .build();
-    chatRepository.save(chat1);
 
+    chatRepository.save(chat1);
     Message message1 = Message.builder()
             .chat(chat1)
             .content("Message 1")
