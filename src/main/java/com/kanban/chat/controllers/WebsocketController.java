@@ -1,8 +1,6 @@
 package com.kanban.chat.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kanban.chat.dtos.ChatDTO;
-import com.kanban.chat.dtos.ChatDetailsDTO;
 import com.kanban.chat.dtos.ChatListDTO;
 import com.kanban.chat.dtos.MessageDTO;
 import com.kanban.chat.services.AuthService;

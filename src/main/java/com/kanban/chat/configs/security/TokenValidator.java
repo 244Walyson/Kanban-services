@@ -53,6 +53,7 @@ public class TokenValidator {
             claimsSet = jwtProcessor.process(token, null);
             return claimsSet.getClaim("nick").toString();
         }catch (Exception e){
+            log.error("Error while trying to process the Access Token", e);
             throw new ForbiddenException("Error while trying to process the Access Token");
         }
     }
