@@ -1,10 +1,17 @@
 package com.kanban.chat.dtos;
 
-import com.kanban.chat.models.entities.ChatRoomEntity;
-import org.apache.kafka.common.protocol.types.Field;
+import com.kanban.chat.models.entities.Chat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
 public class ChatDTO {
 
     private String id;
@@ -14,77 +21,21 @@ public class ChatDTO {
     private String description;
     private List<MessageDTO> messages;
 
-
-    public ChatDTO() {
+    public ChatDTO(Chat entity) {
+        this.id = entity.getId();
+        this.roomName = entity.getRoomName();
+        this.imgUrl = entity.getImgUrl();
+        this.totalMembers = entity.getMembers().size();
+        this.description = entity.getDescription();
     }
 
-    public ChatDTO(String id, String roomName, String imgUrl, Integer totalMembers, String description, List<MessageDTO> messages) {
-        this.id = id;
-        this.roomName = roomName;
-        this.imgUrl = imgUrl;
-        this.description = description;
-        this.totalMembers = totalMembers;
-        this.messages = messages;
-    }
-
-    public ChatDTO(ChatRoomEntity chatRoomEntity) {
-        this.id = chatRoomEntity.getId();
-        this.roomName = chatRoomEntity.getRoomName();
-        this.imgUrl = chatRoomEntity.getImgUrl();
-        this.description = chatRoomEntity.getDescription();
-        this.totalMembers = chatRoomEntity.getMembers().size();
-        this.messages = chatRoomEntity.getMessages().stream().map(MessageDTO::new).toList();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public List<MessageDTO> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<MessageDTO> messages) {
-        this.messages = messages;
-    }
-
-    public void addMember(MessageDTO messageDTO) {
-        this.messages.add(messageDTO);
-    }
-
-    public Integer getTotalMembers() {
-        return totalMembers;
-    }
-
-    public void setTotalMembers(Integer totalMembers) {
-        this.totalMembers = totalMembers;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public static ChatDTO of(Chat entity) {
+        return ChatDTO.builder()
+                .id(entity.getId())
+                .roomName(entity.getRoomName())
+                .imgUrl(entity.getImgUrl())
+                .totalMembers(entity.getMembers().size())
+                .description(entity.getDescription())
+                .build();
     }
 }

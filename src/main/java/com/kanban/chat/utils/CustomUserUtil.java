@@ -7,6 +7,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 public class CustomUserUtil {
@@ -15,12 +17,13 @@ public class CustomUserUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         log.info(principal.toString());
-        if (principal instanceof String) {
-            return (String) principal;
-        } else {
-            return null;
-        }
+        return Optional.of(principal)
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .orElse(null);
+
     }
+
     public String getLoggedNickname(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Jwt jwtPrincipal = (Jwt) authentication.getPrincipal();

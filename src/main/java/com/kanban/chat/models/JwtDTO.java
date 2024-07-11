@@ -14,5 +14,4 @@ public class JwtDTO {
     private int id;
     private String nickName;
     private String email;
-
 }

@@ -1,36 +1,31 @@
 package com.kanban.chat.dtos;
 
-import com.kanban.chat.models.embedded.ChatMessageEmbedded;
 import com.kanban.chat.models.embedded.UserEmbedded;
-import com.kanban.chat.models.entities.ChatMessageEntity;
+import com.kanban.chat.models.entities.Message;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class MessageDTO {
 
     private String id;
-    private UserEmbedded sender;
+    private UserEmbeddedDTO sender;
     private String content;
     private Date sendAt;
 
-    public MessageDTO(ChatMessageEntity message) {
-        this.id = message.getId();
-        this.sender = message.getSender();
-        this.content = message.getContent();
-        this.sendAt = message.getInstant();
-    }
-
-    public MessageDTO(ChatMessageEmbedded chatMessageEmbedded) {
-        this.id = chatMessageEmbedded.getId();
-        this.sender = chatMessageEmbedded.getSender();
-        this.content = chatMessageEmbedded.getContent();
-        this.sendAt = chatMessageEmbedded.getSendAt();
+    public static MessageDTO of(Message entity) {
+        return MessageDTO.builder()
+                .id(entity.getId())
+                .sender(UserEmbeddedDTO.of(entity.getSender()))
+                .content(entity.getContent())
+                .sendAt(entity.getInstant())
+                .build();
     }
 }
