@@ -15,6 +15,8 @@
 	<description>notification service of kanban chat</description>
 	<properties>
 		<java.version>17</java.version>
+		<sonar.organization>244walyson</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -56,11 +58,6 @@
 			<version>3.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.2.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -69,6 +66,11 @@
 			<groupId>com.google.firebase</groupId>
 			<artifactId>firebase-admin</artifactId>
 			<version>9.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -91,6 +93,30 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>plantuml-generator-maven-plugin</artifactId>
+				<groupId>de.elnarion.maven</groupId>
+				<version>1.1.2</version>
+				<executions>
+					<execution>
+						<id>generate-simple-diagram</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-test-sources</phase>
+						<configuration>
+							<outputFilename>diagrams/plantuml-diagram.txt</outputFilename>
+							<scanPackages>
+								<scanPackage>com.waly.auth_service.configs</scanPackage>
+								<scanPackage>com.waly.auth_service.controllers</scanPackage>
+								<scanPackage>com.waly.auth_service.repositories</scanPackage>
+								<scanPackage>com.waly.auth_service.services</scanPackage>
+								<scanPackage>com.waly.auth_service.util</scanPackage>
+							</scanPackages>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
