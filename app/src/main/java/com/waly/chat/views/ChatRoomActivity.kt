@@ -70,6 +70,7 @@ class ChatRoomActivity : AppCompatActivity() {
     private lateinit var searchActive: String
     private lateinit var userSearch: MutableList<User>
     private lateinit var teamSearch: MutableList<TeamMin>
+    private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +78,6 @@ class ChatRoomActivity : AppCompatActivity() {
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        allChat = mutableListOf()
         userSearch = mutableListOf()
         teamSearch = mutableListOf()
         allChat = mutableListOf()
@@ -145,7 +145,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
                 subs.collectLatest {
                     allChat.addAll(0, jsonStringToTeamList(it))
-                    if (!fromSearch) {
+                    if (!fromSearch || count > 0) {
                         removeDuplicates(allChat.first().id)
                         val handler = Handler(Looper.getMainLooper())
                         val runnable = object : Runnable {
@@ -374,6 +374,7 @@ class ChatRoomActivity : AppCompatActivity() {
             Glide
                 .with(applicationContext)
                 .load(user.imgUrl)
+                .placeholder(R.drawable.unknow_image)
                 .centerCrop()
                 .into(imgLayout.findViewById(R.id.statusImage))
 
@@ -446,6 +447,7 @@ class ChatRoomActivity : AppCompatActivity() {
             Glide
                 .with(applicationContext)
                 .load(team.imgUrl)
+                .placeholder(R.drawable.unknow_image)
                 .centerCrop()
                 .into(imgLayout.findViewById(R.id.statusImage))
 
@@ -491,6 +493,7 @@ class ChatRoomActivity : AppCompatActivity() {
             Glide
                 .with(applicationContext)
                 .load(user.imgUrl)
+                .placeholder(R.drawable.unknow_image)
                 .centerCrop()
                 .into(imgLayout.findViewById(R.id.statusImage))
 
@@ -583,6 +586,9 @@ class ChatRoomActivity : AppCompatActivity() {
 
 
     fun showChatRooms(teams: MutableList<Team>) {
+        teams.forEach {
+            Log.i("TEAM", it.roomName)
+        }
         val scrollContainer = binding.motionLayoutContainer
         val scrollView = motionLayout.findViewById<LinearLayout>(R.id.ScrollChats)
         scrollView.removeAllViews()
@@ -599,6 +605,7 @@ class ChatRoomActivity : AppCompatActivity() {
             val latestActivity = roomCard.findViewById<TextView>(R.id.text_last_activity)
             var latestText = getTimeAgo(parseDateToMillis(team.lastActivity))
             if (latestText.contains("agora")) latestActivity.setTextColor(getColor(R.color.blue))
+            if (latestText.contains("none")) latestActivity.visibility = View.GONE
             else latestActivity.setTextColor(resources.getColor(R.color.gray_tertiary))
             latestActivity.text = latestText
 
@@ -613,6 +620,7 @@ class ChatRoomActivity : AppCompatActivity() {
             Glide
                 .with(applicationContext)
                 .load(team.imgUrl)
+                .placeholder(R.drawable.unknow_image)
                 .centerCrop()
                 .into(image)
 
@@ -674,7 +682,9 @@ class ChatRoomActivity : AppCompatActivity() {
             diffDays in 2..6 -> "$diffDays dias atrás"
             else -> {
                 val diffWeeks = diffDays / 7
-                "$diffWeeks semanas atrás"
+                if (diffWeeks == 1L) "$diffWeeks semana atrás"
+                else if (diffWeeks > 1000) "none"
+                 else "$diffWeeks semanas atrás"
             }
         }
     }

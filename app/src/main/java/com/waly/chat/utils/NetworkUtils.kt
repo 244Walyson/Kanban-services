@@ -4,6 +4,7 @@ import com.waly.chat.utils.Environments
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class NetworkUtils {
 
@@ -18,11 +19,16 @@ class NetworkUtils {
 
         private fun getRetrofitInstance(): Retrofit {
             if (!::INSTANCE.isInitialized) {
-                val htttp = OkHttpClient.Builder();
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .build()
+
                 INSTANCE = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(htttp.build())
+                    .client(client)
                     .build()
             }
             return INSTANCE

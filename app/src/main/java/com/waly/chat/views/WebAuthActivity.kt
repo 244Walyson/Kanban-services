@@ -56,7 +56,9 @@ class WebAuthActivity : AppCompatActivity() {
                              val jsonObject = JSONObject(stringBody.substring(stringBody.indexOf("{"), stringBody.lastIndexOf("}") + 1));
                             saveToken(jsonObject.getString("access_token"), jsonObject.getLong("expires_in"))
                             SaveUserData(applicationContext).saveLogedUser()
-                            startActivity(Intent(this@WebAuthActivity, MainActivity::class.java))
+                            intent = Intent(this@WebAuthActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
                             finish()
                         } catch (e: Exception) {
                             Log.e("JSON", "Erro ao converter o corpo em JSON: ${e.message} cause ${e.cause} message ${e.localizedMessage}")

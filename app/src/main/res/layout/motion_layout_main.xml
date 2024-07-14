@@ -7,300 +7,312 @@
     android:backgroundTint="@android:color/transparent"
     app:layoutDescription="@xml/motion_scene">
 
-   <ScrollView
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:id="@+id/TODO">
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="vertical">
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:orientation="vertical">
-
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:orientation="vertical">
-
-                   <LinearLayout
-                       android:layout_width="match_parent"
-                       android:layout_height="160dp"
-                       android:gravity="center"
-                       android:paddingLeft="10dp"
-                       android:paddingTop="20dp"
-                       android:paddingRight="20dp"
-                       android:paddingBottom="20dp"
-                       android:layout_marginBottom="20dp">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
 
-                       <LinearLayout
-                           android:layout_width="wrap_content"
-                           android:layout_height="match_parent"
-                           android:orientation="vertical"
-                           android:layout_weight="1">
-                           <LinearLayout
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content">
-                               <ImageView
-                                   android:id="@+id/notificationIcon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp"
-                                   android:src="@drawable/icon_notification"/>
-                           </LinearLayout>
-                           <LinearLayout
-                               android:layout_width="match_parent"
-                               android:layout_height="wrap_content"
-                               android:orientation="vertical"
-                               android:layout_weight="1"
-                               android:gravity="center_vertical">
 
-                               <TextView
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:fontFamily="@font/gordita_black"
-                                   android:text="Ola,"
-                                   android:textColor="@color/white"
-                                   android:textSize="25dp" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/TODO">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                               <TextView
-                                   android:id="@+id/userName"
-                                   android:layout_width="wrap_content"
-                                   android:layout_height="wrap_content"
-                                   android:layout_marginTop="-15dp"
-                                   android:clickable="true"
-                                   android:focusable="true"
-                                   android:fontFamily="@font/gordita_black"
-                                   android:textColor="@color/white"
-                                   android:textSize="30dp" />
-                           </LinearLayout>
-                       </LinearLayout>
-                       <LinearLayout
-                           android:id="@+id/userImageLayout"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_gravity="center">
-                           <include android:id="@+id/mainUserImg" layout="@layout/home_image" />
-                       </LinearLayout>
-                   </LinearLayout>
-               </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="vertical">
-                   <HorizontalScrollView
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content">
-                       <LinearLayout
-                           android:id="@+id/mainStatus"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:paddingBottom="10dp">
-                           <include android:id="@+id/firstStatus" layout="@layout/status_image"/>
-                       </LinearLayout>
-                   </HorizontalScrollView>
-               </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:gravity="center"
-                   android:paddingEnd="20dp"
-                   android:layout_marginVertical="20dp">
-                   <LinearLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1">
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:textColor="@color/gray_quaternary"
-                           android:text="Equipes"
-                           android:textSize="18dp"
-                           android:fontFamily="@font/poppins_bold"/>
-                   </LinearLayout>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/icon_more_black"
-                       android:backgroundTint="@color/black"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="20dp"
+                            android:layout_marginBottom="20dp">
 
-               </LinearLayout>
-               <HorizontalScrollView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:layout_marginBottom="20dp"
-                   android:paddingEnd="10dp"
-                   android:scrollbars="none">
-                   <LinearLayout
-                       android:id="@+id/mainTeams"
-                       android:layout_width="match_parent"
-                       android:layout_height="match_parent"
-                       android:paddingBottom="10dp"
-                       android:paddingLeft="5dp"
-                       android:orientation="horizontal">
-                   </LinearLayout>
-               </HorizontalScrollView>
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:paddingEnd="20dp">
-                   <TextView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:text="Suas Tasks"
-                       android:textSize="18sp"
-                       android:layout_weight="1"
-                       android:textColor="@color/gray_quaternary"
-                       android:fontFamily="@font/poppins_bold"/>
-                   <ImageView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:src="@drawable/icon_more_black"
-                       android:backgroundTint="@color/black"/>
-               </LinearLayout>
-               <HorizontalScrollView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:paddingEnd="10dp">
-                   <LinearLayout
-                       android:id="@+id/mainTasks"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content">
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Nada ainda"
-                           android:textSize="16sp"
-                           android:textColor="@color/gray_tertiary"
-                           android:fontFamily="@font/futura_medium"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_weight="1">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:id="@+id/notificationIcon"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:src="@drawable/icon_notification"/>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical">
 
-                   </LinearLayout>
-               </HorizontalScrollView>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/gordita_black"
+                                        android:text="Ola,"
+                                        android:textColor="@color/white"
+                                        android:textSize="25dp" />
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/userName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="-15dp"
+                                        android:clickable="true"
+                                        android:focusable="true"
+                                        android:fontFamily="@font/gordita_black"
+                                        android:textColor="@color/white"
+                                        android:textSize="30dp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/userImageLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+                                <include android:id="@+id/mainUserImg" layout="@layout/home_image" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
 
-                   <LinearLayout
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:paddingEnd="20dp"
-                       android:layout_marginTop="20dp">
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Recentes"
-                           android:textSize="18sp"
-                           android:layout_weight="1"
-                           android:textColor="@color/gray_quaternary"
-                           android:fontFamily="@font/poppins_bold"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:id="@+id/mainStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp">
+                                <include android:id="@+id/firstStatus" layout="@layout/status_image"/>
+                            </LinearLayout>
+                        </HorizontalScrollView>
+                    </LinearLayout>
 
-                       <ImageView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:src="@drawable/icon_more_black"/>
-                   </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingEnd="20dp"
+                        android:layout_marginVertical="20dp">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/gray_quaternary"
+                                android:text="Equipes"
+                                android:textSize="18dp"
+                                android:fontFamily="@font/poppins_bold"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_more_black"
+                            android:backgroundTint="@color/black"/>
 
-                   <ScrollView
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content">
-                       <LinearLayout
-                           android:id="@+id/ScrollChatMain"
-                           android:layout_width="match_parent"
-                           android:layout_height="match_parent"
-                           android:paddingEnd="10dp"
-                           android:orientation="vertical">
+                    </LinearLayout>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:paddingEnd="10dp"
+                        android:scrollbars="none">
+                        <LinearLayout
+                            android:id="@+id/mainTeams"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="5dp"
+                            android:orientation="horizontal">
+                        </LinearLayout>
+                    </HorizontalScrollView>
 
-                       </LinearLayout>
-                   </ScrollView>
-               </LinearLayout>
-           </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="20dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Suas Tasks"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:textColor="@color/gray_quaternary"
+                            android:fontFamily="@font/poppins_bold"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_more_black"
+                            android:backgroundTint="@color/black"/>
+                    </LinearLayout>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="10dp">
+                        <LinearLayout
+                            android:id="@+id/mainTasks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nada ainda"
+                                android:textSize="16sp"
+                                android:textColor="@color/gray_tertiary"
+                                android:fontFamily="@font/futura_medium"/>
 
-       </LinearLayout>
-   </ScrollView>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="20dp"
+                            android:layout_marginTop="20dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Recentes"
+                                android:textSize="18sp"
+                                android:layout_weight="1"
+                                android:textColor="@color/gray_quaternary"
+                                android:fontFamily="@font/poppins_bold"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_more_black"/>
+                        </LinearLayout>
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:id="@+id/ScrollChatMain"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingEnd="10dp"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
+                        </ScrollView>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:id="@+id/background"
-        android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:background="@drawable/menu_gradient"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton"
-        app:roundPercent="1"/>
+            android:id="@+id/background"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:background="@drawable/menu_gradient"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            app:layout_constraintEnd_toEndOf="@+id/imageButton"
+            app:layout_constraintStart_toStartOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="@+id/imageButton"
+            app:roundPercent="1"/>
 
-    <Button
-        android:id="@+id/button_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0000"
-        android:drawableTop="@drawable/icon_notification"
-        android:text="Notificações"
-        android:textAllCaps="false"
-        app:layout_constraintCircle="@id/background"
-        app:layout_constraintCircleAngle="270"
-        app:layout_constraintCircleRadius="180dp" />
+        <Button
+            android:id="@+id/button_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:drawableTop="@drawable/icon_notification"
+            android:text="Notificações"
+            android:textAllCaps="false"
+            app:layout_constraintCircle="@id/background"
+            app:layout_constraintCircleAngle="270"
+            app:layout_constraintCircleRadius="180dp" />
 
-    <Button
-        android:id="@+id/button_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0000"
-        android:drawableTop="@drawable/icon_chat"
-        android:text="Conversas"
-        android:textAllCaps="false"
-        app:layout_constraintCircle="@id/background"
-        app:layout_constraintCircleAngle="330"
-        app:layout_constraintCircleRadius="200dp" />
+        <Button
+            android:id="@+id/button_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:drawableTop="@drawable/icon_chat"
+            android:text="Conversas"
+            android:textAllCaps="false"
+            app:layout_constraintCircle="@id/background"
+            app:layout_constraintCircleAngle="330"
+            app:layout_constraintCircleRadius="200dp" />
 
-    <Button
-        android:id="@+id/button_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0000"
-        android:drawableTop="@drawable/icon_search_white"
-        android:text="Buscar"
-        android:textAllCaps="false"
-        app:layout_constraintCircle="@id/background"
-        app:layout_constraintCircleAngle="300"
-        app:layout_constraintCircleRadius="200dp" />
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:drawableTop="@drawable/icon_search_white"
+            android:text="Buscar"
+            android:textAllCaps="false"
+            app:layout_constraintCircle="@id/background"
+            app:layout_constraintCircleAngle="300"
+            app:layout_constraintCircleRadius="200dp" />
 
-    <Button
-        android:id="@+id/button_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#0000"
-        android:drawableTop="@drawable/icon_profile_white"
-        android:text="Perfil"
-        android:textAllCaps="false"
-        app:layout_constraintCircle="@id/background"
-        app:layout_constraintCircleAngle="0"
-        app:layout_constraintCircleRadius="200dp" />
+        <Button
+            android:id="@+id/button_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#0000"
+            android:drawableTop="@drawable/icon_profile_white"
+            android:text="Perfil"
+            android:textAllCaps="false"
+            app:layout_constraintCircle="@id/background"
+            app:layout_constraintCircleAngle="0"
+            app:layout_constraintCircleRadius="200dp" />
 
-    <androidx.constraintlayout.utils.widget.ImageFilterButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="60dp"
-        android:rotation="45"
-        android:scaleX="2"
-        android:scaleY="2"
-        android:background="@drawable/search_bar_shape"
-        android:backgroundTint="@color/white"
-        android:tint="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:iconSize="10dp"
-        android:src="@drawable/icon_add"
-        app:srcCompat="@drawable/icon_add" />
+        <androidx.constraintlayout.utils.widget.ImageFilterButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="60dp"
+            android:rotation="45"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:background="@drawable/search_bar_shape"
+            android:backgroundTint="@color/white"
+            android:tint="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:iconSize="10dp"
+            android:src="@drawable/icon_add"
+            app:srcCompat="@drawable/icon_add" />
+
+
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

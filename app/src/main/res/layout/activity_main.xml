@@ -16,6 +16,6 @@
 
         <include android:id="@+id/motion_layout_main_id" layout="@layout/motion_layout_main" />
 
-
     </LinearLayout>
+
 </LinearLayout>

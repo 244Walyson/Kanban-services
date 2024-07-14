@@ -89,6 +89,7 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
+    implementation("io.sentry:sentry:7.10.0")
 
     implementation("com.google.android.material:material:1.2.1")
     implementation(libs.androidx.lifecycle.runtime.ktx)

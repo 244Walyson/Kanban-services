@@ -3,7 +3,7 @@
     android:layout_height="40dp"
     android:text="Login"
     android:backgroundTint="@color/white"
-    android:textColor="@color/black"
+    android:textColor="@color/white"
     android:fontFamily="@font/gordita_black"
     android:background="@drawable/input_message_shape"
     xmlns:android="http://schemas.android.com/apk/res/android" />

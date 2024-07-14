@@ -155,25 +155,27 @@ class ChatActivity : AppCompatActivity() {
             peopleCount.visibility = View.VISIBLE
             headerChat.findViewById<ImageView>(R.id.people_icon).visibility = View.VISIBLE
         }
+        var teamId = if(team.id.contains("R") || team.id.contains("U")) team.id.substring(1) else team.id
         val roomImage = headerChat.findViewById<ImageView>(R.id.userImage)
         Glide
             .with(applicationContext)
             .load(team.imgUrl)
+            .placeholder(R.drawable.unknow_image)
             .centerCrop()
             .into(roomImage)
         roomImage.setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
-            intent.putExtra("teamId", team.id)
+            intent.putExtra("teamId", teamId)
             startActivity(intent)
         }
         headerChat.findViewById<ImageView>(R.id.people_icon).setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
-            intent.putExtra("teamId", team.id)
+            intent.putExtra("teamId", teamId)
             startActivity(intent)
         }
         roomTitle.setOnClickListener {
             val intent = Intent(this, TeamActivity::class.java)
-            intent.putExtra("teamId", team.id)
+            intent.putExtra("teamId", teamId)
             startActivity(intent)
         }
         headerChat.findViewById<ImageView>(R.id.chatBackButton).setOnClickListener {

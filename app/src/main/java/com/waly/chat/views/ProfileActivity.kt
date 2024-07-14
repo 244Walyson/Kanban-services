@@ -96,6 +96,7 @@ class ProfileActivity : AppCompatActivity() {
             Glide.with(applicationContext)
                 .load(team.imgUrl)
                 .centerCrop()
+                .placeholder(R.drawable.unknow_image)
                 .into(imgLayout.findViewById(R.id.statusImage))
             userImage.addView(imgLayout)
             btnConnect.setImageResource(R.drawable.icon_more_black)
@@ -199,6 +200,7 @@ class ProfileActivity : AppCompatActivity() {
         Glide
             .with(this)
             .load(imgUrl)
+            .placeholder(R.drawable.unknow_image)
             .centerCrop()
             .into(imageView)
 

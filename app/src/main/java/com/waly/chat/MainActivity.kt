@@ -59,6 +59,7 @@ import java.util.concurrent.TimeUnit
 import android.Manifest
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.waly.chat.views.StatusActivity
 
 
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         allChat = mutableListOf()
+
 
         session = SessionManager(applicationContext)
         motionLayout = findViewById(R.id.motion_layout_main_id)
@@ -117,6 +119,14 @@ class MainActivity : AppCompatActivity() {
         websocketConnect()
         showHeader()
 
+        val swipeRefreshLayout: SwipeRefreshLayout = motionLayout.findViewById(R.id.swipe_refresh_layout)
+        swipeRefreshLayout.setOnRefreshListener {
+            fetchTeamData()
+            showHeader()
+            if(allChat.isEmpty()) websocketConnect()
+            swipeRefreshLayout.isRefreshing = false
+        }
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
@@ -133,6 +143,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StatusActivity::class.java))
         }
 
+        askNotificationPermission()
     }
 
 
@@ -164,7 +175,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            private fun showHeader() {
+    private fun showHeader() {
         val service = NetworkUtils.createServiceUser()
         val token = session.accessToken!!
         service.getUser(token)
@@ -186,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                         Glide
                             .with(applicationContext)
                             .load(user?.imgUrl)
+                            .placeholder(R.drawable.unknow_image)
                             .centerCrop()
                             .into(img)
                         imgLayout.removeAllViews()
@@ -252,7 +264,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showTeams(teams: List<TeamMin>?) {
         val list = motionLayout.findViewById<LinearLayout>(R.id.mainTeams)
-
+        list.removeAllViews()
         teams?.forEach { team ->
             val gradient = getGradientDrawable()
             val groupItem = layoutInflater.inflate(R.layout.group_item, motionLayout, false)
@@ -371,6 +383,7 @@ class MainActivity : AppCompatActivity() {
                 Glide
                     .with(applicationContext)
                     .load(team.imgUrl)
+                    .placeholder(R.drawable.unknow_image)
                     .centerCrop()
                     .into(image)
 

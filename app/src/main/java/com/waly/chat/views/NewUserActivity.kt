@@ -6,6 +6,8 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.util.Log
+import android.view.View
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -33,19 +35,56 @@ class NewUserActivity : AppCompatActivity() {
 
         user = CreateUser()
         setButton()
+
+        backgroundAnimation()
+
     }
 
+    private fun backgroundAnimation() {
+
+
+        val backgroundView = findViewById<View>(R.id.backgroundView)
+
+        // Animação de clareamento
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+
+        // Animação de escurecimento
+        val fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+
+        // Listener para repetir as animações
+        val animationListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                // Inverte as animações
+                if (animation === fadeInAnimation) {
+                    backgroundView.startAnimation(fadeOutAnimation)
+                } else {
+                    backgroundView.startAnimation(fadeInAnimation)
+                }
+            }
+            override fun onAnimationRepeat(animation: Animation) {}
+        }
+
+        // Define os listeners para as animações
+        fadeInAnimation.setAnimationListener(animationListener)
+        fadeOutAnimation.setAnimationListener(animationListener)
+
+        // Inicia a animação de clareamento
+        backgroundView.startAnimation(fadeInAnimation)
+    }
     private fun setupListeners() {
         binding.GithubSignIn.setOnClickListener {
             val intent = Intent(this, WebAuthActivity::class.java)
             intent.putExtra("param", Environments.GITHUB_PARAM)
             startActivity(intent)
+            finish()
         }
 
         binding.GoogleSignIn.setOnClickListener {
             val intent = Intent(this, WebAuthActivity::class.java)
             intent.putExtra("param", Environments.GOOGLE_PARAM)
             startActivity(intent)
+            finish()
         }
 
         binding.txtLogIn.setOnClickListener {
@@ -146,6 +185,7 @@ class NewUserActivity : AppCompatActivity() {
                         putExtra("password", user.password)
                     }
                     startActivity(intent)
+                    finish()
                     return;
                 }
                 showError()

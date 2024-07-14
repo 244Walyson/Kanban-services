@@ -11,15 +11,19 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.waly.chat.MainActivity
 import com.waly.chat.databinding.ActivitySplashScreenBinding
 import com.waly.chat.notification.MessageNotification
+import io.sentry.Sentry
 import java.util.Date
 
 
 class SplashScreenActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        Sentry.init { options ->
+            options.dsn = "https://ea45d9d797f0251b7b7efc7b12a41761@sentry.api.waly.dev.br/1"
+        }
 
         MessageNotification(this).createNotificationChannel()
 

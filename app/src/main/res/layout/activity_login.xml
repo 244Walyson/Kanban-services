@@ -3,11 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/black"
+    android:background="@drawable/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.LoginActivity">
 
+    <View
+        android:id="@+id/backgroundView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#D6000000"
+        android:alpha="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +23,6 @@
         tools:layout_editor_absoluteX="-78dp"
         tools:layout_editor_absoluteY="-76dp">
 
-
         <TextView
             android:id="@+id/txtErr"
             android:layout_width="match_parent"
@@ -26,7 +31,7 @@
             android:layout_weight="1"
             android:textColor="@color/white"
             android:text="Login"
-            android:fontFamily="@font/gordita_black"
+            android:fontFamily="@font/gordita_regular"
             android:textSize="25sp" />
 
         <ImageView
@@ -52,9 +57,9 @@
                 android:maxLines="1"
                 android:hint="Email"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_medium"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black_secondary" />
+                android:fontFamily="@font/gordita_regular"
+                android:textColor="@color/white"
+                android:textColorHint="@color/gray_primary" />
 
             <EditText
                 android:id="@+id/edtPassword"
@@ -65,10 +70,10 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_message_shape"
                 android:hint="Password"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:paddingHorizontal="10dp"
-                android:fontFamily="@font/gordita_medium"
-                android:textColorHint="@color/black_secondary" />
+                android:fontFamily="@font/gordita_regular"
+                android:textColorHint="@color/gray_primary" />
 
             <TextView
                 android:id="@+id/txtForgotPassword"

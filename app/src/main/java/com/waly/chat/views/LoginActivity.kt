@@ -20,6 +20,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.Date
 import android.graphics.Color
+import android.view.View
+import android.view.animation.Animation
 import com.waly.chat.utils.Environments
 
 
@@ -38,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.txtSignUp.setOnClickListener {
             startActivity(Intent(this, NewUserActivity::class.java))
+            finish()
         }
 
         binding.GithubLogin.setOnClickListener {
@@ -61,8 +64,43 @@ class LoginActivity : AppCompatActivity() {
 
         setButton()
 
+        backgroundAnimation()
+
     }
 
+
+    private fun backgroundAnimation() {
+
+
+        val backgroundView = findViewById<View>(R.id.backgroundView)
+
+        // Animação de clareamento
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+
+        // Animação de escurecimento
+        val fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+
+        // Listener para repetir as animações
+        val animationListener = object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                // Inverte as animações
+                if (animation === fadeInAnimation) {
+                    backgroundView.startAnimation(fadeOutAnimation)
+                } else {
+                    backgroundView.startAnimation(fadeInAnimation)
+                }
+            }
+            override fun onAnimationRepeat(animation: Animation) {}
+        }
+
+        // Define os listeners para as animações
+        fadeInAnimation.setAnimationListener(animationListener)
+        fadeOutAnimation.setAnimationListener(animationListener)
+
+        // Inicia a animação de clareamento
+        backgroundView.startAnimation(fadeInAnimation)
+    }
 
     fun setLoading() {
         val blinkAnimation = AnimationUtils.loadAnimation(this, androidx.appcompat.R.anim.abc_fade_in)

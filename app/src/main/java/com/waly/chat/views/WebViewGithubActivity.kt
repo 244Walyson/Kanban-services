@@ -32,5 +32,7 @@ class WebViewGithubActivity : AppCompatActivity() {
 
         webView.webViewClient = WebViewClient()
 
+        webView.settings.javaScriptEnabled = true
+
     }
 }
