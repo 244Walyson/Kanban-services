@@ -1,4 +1,10 @@
 spring:
+  application:
+    name: API-GATEWAY
+
+  main:
+    web-application-type: reactive
+
   cloud:
     gateway:
       discovery:
@@ -10,18 +16,29 @@ spring:
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/oauth2/**, /.well-known/**, /users/**
-
+            - Path=/users/**
+          filters:
+            - StripPrefix=1
 
         - id: notification-service
           uri: lb://NOTIFICATION-SERVICE
           predicates:
-            - Path=/fcm-tokens/**, /notifications/**
+            - Path=/notifications/**
+          filters:
+            - StripPrefix=1
 
         - id: chat-service
           uri: lb://CHAT-SERVICE
           predicates:
             - Path=/chat/**
+            - Path=/ws/**
+          filters:
+            - StripPrefix=1
+
+        - id: crud-service
+          uri: lb://CRUD-SERVICE
+          predicates:
+            - Path=/hello-world
           filters:
             - StripPrefix=1
 
@@ -31,6 +48,21 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /chat/v3/api-docs
+        name: Chat Service
+      - url: /users/v3/api-docs
+        name: Auth Service
+      - url: /notifications/v3/api-docs
+        name: Notification Service
 
 logging:
   level:
