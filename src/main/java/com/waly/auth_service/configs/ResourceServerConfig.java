@@ -61,9 +61,7 @@ public class ResourceServerConfig {
 	public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(AbstractHttpConfigurer::disable);
-		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/.well-known/jwks.json").permitAll());
-		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/hello-world").permitAll());
-		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/users").permitAll());
+		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/.well-known/jwks.json", "/swagger-ui/*", "/v3/api-docs", "hello-world", "/users").permitAll());
 		http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
 		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
 		http.oauth2Login(oauth2 -> oauth2
