@@ -31,3 +31,4 @@ target/
 
 # Ignore other OS specific files
 Thumbs.db
+app/google-services.json
