@@ -13,24 +13,24 @@ import retrofit2.http.Path
 
 interface UserClient {
 
-    @GET("/users/me")
+    @GET("/users/users/me")
     fun getUser(@Header("Authorization") authorization: String): Call<User>
 
-    @GET("/users/me/full")
+    @GET("/users/users/me/full")
     fun findMeFull(@Header("Authorization") authorization: String): Call<UserFull>
 
-    @GET("/users")
+    @GET("/users/users")
     fun getUsers(@Header("Authorization") authorization: String): Call<List<User>>
 
-    @POST("/users")
+    @POST("/users/users")
     fun createUser(@Body user: CreateUser): Call<User>
-    @PUT("/users/update-image")
+    @PUT("/users/users/update-image")
     fun updateUserImage(@Header("Authorization") authorization: String, @Body uri: UriDTO): Call<User>
 
-    @POST("/users/connect/{id}")
+    @POST("/users/users/connect/{id}")
     fun requestConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<User>
 
-    @POST("/users/approve/{id}")
+    @POST("/users/users/approve/{id}")
     fun acceptConnection(@Header("Authorization") authorization: String, @Path(value = "id") id: String): Call<Void>
 
 }

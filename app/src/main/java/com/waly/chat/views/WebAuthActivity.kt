@@ -41,7 +41,7 @@ class WebAuthActivity : AppCompatActivity() {
 
     private fun getUrl(): String {
         val param = intent.getStringExtra("param")
-        return "${Environments.BASE_KANBAN_URL}$param"
+        return "${Environments.BASE_URL}$param"
     }
     private fun getAccessToken() {
         webView.webViewClient = object : WebViewClient() {

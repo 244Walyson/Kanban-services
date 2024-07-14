@@ -8,7 +8,7 @@ import retrofit2.http.POST
 interface LoginClient {
 
     @FormUrlEncoded
-    @POST("/oauth2/token")
+    @POST("/users/oauth2/token")
     fun login(
         @Header("Authorization") authorization: String,
         @Field("username") username: String,

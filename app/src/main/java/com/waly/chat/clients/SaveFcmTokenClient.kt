@@ -8,6 +8,6 @@ import retrofit2.http.POST
 
 interface SaveFcmTokenClient {
 
-    @POST("/user/token")
+    @POST("/users/user/token")
     fun saveToken(@Body token: FcmToken, @Header("Authorization") authorization: String): Call<Void>
 }

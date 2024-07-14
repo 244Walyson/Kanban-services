@@ -401,7 +401,7 @@ class ChatRoomActivity : AppCompatActivity() {
 
     private fun listTeams(query: String?, scrollSearch: View, scrollContainer: LinearLayout) {
         val token = session.accessToken
-        val service = NetworkUtils.createServiceTeamFull()
+        val service = NetworkUtils.createServiceTeam()
         if (teamSearch.isEmpty()) {
             service.getTeams(token!!)
                 .enqueue(object : Callback<TeamFullResponse> {
