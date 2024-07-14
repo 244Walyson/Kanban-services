@@ -97,6 +97,30 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<artifactId>plantuml-generator-maven-plugin</artifactId>
+				<groupId>de.elnarion.maven</groupId>
+				<version>1.1.2</version>
+				<executions>
+					<execution>
+						<id>generate-simple-diagram</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-test-sources</phase>
+						<configuration>
+							<outputFilename>diagrams/plantuml-diagram.txt</outputFilename>
+							<scanPackages>
+								<scanPackage>com.waly.auth_service.configs</scanPackage>
+								<scanPackage>com.waly.auth_service.controllers</scanPackage>
+								<scanPackage>com.waly.auth_service.repositories</scanPackage>
+								<scanPackage>com.waly.auth_service.services</scanPackage>
+								<scanPackage>com.waly.auth_service.util</scanPackage>
+							</scanPackages>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

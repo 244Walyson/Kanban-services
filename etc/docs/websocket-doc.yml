@@ -1,0 +1,206 @@
+asyncapi: 3.0.0
+id: 'ws://localhost:8080/ws'
+info:
+  title: Waly Real Time Messaging API
+  version: 1.0.0
+servers:
+  production:
+    host: localhost
+    pathname: /connect
+    protocol: https
+    protocolVersion: '1.1'
+    security:
+      - $ref: '#/components/securitySchemes/token'
+channels:
+  chatUpdates:
+    address: /{nick}/queue/chats
+    messages:
+      chatUpdates:
+        $ref: '#/components/messages/chatList'
+
+  ReceiveMessages:
+    address: /{roomId}/queue/messages
+    messages:
+      outgoingMessage:
+        $ref: '#/components/messages/outgoingMessage'
+
+  sendMessages:
+    address: /chat/{roomId}
+    messages:
+      outgoingMessage:
+        $ref: '#/components/messages/outgoingMessage'
+
+
+operations:
+  receiveChatUpdates:
+    action: receive
+    channel:
+      $ref: '#/channels/chatUpdates'
+    messages:
+      - $ref: '#/channels/chatUpdates/messages/chatUpdates'
+
+  receiveMessage:
+    action: receive
+    channel:
+      $ref: '#/channels/ReceiveMessages'
+    messages:
+      - $ref: '#/channels/ReceiveMessages/messages/outgoingMessage'
+
+  sendMessage:
+    action: send
+    channel:
+      $ref: '#/channels/sendMessages'
+    messages:
+      - $ref: '#/channels/sendMessages/messages/outgoingMessage'
+
+
+components:
+  securitySchemes:
+    token:
+      type: httpApiKey
+      name: token
+      in: query
+  schemas:
+    ChatDetails:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        totalCollaborators:
+          type: number
+        image_url:
+          type: string
+          format: uri
+
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              nickname:
+                type: string
+              img_url:
+                type: string
+                format: uri
+
+    Chat:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        totalCollaborators:
+          type: number
+        image_url:
+          type: string
+          format: uri
+
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+            sender:
+              type: object
+              properties:
+                name:
+                  type: string
+                nickname:
+                  type: string
+                img_url:
+                  type: string
+                  format: uri
+            sentAt:
+              type: date
+
+
+    chatList:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        img_url:
+          type: string
+          format: uri
+        latestMessage:
+          type: string
+        lastActivity:
+          type: string
+          format: date-time
+
+    message:
+      type: array
+      properties:
+        id:
+          type: string
+        sender:
+          type: object
+          properties:
+            name:
+              type: string
+            nickname:
+              type: string
+            img_url:
+              type: string
+              format: uri
+            sentAt:
+              type: string
+              format: date-time
+
+  messages:
+    chatList:
+      summary: A list of rooms that user has connected
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          img_url:
+            type: string
+          latestMessage:
+            type: string
+          lastActivity:
+            type: string
+            format: date-time
+
+    outgoingMessage:
+      summary: A message sent to a chat
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          id:
+            type: string
+          sender:
+            type: object
+            properties:
+              name:
+                type: string
+              nickname:
+                type: string
+              img_url:
+                type: string
+                format: uri
+          sentAt:
+            type: string
+            format: date-time
+          content:
+            type: string
+
